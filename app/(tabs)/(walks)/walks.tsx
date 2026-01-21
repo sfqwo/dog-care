@@ -20,11 +20,10 @@ import {
 } from "@/src/components";
 import { useWalkCardDetails } from "@/src/hooks/useWalkCardDetails";
 import { useWalkStats } from "@/src/hooks/useWalkStats";
-import { createUid, isPositiveNumber } from "@/src/utils";
+import { createUid, isPositiveNumber, formatDateTime } from "@/src/utils";
 import { STORAGE_KEYS } from "@/src/storage/keys";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import type { Walk } from "@/src/domain/types";
-import { formatDateTime } from "@/src/ui/format";
 import { pageGradient, walkStyles } from "./walks.styles";
 import { LinearGradient } from "expo-linear-gradient";
 

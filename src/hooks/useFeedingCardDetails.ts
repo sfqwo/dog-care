@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { Feeding } from "@/src/domain/types";
-import { formatDateTime } from "@/src/ui/format";
+import { formatDateTime } from "@/src/utils";
 
 const LIGHT = ["#faf5ff", "#f5d0fe", "#f0abfc"] as const;
 const BALANCED = ["#ecfccb", "#d9f99d", "#bef264"] as const;
