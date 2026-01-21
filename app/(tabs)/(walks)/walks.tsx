@@ -19,6 +19,7 @@ import {
   TimeRecorderTitle,
 } from "@/src/components";
 import { useWalkCardDetails } from "@/src/hooks/useWalkCardDetails";
+import { useWalkStats } from "@/src/hooks/useWalkStats";
 import { createUid } from "@/src/utils/createUid";
 import { STORAGE_KEYS } from "@/src/storage/keys";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
@@ -33,6 +34,7 @@ export default function WalksScreen() {
   const [walks, setWalks] = useState<Walk[]>([]);
   const [durationMin, setDurationMin] = useState("");
   const [note, setNote] = useState("");
+  const stats = useWalkStats(walks);
 
   useEffect(() => {
     loadJSON<Walk[]>(STORAGE_KEYS.WALKS, []).then(setWalks);
@@ -46,14 +48,6 @@ export default function WalksScreen() {
     const n = Number(durationMin);
     return Number.isFinite(n) && n > 0;
   }, [durationMin]);
-
-  const stats = useMemo(() => {
-    if (!walks.length) return { totalMinutes: 0, avgDuration: 0, longest: 0 };
-    const totalMinutes = walks.reduce((sum, walk) => sum + walk.durationMin, 0);
-    const avgDuration = Math.max(1, Math.round(totalMinutes / walks.length));
-    const longest = walks.reduce((max, walk) => Math.max(max, walk.durationMin), 0);
-    return { totalMinutes, avgDuration, longest };
-  }, [walks]);
 
   const handleAddWalk = () => {
     if (!canAddWalk) return;
