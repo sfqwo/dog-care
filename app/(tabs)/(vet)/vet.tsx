@@ -27,6 +27,11 @@ import { formatDateTime } from "@/src/ui/format";
 import { createUid } from "@/src/utils/createUid";
 import { pageGradient, vetStyles } from "./vet.styles";
 
+type VetListItemProps = {
+  record: VetRecord;
+  onRemove: (id: string) => void;
+};
+
 export default function VetScreen() {
   const [records, setRecords] = useState<VetRecord[]>([]);
   const [title, setTitle] = useState("");
@@ -41,7 +46,7 @@ export default function VetScreen() {
     saveJSON(STORAGE_KEYS.VET, records);
   }, [records]);
 
-  const canAdd = useMemo(() => title.trim().length > 0, [title]);
+  const canAddRecord = useMemo(() => title.trim().length > 0, [title]);
 
   const stats = useMemo(() => {
     if (!records.length) return { clinicCount: 0, lastVisitText: "Нет визитов" };
@@ -53,8 +58,8 @@ export default function VetScreen() {
     return { clinicCount, lastVisitText };
   }, [records]);
 
-  const addRecord = () => {
-    if (!canAdd) return;
+  const handleAddRecord = () => {
+    if (!canAddRecord) return;
     const newRecord: VetRecord = {
       id: createUid(),
       at: Date.now(),
@@ -68,7 +73,7 @@ export default function VetScreen() {
     setNote("");
   };
 
-  const removeRecord = (id: string) =>
+  const handleRemoveRecord = (id: string) =>
     setRecords((prev) => prev.filter((record) => record.id !== id));
 
   const heroBadgeText = records.length ? "Здоровье под контролем" : "Запланируйте прием";
@@ -102,7 +107,7 @@ export default function VetScreen() {
                     onChangeText={setTitle}
                     placeholder="Событие (например вакцинация)"
                   />
-                  <TimeRecorderButton label="Сохранить" onPress={addRecord} disabled={!canAdd} />
+                  <TimeRecorderButton label="Сохранить" onPress={handleAddRecord} disabled={!canAddRecord} />
                 </TimeRecorderRow>
                 <Input
                   value={clinic}
@@ -121,7 +126,7 @@ export default function VetScreen() {
           <SwipeableCardsListEmpty text="Добавьте первую запись о визите к ветеринару." />
 
           {records.map((record) => (
-            <VetListItem key={record.id} record={record} onRemove={removeRecord} />
+            <VetListItem key={record.id} record={record} onRemove={handleRemoveRecord} />
           ))}
         </SwipeableCardsList>
       </SafeAreaView>
@@ -129,27 +134,28 @@ export default function VetScreen() {
   );
 }
 
-function VetListItem({
-  record,
-  onRemove,
-}: {
-  record: VetRecord;
-  onRemove: (id: string) => void;
-}) {
-  const { gradientColors, cardTitle, cardSubtitle, clinicLabel, noteText } =
-    useVetCardDetails(record);
+function VetListItem({ record, onRemove }: VetListItemProps) {
+  const {
+    gradientColors,
+    cardTitle,
+    cardSubtitle,
+    badgeText,
+    noteText
+  } = useVetCardDetails(record);
+
+  const handleRemove = () => onRemove(record.id);
 
   return (
     <SwipeableCardsListItem
       id={record.id}
       title={cardTitle}
       subtitle={cardSubtitle}
-      durationText={clinicLabel}
+      badgeText={badgeText}
       note={noteText}
       gradientColors={gradientColors}
       durationIcon="medical-bag"
       noteIcon="stethoscope"
-      onRemove={() => onRemove(record.id)}
+      onRemove={handleRemove}
     />
   );
 }

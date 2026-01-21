@@ -11,10 +11,10 @@ export function useVetCardDetails(record: VetRecord) {
     const gradientColors = getGradient(record);
     const cardTitle = record.title;
     const cardSubtitle = formatDateTime(record.at);
-    const clinicLabel = record.clinic?.trim() || "Домашний уход";
+    const badgeText = record.clinic?.trim() || "Домашний уход";
     const noteText = record.note?.trim();
 
-    return { gradientColors, cardTitle, cardSubtitle, clinicLabel, noteText };
+    return { gradientColors, cardTitle, cardSubtitle, badgeText, noteText };
   }, [record.title, record.at, record.clinic, record.note]);
 }
 

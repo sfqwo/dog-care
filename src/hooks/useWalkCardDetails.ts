@@ -9,9 +9,9 @@ const LONG = ["#ede9fe", "#ddd6fe", "#c4b5fd"] as const;
 export function useWalkCardDetails(walk: Walk) {
   return useMemo(() => {
     const gradientColors = getGradient(walk.durationMin);
-    const durationLabel = getLabel(walk.durationMin);
-    const startedAtText = formatDateTime(walk.startedAt);
-    return { gradientColors, durationLabel, startedAtText };
+    const cardSubtitle = getLabel(walk.durationMin);
+    const cardTitle = formatDateTime(walk.startedAt);
+    return { gradientColors, cardSubtitle, cardTitle };
   }, [walk.durationMin, walk.startedAt]);
 }
 

@@ -27,6 +27,11 @@ import { formatDateTime } from "@/src/ui/format";
 import { createUid } from "@/src/utils/createUid";
 import { feedingStyles, pageGradient } from "./feeding.styles";
 
+type FeedingListItemProps = {
+  feeding: Feeding;
+  onRemove: (id: string) => void;
+}
+
 export default function FeedingScreen() {
   const [items, setItems] = useState<Feeding[]>([]);
   const [grams, setGrams] = useState("");
@@ -40,7 +45,7 @@ export default function FeedingScreen() {
     saveJSON(STORAGE_KEYS.FEEDING, items);
   }, [items]);
 
-  const canAdd = useMemo(() => {
+  const canAddFeeding = useMemo(() => {
     const n = Number(grams);
     return Number.isFinite(n) && n > 0;
   }, [grams]);
@@ -52,8 +57,8 @@ export default function FeedingScreen() {
     return { totalGrams, avgGrams };
   }, [items]);
 
-  const addFeeding = () => {
-    if (!canAdd) return;
+  const handleAddFeeding = () => {
+    if (!canAddFeeding) return;
     const newItem: Feeding = {
       id: createUid(),
       at: Date.now(),
@@ -65,7 +70,7 @@ export default function FeedingScreen() {
     setFood("");
   };
 
-  const removeFeeding = (id: string) => setItems((p) => p.filter((x) => x.id !== id));
+  const handleRemoveFeeding = (id: string) => setItems((p) => p.filter((x) => x.id !== id));
 
   const lastMealText = items[0] ? formatDateTime(items[0].at) : "Еще нет записей";
   const heroBadgeText = items.length ? "Сытый пёс" : "Пора покормить питомца";
@@ -100,7 +105,7 @@ export default function FeedingScreen() {
                     placeholder="Граммы (например 120)"
                     keyboardType="number-pad"
                   />
-                  <TimeRecorderButton label="Добавить" onPress={addFeeding} disabled={!canAdd} />
+                  <TimeRecorderButton label="Добавить" onPress={handleAddFeeding} disabled={!canAddFeeding} />
                 </TimeRecorderRow>
                 <Input
                   value={food}
@@ -113,7 +118,7 @@ export default function FeedingScreen() {
           <SwipeableCardsListEmpty text="Журнал пуст — добавьте первую миску." />
 
           {items.map((item) => (
-            <FeedingListItem key={item.id} feeding={item} onRemove={removeFeeding} />
+            <FeedingListItem key={item.id} feeding={item} onRemove={handleRemoveFeeding} />
           ))}
         </SwipeableCardsList>
       </SafeAreaView>
@@ -121,26 +126,27 @@ export default function FeedingScreen() {
   );
 }
 
-function FeedingListItem({
-  feeding,
-  onRemove,
-}: {
-  feeding: Feeding;
-  onRemove: (id: string) => void;
-}) {
-  const { gradientColors, portionLabel, recordedAtText, noteText } = useFeedingCardDetails(feeding);
+function FeedingListItem({ feeding, onRemove }: FeedingListItemProps) {
+  const {
+    gradientColors,
+    cardSubtitle,
+    cardTitle,
+    noteText,
+  } = useFeedingCardDetails(feeding);
+
+  const handleRemove = () => onRemove(feeding.id);
 
   return (
     <SwipeableCardsListItem
       id={feeding.id}
-      title={recordedAtText}
-      subtitle={portionLabel}
-      durationText={`${feeding.grams} г`}
+      title={cardTitle}
+      subtitle={cardSubtitle}
+      badgeText={`${feeding.grams} г`}
       note={noteText}
       gradientColors={gradientColors}
       durationIcon="food-variant"
       noteIcon="silverware-fork-knife"
-      onRemove={() => onRemove(feeding.id)}
+      onRemove={handleRemove}
     />
   );
 }

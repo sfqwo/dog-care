@@ -26,7 +26,7 @@ type SwipeableCardsListItemProps = {
   id: string;
   title: string;
   subtitle: string;
-  durationText: string;
+  badgeText: string;
   gradientColors: readonly [string, string, string];
   onRemove: () => void;
   note?: string;
@@ -109,7 +109,7 @@ export function SwipeableCardsList({
 export function SwipeableCardsListItem({
   title,
   subtitle,
-  durationText,
+  badgeText,
   gradientColors,
   note,
   helperText = "Свайп влево или долгое нажатие — удалить",
@@ -158,7 +158,7 @@ export function SwipeableCardsListItem({
             </View>
             <View style={styles.durationPill}>
               <MaterialCommunityIcons name={durationIcon} size={16} style={styles.icon} />
-              <Text style={styles.durationValue}>{durationText}</Text>
+              <Text style={styles.durationValue}>{badgeText}</Text>
             </View>
           </View>
 

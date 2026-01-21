@@ -9,10 +9,10 @@ const FEAST = ["#fef3c7", "#fde68a", "#fcd34d"] as const;
 export function useFeedingCardDetails(feeding: Feeding) {
   return useMemo(() => {
     const gradientColors = getGradient(feeding.grams);
-    const portionLabel = getPortionLabel(feeding.grams);
-    const recordedAtText = formatDateTime(feeding.at);
+    const cardSubtitle = getPortionLabel(feeding.grams);
+    const cardTitle = formatDateTime(feeding.at);
     const noteText = feeding.food ? `Рацион: ${feeding.food}` : undefined;
-    return { gradientColors, portionLabel, recordedAtText, noteText };
+    return { gradientColors, cardSubtitle, cardTitle, noteText };
   }, [feeding.grams, feeding.food, feeding.at]);
 }
 

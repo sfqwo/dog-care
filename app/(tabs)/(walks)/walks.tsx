@@ -27,6 +27,8 @@ import { formatDateTime } from "@/src/ui/format";
 import { pageGradient, walkStyles } from "./walks.styles";
 import { LinearGradient } from "expo-linear-gradient";
 
+type WalkListItemProps = { walk: Walk; onRemove: (id: string) => void };
+
 export default function WalksScreen() {
   const [walks, setWalks] = useState<Walk[]>([]);
   const [durationMin, setDurationMin] = useState("");
@@ -40,7 +42,7 @@ export default function WalksScreen() {
     saveJSON(STORAGE_KEYS.WALKS, walks);
   }, [walks]);
 
-  const canAdd = useMemo(() => {
+  const canAddWalk = useMemo(() => {
     const n = Number(durationMin);
     return Number.isFinite(n) && n > 0;
   }, [durationMin]);
@@ -53,8 +55,8 @@ export default function WalksScreen() {
     return { totalMinutes, avgDuration, longest };
   }, [walks]);
 
-  const addWalk = () => {
-    if (!canAdd) return;
+  const handleAddWalk = () => {
+    if (!canAddWalk) return;
     const newItem: Walk = {
       id: createUid(),
       startedAt: Date.now(),
@@ -66,7 +68,7 @@ export default function WalksScreen() {
     setNote("");
   };
 
-  const removeWalk = (id: string) => setWalks((prev) => prev.filter((w) => w.id !== id));
+  const handleRemoveWalk = (id: string) => setWalks((prev) => prev.filter((w) => w.id !== id));
 
   const lastWalkText = walks[0] ? formatDateTime(walks[0].startedAt) : "Еще нет записей";
   const heroBadgeText = walks.length ? "Свежий воздух" : "Готовы гулять?";
@@ -101,7 +103,7 @@ export default function WalksScreen() {
                     placeholder="Минуты (например 25)"
                     keyboardType="number-pad"
                   />
-                  <TimeRecorderButton label="Добавить" onPress={addWalk} disabled={!canAdd} />
+                  <TimeRecorderButton label="Добавить" onPress={handleAddWalk} disabled={!canAddWalk} />
                 </TimeRecorderRow>
                 <Input
                   value={note}
@@ -114,7 +116,7 @@ export default function WalksScreen() {
           </SwipeableCardsListHeader>
           <SwipeableCardsListEmpty text="Список пуст — начните с короткой прогулки и сохраните её здесь." />
           {walks.map((item) => (
-            <WalkListItem key={item.id} walk={item} onRemove={removeWalk} />
+            <WalkListItem key={item.id} walk={item} onRemove={handleRemoveWalk} />
           ))}
         </SwipeableCardsList>
       </SafeAreaView>
@@ -122,18 +124,20 @@ export default function WalksScreen() {
   );
 }
 
-function WalkListItem({ walk, onRemove }: { walk: Walk; onRemove: (id: string) => void }) {
-  const { gradientColors, durationLabel, startedAtText } = useWalkCardDetails(walk);
+function WalkListItem({ walk, onRemove }: WalkListItemProps) {
+  const { gradientColors, cardSubtitle, cardTitle } = useWalkCardDetails(walk);
+
+  const handleRemove = () => onRemove(walk.id);
 
   return (
     <SwipeableCardsListItem
       id={walk.id}
-      title={startedAtText}
-      subtitle={durationLabel}
-      durationText={`${walk.durationMin} мин`}
+      title={cardTitle}
+      subtitle={cardSubtitle}
+      badgeText={`${walk.durationMin} мин`}
       note={walk.note}
       gradientColors={gradientColors}
-      onRemove={() => onRemove(walk.id)}
+      onRemove={handleRemove}
     />
   );
 }
