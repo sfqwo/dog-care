@@ -23,7 +23,6 @@ import type { VetRecord } from "@/src/domain/types";
 import { useVetCardDetails } from "@/src/hooks/useVetCardDetails";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import { STORAGE_KEYS } from "@/src/storage/keys";
-import { formatDateTime } from "@/src/ui/format";
 import { createUid } from "@/src/utils/createUid";
 import { useVetStats } from "@/src/hooks/useVetStats";
 import { pageGradient, vetStyles } from "./vet.styles";

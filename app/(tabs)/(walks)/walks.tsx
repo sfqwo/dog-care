@@ -20,8 +20,7 @@ import {
 } from "@/src/components";
 import { useWalkCardDetails } from "@/src/hooks/useWalkCardDetails";
 import { useWalkStats } from "@/src/hooks/useWalkStats";
-import { createUid } from "@/src/utils/createUid";
-import { isPositiveNumber } from "@/src/utils/isPositiveNumber";
+import { createUid, isPositiveNumber } from "@/src/utils";
 import { STORAGE_KEYS } from "@/src/storage/keys";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import type { Walk } from "@/src/domain/types";
