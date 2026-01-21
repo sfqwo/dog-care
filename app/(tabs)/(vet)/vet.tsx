@@ -25,6 +25,7 @@ import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import { STORAGE_KEYS } from "@/src/storage/keys";
 import { formatDateTime } from "@/src/ui/format";
 import { createUid } from "@/src/utils/createUid";
+import { useVetStats } from "@/src/hooks/useVetStats";
 import { pageGradient, vetStyles } from "./vet.styles";
 
 type VetListItemProps = {
@@ -37,6 +38,7 @@ export default function VetScreen() {
   const [title, setTitle] = useState("");
   const [clinic, setClinic] = useState("");
   const [note, setNote] = useState("");
+  const stats = useVetStats(records);
 
   useEffect(() => {
     loadJSON<VetRecord[]>(STORAGE_KEYS.VET, []).then(setRecords);
@@ -47,16 +49,6 @@ export default function VetScreen() {
   }, [records]);
 
   const canAddRecord = useMemo(() => title.trim().length > 0, [title]);
-
-  const stats = useMemo(() => {
-    if (!records.length) return { clinicCount: 0, lastVisitText: "Нет визитов" };
-    const clinicNames = records
-      .map((record) => record.clinic?.trim())
-      .filter((value): value is string => Boolean(value));
-    const clinicCount = new Set(clinicNames).size;
-    const lastVisitText = formatDateTime(records[0].at);
-    return { clinicCount, lastVisitText };
-  }, [records]);
 
   const handleAddRecord = () => {
     if (!canAddRecord) return;
