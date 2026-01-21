@@ -26,6 +26,7 @@ import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import { STORAGE_KEYS } from "@/src/storage/keys";
 import { formatDateTime } from "@/src/ui/format";
 import { createUid } from "@/src/utils/createUid";
+import { isPositiveNumber } from "@/src/utils/isPositiveNumber";
 import { feedingStyles, pageGradient } from "./feeding.styles";
 
 type FeedingListItemProps = {
@@ -47,10 +48,7 @@ export default function FeedingScreen() {
     saveJSON(STORAGE_KEYS.FEEDING, items);
   }, [items]);
 
-  const canAddFeeding = useMemo(() => {
-    const n = Number(grams);
-    return Number.isFinite(n) && n > 0;
-  }, [grams]);
+  const canAddFeeding = useMemo(() => isPositiveNumber(grams), [grams]);
 
   const handleAddFeeding = () => {
     if (!canAddFeeding) return;

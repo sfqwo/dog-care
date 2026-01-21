@@ -21,6 +21,7 @@ import {
 import { useWalkCardDetails } from "@/src/hooks/useWalkCardDetails";
 import { useWalkStats } from "@/src/hooks/useWalkStats";
 import { createUid } from "@/src/utils/createUid";
+import { isPositiveNumber } from "@/src/utils/isPositiveNumber";
 import { STORAGE_KEYS } from "@/src/storage/keys";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import type { Walk } from "@/src/domain/types";
@@ -44,10 +45,7 @@ export default function WalksScreen() {
     saveJSON(STORAGE_KEYS.WALKS, walks);
   }, [walks]);
 
-  const canAddWalk = useMemo(() => {
-    const n = Number(durationMin);
-    return Number.isFinite(n) && n > 0;
-  }, [durationMin]);
+  const canAddWalk = useMemo(() => isPositiveNumber(durationMin), [durationMin]);
 
   const handleAddWalk = () => {
     if (!canAddWalk) return;
