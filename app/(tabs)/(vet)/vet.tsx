@@ -87,7 +87,7 @@ export default function VetScreen() {
               <StatsBlocks>
                 <StatsBlock label="Записей" value={records.length} />
                 <StatsBlock label="Клиник" value={stats.clinicCount} />
-                <StatsBlock label="Последний визит" value={stats.lastVisitText} />
+                <StatsBlock label="Прошлый визит" value={stats.lastVisitText} />
               </StatsBlocks>
 
               <TimeRecorder>

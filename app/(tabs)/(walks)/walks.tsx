@@ -81,7 +81,7 @@ export default function WalksScreen() {
               <StatsBlocks>
                 <StatsBlock label="Прогулок" value={walks.length} />
                 <StatsBlock label="Минут суммарно" value={stats.totalMinutes} />
-                <StatsBlock label="Средняя длительность" value={`${stats.avgDuration} мин`} />
+                <StatsBlock label="Среднее время" value={`${stats.avgDuration} мин`} />
               </StatsBlocks>
 
               <TimeRecorder>

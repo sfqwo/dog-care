@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   },
   statValue: {
     marginTop: 6,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "700",
     color: "#0f172a",
   },
