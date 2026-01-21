@@ -21,6 +21,7 @@ import {
 } from "@/src/components";
 import type { Feeding } from "@/src/domain/types";
 import { useFeedingCardDetails } from "@/src/hooks/useFeedingCardDetails";
+import { useFeedingStats } from "@/src/hooks/useFeedingStats";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import { STORAGE_KEYS } from "@/src/storage/keys";
 import { formatDateTime } from "@/src/ui/format";
@@ -36,6 +37,7 @@ export default function FeedingScreen() {
   const [items, setItems] = useState<Feeding[]>([]);
   const [grams, setGrams] = useState("");
   const [food, setFood] = useState("");
+  const stats = useFeedingStats(items);
 
   useEffect(() => {
     loadJSON<Feeding[]>(STORAGE_KEYS.FEEDING, []).then(setItems);
@@ -49,13 +51,6 @@ export default function FeedingScreen() {
     const n = Number(grams);
     return Number.isFinite(n) && n > 0;
   }, [grams]);
-
-  const stats = useMemo(() => {
-    if (!items.length) return { totalGrams: 0, avgGrams: 0 };
-    const totalGrams = items.reduce((sum, meal) => sum + meal.grams, 0);
-    const avgGrams = Math.max(1, Math.round(totalGrams / items.length));
-    return { totalGrams, avgGrams };
-  }, [items]);
 
   const handleAddFeeding = () => {
     if (!canAddFeeding) return;
