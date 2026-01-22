@@ -19,3 +19,39 @@ export type VetRecord = {
   note?: string;
   clinic?: string;
 };
+
+export type Pet = {
+  id: string;
+  name: string;
+  breed?: string;
+  birthdate?: string;
+  species?: string;
+  gender?: string;
+  weight?: string;
+  notes?: string;
+};
+
+export type PetProfilePayload = {
+  name: string;
+  breed?: string;
+  birthdate?: string;
+  species?: string;
+  gender?: string;
+  weight?: string;
+  notes?: string;
+};
+
+export type UserProfile = {
+  ownerName: string;
+  email?: string;
+  phone?: string;
+  city?: string;
+  pets: Pet[];
+};
+
+export type UserProfilePayload = {
+  ownerName: string;
+  email?: string;
+  phone?: string;
+  city?: string;
+};

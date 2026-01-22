@@ -144,7 +144,7 @@ function VetListItem({ record, onRemove }: VetListItemProps) {
       badgeText={badgeText}
       note={noteText}
       gradientColors={gradientColors}
-      durationIcon="medical-bag"
+      badgeIcon="medical-bag"
       noteIcon="stethoscope"
       onRemove={handleRemove}
     />

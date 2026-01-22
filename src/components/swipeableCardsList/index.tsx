@@ -29,10 +29,10 @@ type SwipeableCardsListItemProps = {
   badgeText: string;
   gradientColors: readonly [string, string, string];
   onRemove: () => void;
+  onPress?: () => void;
   note?: string;
-  helperText?: string;
   renderRightActions?: () => ReactNode;
-  durationIcon?: IconName;
+  badgeIcon?: IconName;
   noteIcon?: IconName;
   helperIcon?: IconName;
 };
@@ -112,19 +112,23 @@ export function SwipeableCardsListItem({
   badgeText,
   gradientColors,
   note,
-  helperText = "Свайп влево или долгое нажатие — удалить",
   onRemove,
+  onPress,
   renderRightActions,
-  durationIcon = "paw-outline",
+  badgeIcon = "paw-outline",
   noteIcon = "notebook-outline",
   helperIcon = "gesture-swipe-left",
 }: SwipeableCardsListItemProps) {
   useSwipeableCardsListGuard("SwipeableCardsListItem");
+  const hasCustomPress = typeof onPress === "function";
+  const helperText = hasCustomPress ? "Свайп влево — удалить" : "Свайп влево или долгое нажатие — удалить";
   const gradientArray = [...gradientColors] as [string, string, string];
+  const handlePress = hasCustomPress ? onPress : undefined;
+  const handleLongPress = hasCustomPress ? onPress : onRemove;
   const rightActions =
     renderRightActions ??
     (() => (
-      <Pressable style={styles.defaultAction} onPress={() => onRemove?.()}>
+      <Pressable style={styles.defaultAction} onPress={onRemove}>
         <Text style={styles.defaultActionText}>Удалить</Text>
       </Pressable>
     ));
@@ -143,7 +147,8 @@ export function SwipeableCardsListItem({
     >
       <Pressable
         style={({ pressed }) => [styles.cardPressable, pressed && styles.cardPressablePressed]}
-        onLongPress={onRemove}
+        onLongPress={handleLongPress}
+        onPress={handlePress}
       >
         <LinearGradient
           colors={gradientArray}
@@ -157,7 +162,7 @@ export function SwipeableCardsListItem({
               <Text style={styles.cardSubtitle}>{subtitle}</Text>
             </View>
             <View style={styles.durationPill}>
-              <MaterialCommunityIcons name={durationIcon} size={16} style={styles.icon} />
+              <MaterialCommunityIcons name={badgeIcon} size={16} style={styles.icon} />
               <Text style={styles.durationValue}>{badgeText}</Text>
             </View>
           </View>

@@ -3,3 +3,7 @@ export * from "./statsBlocks";
 export * from "./heroCard";
 export * from "./swipeableCardsList";
 export * from "./input";
+export * from "./modal";
+export * from "./ownerProfileModal";
+export * from "./petProfileModal";
+export * from "./ownerProfileCard";

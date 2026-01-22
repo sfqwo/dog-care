@@ -33,6 +33,15 @@ export default function TabsLayout() {
             ),
           }}
         />
+        <Tabs.Screen
+          name="(profile)/profile"
+          options={{
+            title: "Профиль",
+            tabBarIcon: ({ size, color }) => (
+              <Ionicons name="person-circle" size={size} color={color} />
+            ),
+          }}
+        />
       </Tabs>
     </GestureHandlerRootView>
   );

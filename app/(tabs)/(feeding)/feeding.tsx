@@ -135,9 +135,10 @@ function FeedingListItem({ feeding, onRemove }: FeedingListItemProps) {
       badgeText={`${feeding.grams} г`}
       note={noteText}
       gradientColors={gradientColors}
-      durationIcon="food-variant"
+      badgeIcon="food-variant"
       noteIcon="silverware-fork-knife"
       onRemove={handleRemove}
+      onPress={handleRemove}
     />
   );
 }

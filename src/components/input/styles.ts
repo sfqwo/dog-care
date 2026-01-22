@@ -9,6 +9,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 12,
     backgroundColor: "white",
+    minHeight: 46,
   },
   note: {
     minHeight: 48,
