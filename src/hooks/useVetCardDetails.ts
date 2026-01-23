@@ -15,7 +15,7 @@ export function useVetCardDetails(record: VetRecord) {
     const noteText = record.note?.trim();
 
     return { gradientColors, cardTitle, cardSubtitle, badgeText, noteText };
-  }, [record.title, record.at, record.clinic, record.note]);
+  }, [record]);
 }
 
 function getGradient(record: VetRecord) {

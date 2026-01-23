@@ -6,7 +6,10 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "lint": "expo lint --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run typecheck"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -27,6 +30,8 @@
   "devDependencies": {
     "@types/react": "~19.1.0",
     "babel-preset-expo": "^54.0.9",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~10.0.0",
     "typescript": "~5.9.2"
   },
   "private": true

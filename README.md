@@ -42,9 +42,6 @@ src/utils/           # Утилиты (генератор uid и т.д.)
 | `npm run ios`      | Запуск в iOS симуляторе       |
 | `npm run android`  | Запуск в Android эмуляторе    |
 | `npm run web`      | Запуск в браузере             |
-
-## Вклад
-
-1. Форкните репозиторий и создайте ветку из `main`.
-2. Внесите изменения и убедитесь, что `npx tsc --noEmit` проходит без ошибок.
-3. Отправьте pull request.
+| `npm run lint`     | Линт через `expo lint`        |
+| `npm run typecheck`| Проверка типов `tsc --noEmit` |
+| `npm test`         | Аlias на `npm run typecheck`  |

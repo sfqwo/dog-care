@@ -1,3 +1,4 @@
+import "@/src/setup";
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
