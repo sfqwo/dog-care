@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, View } from "react-native";
-import { styles } from "./styles";
 import type { InfoLineProps, OwnerProfileCardProps } from "./types";
+import { styles } from "./styles";
 
 export function OwnerProfileCard({ profile, onEdit }: OwnerProfileCardProps) {
   return (
@@ -10,7 +10,6 @@ export function OwnerProfileCard({ profile, onEdit }: OwnerProfileCardProps) {
       <InfoLine label="Email" value={profile.email} />
       <InfoLine label="Телефон" value={profile.phone} />
       <InfoLine label="Дата рождения" value={profile.birthdate} />
-      <InfoLine label="Город" value={profile.city} />
       <TouchableOpacity style={styles.button} onPress={onEdit}>
         <Text style={styles.buttonText}>Редактировать профиль</Text>
       </TouchableOpacity>

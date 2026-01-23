@@ -3,9 +3,13 @@
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
+    "resolveJsonModule": true,
     "paths": {
       "@/*": ["./*"],
-      "@dog-care/input": ["packages/input/src"]
+      "@dog-care/input": ["packages/ui/input/src"],
+      "@dog-care/select": ["packages/ui/select"],
+      "@dog-care/core/shared": ["packages/core/shared"],
+      "@dog-care/core/utils": ["packages/core/utils"]
     },
   }
 }

@@ -46,7 +46,6 @@ export type UserProfile = {
   email?: string;
   phone?: string;
   birthdate?: string;
-  city?: string;
   pets: Pet[];
 };
 
@@ -55,5 +54,4 @@ export type UserProfilePayload = {
   email?: string;
   phone?: string;
   birthdate?: string;
-  city?: string;
 };

@@ -14,7 +14,7 @@ import {
 } from "@/src/components";
 import type { Pet } from "@/src/domain/types";
 import { ProfileProvider, useProfileContext } from "@/src/hooks/profileContext";
-import { formatGender, formatWeight } from "@/src/utils";
+import { formatGender, formatWeight, getSpeciesLabel } from "@dog-care/core/shared";
 import { profileStyles, pageGradient, petGradient } from "./profile.styles";
 import type { PetListItemProps } from "./profile.types";
 
@@ -35,9 +35,8 @@ function ProfileScreenContent() {
     openEditPetModal,
   } = useProfileContext();
 
-  const cityLabel = profile.city?.trim() ? ` • ${profile.city.trim()}` : "";
   const heroSubtitle = profile.ownerName
-    ? `Владелец: ${profile.ownerName}${cityLabel}`
+    ? `Владелец: ${profile.ownerName}`
     : "Расскажите немного о себе";
   const heroBadgeText = profile.pets.length
     ? `${profile.pets.length} питомца`
@@ -94,14 +93,18 @@ function ProfileScreenContent() {
 }
 
 function PetListItem({ pet, onRemove, onEdit }: PetListItemProps) {
-  const subtitleParts = [pet.species, pet.breed, formatGender(pet.gender)];
+  const subtitleParts = [
+    getSpeciesLabel(pet.species),
+    pet.breed,
+    formatGender(pet.gender),
+  ];
   const subtitle =
     subtitleParts.filter(Boolean).join(" • ") || "Информация о виде и породе не указана";
 
   const weightLabel = pet.weight?.trim();
   const badgeText = weightLabel
     ? formatWeight(weightLabel)
-    : pet.species ?? "Любимый друг";
+    : getSpeciesLabel(pet.species) ?? "Любимый друг";
 
   const { note, noteIcon } = buildPetNote(pet);
 

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { UserProfile, UserProfilePayload } from "@/src/domain/types";
 import { useProfileContext } from "@/src/hooks/profileContext";
-import { Input } from "@dog-care/input";
+import { Input } from "@/packages/ui/input/src";
 import { Modal, ModalActionButton, ModalActions, ModalSubtitle, ModalTitle } from "../modal";
 import type { OwnerProfileFields, OwnerProfileModalProps } from "./types";
 
@@ -28,9 +28,8 @@ export function OwnerProfileModal({ visible, onClose }: OwnerProfileModalProps) 
       email: form.email?.trim(),
       phone: form.phone?.trim(),
       birthdate: form.birthdate?.trim(),
-      city: form.city?.trim(),
     };
-    updateOwner(payload)
+    updateOwner(payload);
   };
 
   return (
@@ -55,11 +54,6 @@ export function OwnerProfileModal({ visible, onClose }: OwnerProfileModalProps) 
         onChangeText={changeHandler("phone")}
         placeholder="Телефон"
         keyboardType="phone-pad"
-      />
-      <Input
-        value={form.city ?? ""}
-        onChangeText={changeHandler("city")}
-        placeholder="Город / район"
       />
       <ModalActions>
         <ModalActionButton closeOnPress>Отменить</ModalActionButton>

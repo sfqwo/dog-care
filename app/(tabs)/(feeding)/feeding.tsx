@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import { Input } from "@dog-care/input";
+import { Input } from "@/packages/ui/input/src";
 import {
   HeroCard,
   HeroCardBadge,
@@ -24,7 +24,7 @@ import { useFeedingCardDetails } from "@/src/hooks/useFeedingCardDetails";
 import { useFeedingStats } from "@/src/hooks/useFeedingStats";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import { STORAGE_KEYS } from "@/src/storage/keys";
-import { createUid, isPositiveNumber, formatDateTime } from "@/src/utils";
+import { createUid, isPositiveNumber, formatDateTime } from "@dog-care/core/utils";
 import { feedingStyles, pageGradient } from "./feeding.styles";
 import type { FeedingListItemProps } from "./feeding.types";
 

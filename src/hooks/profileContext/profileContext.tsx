@@ -7,50 +7,35 @@ import {
   useMemo,
   useState,
 } from "react";
-import type {
-  Pet,
-  PetProfilePayload,
-  UserProfile,
-  UserProfilePayload,
-} from "@/src/domain/types";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import { STORAGE_KEYS } from "@/src/storage/keys";
-import { createUid } from "@/src/utils/createUid";
+import { createUid } from "@dog-care/core/utils";
 import { PetProfileModal } from "@/src/components/petProfileModal";
-import { OwnerProfileModal } from "../components";
+import { OwnerProfileModal } from "../../components";
+import type { ProfileContextValue } from "./types";
 
-type ProfileContextValue = {
-  profile: UserProfile;
-  editingPet: Pet | null;
-  addPet: (pet: PetProfilePayload) => void;
-  updatePet: (pet: Pet) => void;
-  removePet: (id: string) => void;
-  updateOwner: (profile: UserProfilePayload) => void;
-  openEditOwnerModal: () => void;
-  openAddPetModal: () => void;
-  openEditPetModal: (pet: Pet) => void;
-};
-
-const DEFAULT_PROFILE: UserProfile = {
+const DEFAULT_PROFILE: ProfileContextValue["profile"] = {
   ownerName: "",
   email: "",
   phone: "",
   birthdate: "",
-  city: "",
   pets: [],
 };
 
 const ProfileContext = createContext<ProfileContextValue | undefined>(undefined);
 
 export function ProfileProvider({ children }: { children: ReactNode }) {
-  const [profile, setProfile] = useState<UserProfile>(DEFAULT_PROFILE);
-  const [editingPet, setEditingPet] = useState<Pet | null>(null);
+  const [profile, setProfile] = useState<ProfileContextValue["profile"]>(DEFAULT_PROFILE);
+  const [editingPet, setEditingPet] = useState<ProfileContextValue["editingPet"] | null>(null);
   const [petModalVisible, setPetModalVisible] = useState(false);
   const [ownerModalVisible, setOwnerModalVisible] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
-    loadJSON<UserProfile>(STORAGE_KEYS.PROFILE, DEFAULT_PROFILE).then((data) => {
+    loadJSON<ProfileContextValue["profile"]>(
+      STORAGE_KEYS.PROFILE,
+      DEFAULT_PROFILE,
+    ).then((data) => {
       if (isMounted) {
         setProfile(data ?? DEFAULT_PROFILE);
       }
@@ -64,7 +49,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     saveJSON(STORAGE_KEYS.PROFILE, profile);
   }, [profile]);
 
-  const addPet = useCallback((pet: PetProfilePayload) => {
+  const addPet = useCallback<ProfileContextValue["addPet"]>((pet) => {
     setProfile((prev) => ({
       ...prev,
       pets: [
@@ -77,7 +62,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
-  const updatePet = useCallback((updatedPet: Pet) => {
+  const updatePet = useCallback<ProfileContextValue["updatePet"]>((updatedPet) => {
     setProfile((prev) => ({
       ...prev,
       pets: prev.pets.map((pet) =>
@@ -91,7 +76,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
-  const removePet = useCallback((id: string) => {
+  const removePet = useCallback<ProfileContextValue["removePet"]>((id) => {
     setProfile((prev) => ({ ...prev, pets: prev.pets.filter((pet) => pet.id !== id) }));
     setEditingPet((current) => {
       if (current?.id === id) {
@@ -102,7 +87,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const updateOwner = useCallback((nextProfile: UserProfilePayload) => {
+  const updateOwner = useCallback<ProfileContextValue["updateOwner"]>((nextProfile) => {
     setProfile((prevProfile) => ({ ...prevProfile, ...nextProfile }));
   }, []);
 
@@ -115,7 +100,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     setPetModalVisible(true);
   }, []);
 
-  const openEditPetModal = useCallback((pet: Pet) => {
+  const openEditPetModal = useCallback<ProfileContextValue["openEditPetModal"]>((pet) => {
     setEditingPet(pet);
     setPetModalVisible(true);
   }, []);

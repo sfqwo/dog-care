@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { Walk } from "@/src/domain/types";
-import { formatDateTime } from "@/src/utils";
+import { formatDateTime } from "@dog-care/core/utils";
 
 const SHORT = ["#fdf2f8", "#fce7f3", "#ffe4e6"] as const;
 const MEDIUM = ["#ecfccb", "#d9f99d", "#bef264"] as const;

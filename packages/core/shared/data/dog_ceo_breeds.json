@@ -1,0 +1,843 @@
+{
+  "meta": {
+    "source": "Dog CEO - Dog API (https://dog.ceo/api/breeds/list/all)",
+    "retrieved_at": "2026-01-23T16:37:20.102479+01:00",
+    "note": "name_ru is a best-effort Russian common-name translation of the English breed name (not an official FCI registry field)."
+  },
+  "breeds": [
+    {
+      "id": 1,
+      "code": "affenpinscher",
+      "name_en": "Affenpinscher",
+      "name_ru": "Аффенпинчер"
+    },
+    {
+      "id": 3,
+      "code": "airedale",
+      "name_en": "Airedale Terrier",
+      "name_ru": "Эрдельтерьер"
+    },
+    {
+      "id": 4,
+      "code": "akita",
+      "name_en": "Akita",
+      "name_ru": "Акита"
+    },
+    {
+      "id": 5,
+      "code": "appenzeller",
+      "name_en": "Appenzeller Sennenhund",
+      "name_ru": "Аппенцеллер зенненхунд"
+    },
+    {
+      "id": 6,
+      "code": "australian-kelpie",
+      "name_en": "Australian Kelpie",
+      "name_ru": "Австралийский келпи"
+    },
+    {
+      "id": 7,
+      "code": "australian-shepherd",
+      "name_en": "Australian Shepherd",
+      "name_ru": "Австралийская овчарка"
+    },
+    {
+      "id": 8,
+      "code": "bakharwal-indian",
+      "name_en": "Bakharwal Dog",
+      "name_ru": "Бакхарвальская собака"
+    },
+    {
+      "id": 9,
+      "code": "basenji",
+      "name_en": "Basenji",
+      "name_ru": "Басенджи"
+    },
+    {
+      "id": 10,
+      "code": "beagle",
+      "name_en": "Beagle",
+      "name_ru": "Бигль"
+    },
+    {
+      "id": 11,
+      "code": "bluetick",
+      "name_en": "Bluetick Coonhound",
+      "name_ru": "Блюттик-кунхаунд"
+    },
+    {
+      "id": 12,
+      "code": "borzoi",
+      "name_en": "Borzoi",
+      "name_ru": "Русская псовая борзая"
+    },
+    {
+      "id": 13,
+      "code": "bouvier",
+      "name_en": "Bouvier des Flandres",
+      "name_ru": "Фландрский бувье"
+    },
+    {
+      "id": 14,
+      "code": "boxer",
+      "name_en": "Boxer",
+      "name_ru": "Боксер"
+    },
+    {
+      "id": 15,
+      "code": "brabancon",
+      "name_en": "Brussels Griffon (Petit Brabançon)",
+      "name_ru": "Пти-брабансон"
+    },
+    {
+      "id": 16,
+      "code": "briard",
+      "name_en": "Briard",
+      "name_ru": "Бриар"
+    },
+    {
+      "id": 17,
+      "code": "buhund-norwegian",
+      "name_en": "Norwegian Buhund",
+      "name_ru": "Норвежский бухунд"
+    },
+    {
+      "id": 18,
+      "code": "bulldog-boston",
+      "name_en": "Boston Terrier",
+      "name_ru": "Бостон-терьер"
+    },
+    {
+      "id": 19,
+      "code": "bulldog-english",
+      "name_en": "English Bulldog",
+      "name_ru": "Английский бульдог"
+    },
+    {
+      "id": 20,
+      "code": "bulldog-french",
+      "name_en": "French Bulldog",
+      "name_ru": "Французский бульдог"
+    },
+    {
+      "id": 21,
+      "code": "bullterrier-staffordshire",
+      "name_en": "Staffordshire Bullterrier",
+      "name_ru": "Стаффордширский бультерьер"
+    },
+    {
+      "id": 22,
+      "code": "cattledog-australian",
+      "name_en": "Australian Cattle Dog",
+      "name_ru": "Австралийская пастушья собака"
+    },
+    {
+      "id": 24,
+      "code": "chihuahua",
+      "name_en": "Chihuahua",
+      "name_ru": "Чихуахуа"
+    },
+    {
+      "id": 26,
+      "code": "chow",
+      "name_en": "Chow Chow",
+      "name_ru": "Чау-чау"
+    },
+    {
+      "id": 27,
+      "code": "clumber",
+      "name_en": "Clumber Spaniel",
+      "name_ru": "Кламбер-спаниель"
+    },
+    {
+      "id": 29,
+      "code": "collie-border",
+      "name_en": "Border Collie",
+      "name_ru": "Бордер-колли"
+    },
+    {
+      "id": 30,
+      "code": "coonhound",
+      "name_en": "Coonhound",
+      "name_ru": "Кунхаунд"
+    },
+    {
+      "id": 31,
+      "code": "corgi-cardigan",
+      "name_en": "Cardigan Welsh Corgi",
+      "name_ru": "Вельш-корги-кардиган"
+    },
+    {
+      "id": 32,
+      "code": "cotondetulear",
+      "name_en": "Coton de Tulear",
+      "name_ru": "Котон-де-тулеар"
+    },
+    {
+      "id": 33,
+      "code": "dachshund",
+      "name_en": "Dachshund",
+      "name_ru": "Такса"
+    },
+    {
+      "id": 34,
+      "code": "dalmatian",
+      "name_en": "Dalmatian",
+      "name_ru": "Далматин"
+    },
+    {
+      "id": 35,
+      "code": "dane-great",
+      "name_en": "Great Dane",
+      "name_ru": "Немецкий дог"
+    },
+    {
+      "id": 36,
+      "code": "danish-swedish",
+      "name_en": "Danish–Swedish Farmdog",
+      "name_ru": "Датско-шведская фермерская собака"
+    },
+    {
+      "id": 37,
+      "code": "deerhound-scottish",
+      "name_en": "Scottish Deerhound",
+      "name_ru": "Шотландский дирхаунд"
+    },
+    {
+      "id": 40,
+      "code": "doberman",
+      "name_en": "Doberman",
+      "name_ru": "Доберман"
+    },
+    {
+      "id": 41,
+      "code": "elkhound-norwegian",
+      "name_en": "Norwegian Elkhound",
+      "name_ru": "Норвежский элкхаунд"
+    },
+    {
+      "id": 42,
+      "code": "entlebucher",
+      "name_en": "Entlebucher Mountain Dog",
+      "name_ru": "Энтлебухер зенненхунд"
+    },
+    {
+      "id": 44,
+      "code": "finnish-lapphund",
+      "name_en": "Finnish Lapphund",
+      "name_ru": "Финский лаппхунд"
+    },
+    {
+      "id": 45,
+      "code": "frise-bichon",
+      "name_en": "Bichon Frise",
+      "name_ru": "Бишон-фризе"
+    },
+    {
+      "id": 47,
+      "code": "german-shepherd",
+      "name_en": "German Shepherd",
+      "name_ru": "Немецкая овчарка"
+    },
+    {
+      "id": 48,
+      "code": "greyhound-indian",
+      "name_en": "Mudhol Hound",
+      "name_ru": "Мудхольская борзая"
+    },
+    {
+      "id": 49,
+      "code": "greyhound-italian",
+      "name_en": "Italian Greyhound",
+      "name_ru": "Итальянская левретка"
+    },
+    {
+      "id": 50,
+      "code": "groenendael",
+      "name_en": "Belgian Shepherd (Groenendael)",
+      "name_ru": "Бельгийская овчарка (грюнендаль)"
+    },
+    {
+      "id": 51,
+      "code": "havanese",
+      "name_en": "Havanese",
+      "name_ru": "Гаванский бишон"
+    },
+    {
+      "id": 52,
+      "code": "hound-afghan",
+      "name_en": "Afghan Hound",
+      "name_ru": "Афганская борзая"
+    },
+    {
+      "id": 53,
+      "code": "hound-basset",
+      "name_en": "Basset Hound",
+      "name_ru": "Бассет-хаунд"
+    },
+    {
+      "id": 54,
+      "code": "hound-blood",
+      "name_en": "Bloodhound",
+      "name_ru": "Бладхаунд"
+    },
+    {
+      "id": 56,
+      "code": "hound-ibizan",
+      "name_en": "Ibizan Hound",
+      "name_ru": "Ивисская борзая"
+    },
+    {
+      "id": 57,
+      "code": "hound-plott",
+      "name_en": "Plott Hound",
+      "name_ru": "Плотт-хаунд"
+    },
+    {
+      "id": 58,
+      "code": "hound-walker",
+      "name_en": "Treeing Walker Coonhound",
+      "name_ru": "Уокер-кунхаунд"
+    },
+    {
+      "id": 59,
+      "code": "husky",
+      "name_en": "Siberian Husky",
+      "name_ru": "Сибирский хаски"
+    },
+    {
+      "id": 60,
+      "code": "keeshond",
+      "name_en": "Keeshond",
+      "name_ru": "Кеесхонд"
+    },
+    {
+      "id": 63,
+      "code": "komondor",
+      "name_en": "Komondor",
+      "name_ru": "Комондор"
+    },
+    {
+      "id": 64,
+      "code": "kuvasz",
+      "name_en": "Kuvasz",
+      "name_ru": "Кувас"
+    },
+    {
+      "id": 66,
+      "code": "labrador",
+      "name_en": "Labrador Retriever",
+      "name_ru": "Лабрадор-ретривер"
+    },
+    {
+      "id": 67,
+      "code": "leonberg",
+      "name_en": "Leonberger",
+      "name_ru": "Леонбергер"
+    },
+    {
+      "id": 68,
+      "code": "lhasa",
+      "name_en": "Lhasa Apso",
+      "name_ru": "Лхаса апсо"
+    },
+    {
+      "id": 69,
+      "code": "malamute",
+      "name_en": "Alaskan Malamute",
+      "name_ru": "Аляскинский маламут"
+    },
+    {
+      "id": 70,
+      "code": "malinois",
+      "name_en": "Belgian Shepherd (Malinois)",
+      "name_ru": "Бельгийская овчарка (малинуа)"
+    },
+    {
+      "id": 71,
+      "code": "maltese",
+      "name_en": "Maltese",
+      "name_ru": "Мальтийская болонка"
+    },
+    {
+      "id": 72,
+      "code": "mastiff-bull",
+      "name_en": "Bullmastiff",
+      "name_ru": "Бульмастиф"
+    },
+    {
+      "id": 73,
+      "code": "mastiff-english",
+      "name_en": "English Mastiff",
+      "name_ru": "Английский мастиф"
+    },
+    {
+      "id": 75,
+      "code": "mastiff-tibetan",
+      "name_en": "Tibetan Mastiff",
+      "name_ru": "Тибетский мастиф"
+    },
+    {
+      "id": 76,
+      "code": "mexicanhairless",
+      "name_en": "Xoloitzcuintli",
+      "name_ru": "Ксолоитцкуинтли"
+    },
+    {
+      "id": 78,
+      "code": "mountain-bernese",
+      "name_en": "Bernese Mountain Dog",
+      "name_ru": "Бернский зенненхунд"
+    },
+    {
+      "id": 79,
+      "code": "mountain-swiss",
+      "name_en": "Greater Swiss Mountain Dog",
+      "name_ru": "Большой швейцарский зенненхунд"
+    },
+    {
+      "id": 81,
+      "code": "newfoundland",
+      "name_en": "Newfoundland",
+      "name_ru": "Ньюфаундленд"
+    },
+    {
+      "id": 82,
+      "code": "otterhound",
+      "name_en": "Otterhound",
+      "name_ru": "Оттерхаунд"
+    },
+    {
+      "id": 83,
+      "code": "ovcharka-caucasian",
+      "name_en": "Caucasian Shepherd Dog",
+      "name_ru": "Кавказская овчарка"
+    },
+    {
+      "id": 84,
+      "code": "papillon",
+      "name_en": "Papillon",
+      "name_ru": "Папийон"
+    },
+    {
+      "id": 86,
+      "code": "pekinese",
+      "name_en": "Pekingese",
+      "name_ru": "Пекинес"
+    },
+    {
+      "id": 88,
+      "code": "pinscher-miniature",
+      "name_en": "Miniature Pinscher",
+      "name_ru": "Цвергпинчер"
+    },
+    {
+      "id": 90,
+      "code": "pointer-german",
+      "name_en": "German Shorthaired Pointer",
+      "name_ru": "Немецкий короткошерстный пойнтер"
+    },
+    {
+      "id": 91,
+      "code": "pointer-germanlonghair",
+      "name_en": "German Longhaired Pointer",
+      "name_ru": "Немецкий длинношерстный пойнтер"
+    },
+    {
+      "id": 92,
+      "code": "pomeranian",
+      "name_en": "Pomeranian",
+      "name_ru": "Померанский шпиц"
+    },
+    {
+      "id": 93,
+      "code": "poodle-medium",
+      "name_en": "Medium Poodle",
+      "name_ru": "Средний пудель"
+    },
+    {
+      "id": 94,
+      "code": "poodle-miniature",
+      "name_en": "Miniature Poodle",
+      "name_ru": "Миниатюрный пудель"
+    },
+    {
+      "id": 95,
+      "code": "poodle-standard",
+      "name_en": "Standard Poodle",
+      "name_ru": "Стандартный пудель"
+    },
+    {
+      "id": 96,
+      "code": "poodle-toy",
+      "name_en": "Toy Poodle",
+      "name_ru": "Той-пудель"
+    },
+    {
+      "id": 97,
+      "code": "pug",
+      "name_en": "Pug",
+      "name_ru": "Мопс"
+    },
+    {
+      "id": 100,
+      "code": "rajapalayam-indian",
+      "name_en": "Rajapalayam",
+      "name_ru": "Раджапалайям"
+    },
+    {
+      "id": 101,
+      "code": "redbone",
+      "name_en": "Redbone Coonhound",
+      "name_ru": "Редбоун-кунхаунд"
+    },
+    {
+      "id": 102,
+      "code": "retriever-chesapeake",
+      "name_en": "Chesapeake Bay Retriever",
+      "name_ru": "Чесапик-бей-ретривер"
+    },
+    {
+      "id": 103,
+      "code": "retriever-curly",
+      "name_en": "Curly-Coated Retriever",
+      "name_ru": "Курчавошёрстный ретривер"
+    },
+    {
+      "id": 104,
+      "code": "retriever-flatcoated",
+      "name_en": "Flat-Coated Retriever",
+      "name_ru": "Прямошёрстный ретривер"
+    },
+    {
+      "id": 105,
+      "code": "retriever-golden",
+      "name_en": "Golden Retriever",
+      "name_ru": "Золотистый ретривер"
+    },
+    {
+      "id": 106,
+      "code": "ridgeback-rhodesian",
+      "name_en": "Rhodesian Ridgeback",
+      "name_ru": "Родезийский риджбек"
+    },
+    {
+      "id": 107,
+      "code": "rottweiler",
+      "name_en": "Rottweiler",
+      "name_ru": "Ротвейлер"
+    },
+    {
+      "id": 108,
+      "code": "rough-collie",
+      "name_en": "Rough Collie",
+      "name_ru": "Длинношёрстный колли"
+    },
+    {
+      "id": 109,
+      "code": "saluki",
+      "name_en": "Saluki",
+      "name_ru": "Салюки"
+    },
+    {
+      "id": 110,
+      "code": "samoyed",
+      "name_en": "Samoyed",
+      "name_ru": "Самоед"
+    },
+    {
+      "id": 111,
+      "code": "schipperke",
+      "name_en": "Schipperke",
+      "name_ru": "Шипперке"
+    },
+    {
+      "id": 112,
+      "code": "schnauzer-giant",
+      "name_en": "Giant Schnauzer",
+      "name_ru": "Ризеншнауцер"
+    },
+    {
+      "id": 113,
+      "code": "schnauzer-miniature",
+      "name_en": "Miniature Schnauzer",
+      "name_ru": "Цвергшнауцер"
+    },
+    {
+      "id": 114,
+      "code": "segugio-italian",
+      "name_en": "Italian Segugio",
+      "name_ru": "Итальянский сегуджо"
+    },
+    {
+      "id": 115,
+      "code": "setter-english",
+      "name_en": "English Setter",
+      "name_ru": "Английский сеттер"
+    },
+    {
+      "id": 116,
+      "code": "setter-gordon",
+      "name_en": "Gordon Setter",
+      "name_ru": "Сеттер гордон"
+    },
+    {
+      "id": 117,
+      "code": "setter-irish",
+      "name_en": "Irish Setter",
+      "name_ru": "Ирландский сеттер"
+    },
+    {
+      "id": 118,
+      "code": "sharpei",
+      "name_en": "Shar Pei",
+      "name_ru": "Шарпей"
+    },
+    {
+      "id": 119,
+      "code": "sheepdog-english",
+      "name_en": "Old English Sheepdog",
+      "name_ru": "Бобтейл"
+    },
+    {
+      "id": 121,
+      "code": "sheepdog-shetland",
+      "name_en": "Shetland Sheepdog",
+      "name_ru": "Шелти"
+    },
+    {
+      "id": 122,
+      "code": "shiba",
+      "name_en": "Shiba Inu",
+      "name_ru": "Сиба-ину"
+    },
+    {
+      "id": 123,
+      "code": "shihtzu",
+      "name_en": "Shih Tzu",
+      "name_ru": "Ши-тцу"
+    },
+    {
+      "id": 125,
+      "code": "spaniel-brittany",
+      "name_en": "Brittany Spaniel",
+      "name_ru": "Бретонский эпаньоль"
+    },
+    {
+      "id": 126,
+      "code": "spaniel-cocker",
+      "name_en": "Cocker Spaniel",
+      "name_ru": "Кокер-спаниель"
+    },
+    {
+      "id": 128,
+      "code": "spaniel-japanese",
+      "name_en": "Japanese Chin",
+      "name_ru": "Японский хин"
+    },
+    {
+      "id": 129,
+      "code": "spaniel-sussex",
+      "name_en": "Sussex Spaniel",
+      "name_ru": "Суссекс-спаниель"
+    },
+    {
+      "id": 130,
+      "code": "spaniel-welsh",
+      "name_en": "Welsh Springer Spaniel",
+      "name_ru": "Вельш-спрингер-спаниель"
+    },
+    {
+      "id": 131,
+      "code": "spitz-indian",
+      "name_en": "Indian Spitz",
+      "name_ru": "Индийский шпиц"
+    },
+    {
+      "id": 132,
+      "code": "spitz-japanese",
+      "name_en": "Japanese Spitz",
+      "name_ru": "Японский шпиц"
+    },
+    {
+      "id": 133,
+      "code": "springer-english",
+      "name_en": "English Springer Spaniel",
+      "name_ru": "Английский спрингер-спаниель"
+    },
+    {
+      "id": 134,
+      "code": "stbernard",
+      "name_en": "Saint Bernard",
+      "name_ru": "Сенбернар"
+    },
+    {
+      "id": 137,
+      "code": "terrier-australian",
+      "name_en": "Australian Terrier",
+      "name_ru": "Австралийский терьер"
+    },
+    {
+      "id": 138,
+      "code": "terrier-bedlington",
+      "name_en": "Bedlington Terrier",
+      "name_ru": "Бедлингтон-терьер"
+    },
+    {
+      "id": 139,
+      "code": "terrier-border",
+      "name_en": "Border Terrier",
+      "name_ru": "Бордер-терьер"
+    },
+    {
+      "id": 140,
+      "code": "terrier-boston",
+      "name_en": "Boston Terrier",
+      "name_ru": "Бостон-терьер"
+    },
+    {
+      "id": 141,
+      "code": "terrier-cairn",
+      "name_en": "Cairn Terrier",
+      "name_ru": "Керн-терьер"
+    },
+    {
+      "id": 142,
+      "code": "terrier-dandie",
+      "name_en": "Dandie Dinmont Terrier",
+      "name_ru": "Денди-динмонт-терьер"
+    },
+    {
+      "id": 143,
+      "code": "terrier-fox",
+      "name_en": "Fox Terrier",
+      "name_ru": "Фокстерьер"
+    },
+    {
+      "id": 144,
+      "code": "terrier-irish",
+      "name_en": "Irish Terrier",
+      "name_ru": "Ирландский терьер"
+    },
+    {
+      "id": 145,
+      "code": "terrier-kerryblue",
+      "name_en": "Kerry Blue Terrier",
+      "name_ru": "Керри-блю-терьер"
+    },
+    {
+      "id": 146,
+      "code": "terrier-lakeland",
+      "name_en": "Lakeland Terrier",
+      "name_ru": "Лейкленд-терьер"
+    },
+    {
+      "id": 147,
+      "code": "terrier-norfolk",
+      "name_en": "Norfolk Terrier",
+      "name_ru": "Норфолк-терьер"
+    },
+    {
+      "id": 148,
+      "code": "terrier-norwich",
+      "name_en": "Norwich Terrier",
+      "name_ru": "Норвич-терьер"
+    },
+    {
+      "id": 150,
+      "code": "terrier-russell",
+      "name_en": "Russell Terrier",
+      "name_ru": "Джек-рассел-терьер"
+    },
+    {
+      "id": 151,
+      "code": "terrier-scottish",
+      "name_en": "Scottish Terrier",
+      "name_ru": "Шотландский терьер"
+    },
+    {
+      "id": 152,
+      "code": "terrier-sealyham",
+      "name_en": "Sealyham Terrier",
+      "name_ru": "Силихем-терьер"
+    },
+    {
+      "id": 153,
+      "code": "terrier-silky",
+      "name_en": "Australian Silky Terrier",
+      "name_ru": "Австралийский шелковистый терьер"
+    },
+    {
+      "id": 154,
+      "code": "terrier-tibetan",
+      "name_en": "Tibetan Terrier",
+      "name_ru": "Тибетский терьер"
+    },
+    {
+      "id": 155,
+      "code": "terrier-toy",
+      "name_en": "Toy Terrier",
+      "name_ru": "Той-терьер"
+    },
+    {
+      "id": 156,
+      "code": "terrier-welsh",
+      "name_en": "Welsh Terrier",
+      "name_ru": "Уэльский терьер"
+    },
+    {
+      "id": 157,
+      "code": "terrier-westhighland",
+      "name_en": "West Highland White Terrier",
+      "name_ru": "Вест-хайленд-уайт-терьер"
+    },
+    {
+      "id": 158,
+      "code": "terrier-wheaten",
+      "name_en": "Soft Coated Wheaten Terrier",
+      "name_ru": "Мягкошёрстный пшеничный терьер"
+    },
+    {
+      "id": 159,
+      "code": "terrier-yorkshire",
+      "name_en": "Yorkshire Terrier",
+      "name_ru": "Йоркширский терьер"
+    },
+    {
+      "id": 160,
+      "code": "tervuren",
+      "name_en": "Belgian Shepherd (Tervuren)",
+      "name_ru": "Бельгийская овчарка (тервюрен)"
+    },
+    {
+      "id": 161,
+      "code": "vizsla",
+      "name_en": "Hungarian Vizsla",
+      "name_ru": "Венгерская выжла"
+    },
+    {
+      "id": 162,
+      "code": "waterdog-spanish",
+      "name_en": "Spanish Water Dog",
+      "name_ru": "Испанская водяная собака"
+    },
+    {
+      "id": 163,
+      "code": "weimaraner",
+      "name_en": "Weimaraner",
+      "name_ru": "Веймаранер"
+    },
+    {
+      "id": 164,
+      "code": "whippet",
+      "name_en": "Whippet",
+      "name_ru": "Уиппет"
+    },
+    {
+      "id": 165,
+      "code": "wolfhound-irish",
+      "name_en": "Irish Wolfhound",
+      "name_ru": "Ирландский волкодав"
+    }
+  ]
+}

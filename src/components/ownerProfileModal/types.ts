@@ -1,4 +1,4 @@
-export type OwnerProfileFields = "ownerName" | "email" | "phone" | "birthdate" | "city";
+export type OwnerProfileFields = "ownerName" | "email" | "phone" | "birthdate";
 
 export type OwnerProfileModalProps = {
   visible: boolean;

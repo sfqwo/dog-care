@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { VetRecord } from "@/src/domain/types";
-import { formatDateTime } from "@/src/utils";
+import { formatDateTime } from "@dog-care/core/utils";
 
 export function useVetStats(records: VetRecord[]) {
   return useMemo(() => {

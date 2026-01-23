@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { VetRecord } from "@/src/domain/types";
-import { formatDateTime } from "@/src/utils";
+import { formatDateTime } from "@dog-care/core/utils";
 
 const CLINIC_GRADIENT = ["#e0f2fe", "#bae6fd", "#93c5fd"] as const;
 const HOMECARE_GRADIENT = ["#ede9fe", "#ddd6fe", "#c4b5fd"] as const;

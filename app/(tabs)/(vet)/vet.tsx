@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Input } from "@dog-care/input";
+import { Input } from "@/packages/ui/input/src";
 import {
   HeroCard,
   HeroCardBadge,
@@ -23,7 +23,7 @@ import type { VetRecord } from "@/src/domain/types";
 import { useVetCardDetails } from "@/src/hooks/useVetCardDetails";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import { STORAGE_KEYS } from "@/src/storage/keys";
-import { createUid } from "@/src/utils/createUid";
+import { createUid } from "@dog-care/core/utils";
 import { useVetStats } from "@/src/hooks/useVetStats";
 import { pageGradient, vetStyles } from "./vet.styles";
 import type { VetListItemProps } from "./vet.types";

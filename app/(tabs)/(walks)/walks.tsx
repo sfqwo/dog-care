@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Input } from "@dog-care/input";
+import { Input } from "@/packages/ui/input/src";
 import {
   HeroCard,
   HeroCardBadge,
@@ -21,7 +21,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { useWalkCardDetails } from "@/src/hooks/useWalkCardDetails";
 import { useWalkStats } from "@/src/hooks/useWalkStats";
-import { createUid, isPositiveNumber, formatDateTime } from "@/src/utils";
+import { createUid, isPositiveNumber, formatDateTime } from "@dog-care/core/utils";
 import { STORAGE_KEYS } from "@/src/storage/keys";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import type { Walk } from "@/src/domain/types";

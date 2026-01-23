@@ -10,6 +10,8 @@ export const styles = StyleSheet.create({
     paddingVertical: 12,
     backgroundColor: "white",
     minHeight: 46,
+    fontSize: 16,
+    color: "#374151",
   },
   note: {
     minHeight: 48,
