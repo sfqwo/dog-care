@@ -14,8 +14,9 @@ import {
 } from "@/src/components";
 import type { Pet } from "@/src/domain/types";
 import { ProfileProvider, useProfileContext } from "@/src/hooks/profileContext";
-import { profileStyles, pageGradient, petGradient } from "./profile.styles";
 import { formatGender, formatWeight } from "@/src/utils";
+import { profileStyles, pageGradient, petGradient } from "./profile.styles";
+import type { PetListItemProps } from "./profile.types";
 
 export default function ProfileScreen() {
   return (
@@ -91,12 +92,6 @@ function ProfileScreenContent() {
     </LinearGradient>
   );
 }
-
-type PetListItemProps = {
-  pet: Pet;
-  onRemove: (id: string) => void;
-  onEdit: (pet: Pet) => void;
-};
 
 function PetListItem({ pet, onRemove, onEdit }: PetListItemProps) {
   const subtitleParts = [pet.species, pet.breed, formatGender(pet.gender)];

@@ -1,12 +1,9 @@
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, useContext } from "react";
 import { Text, View } from "react-native";
 import { styles } from "./styles";
+import type { HeroCardRootProps, HeroCardTextProps } from "./types";
 
 const HeroCardSectionContext = createContext(false);
-
-type HeroCardRootProps = {
-  children: ReactNode;
-};
 
 export function HeroCard({ children }: HeroCardRootProps) {
   return (
@@ -15,8 +12,6 @@ export function HeroCard({ children }: HeroCardRootProps) {
     </HeroCardSectionContext.Provider>
   );
 }
-
-type HeroCardTextProps = { text: string };
 
 export function HeroCardTitle({ text }: HeroCardTextProps) {
   useHeroCardSectionGuard("HeroCardTitle");

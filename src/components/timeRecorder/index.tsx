@@ -1,12 +1,14 @@
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, useContext } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
+import type {
+  TimeRecorderButtonProps,
+  TimeRecorderProps,
+  TimeRecorderRowProps,
+  TimeRecorderTitleProps,
+} from "./types";
 
 const TimeRecorderContext = createContext(false);
-
-type TimeRecorderProps = {
-  children: ReactNode;
-};
 
 export function TimeRecorder({ children }: TimeRecorderProps) {
   return (
@@ -16,29 +18,15 @@ export function TimeRecorder({ children }: TimeRecorderProps) {
   );
 }
 
-type TimeRecorderTitleProps = {
-  children: ReactNode;
-};
-
 export function TimeRecorderTitle({ children }: TimeRecorderTitleProps) {
   useTimeRecorderGuard("TimeRecorderTitle");
   return <Text style={styles.sectionTitle}>{children}</Text>;
 }
 
-type TimeRecorderRowProps = {
-  children: ReactNode;
-};
-
 export function TimeRecorderRow({ children }: TimeRecorderRowProps) {
   useTimeRecorderGuard("TimeRecorderRow");
   return <View style={styles.inputRow}>{children}</View>;
 }
-
-type TimeRecorderButtonProps = {
-  label: ReactNode;
-  onPress: () => void;
-  disabled?: boolean;
-};
 
 export function TimeRecorderButton({ label, onPress, disabled }: TimeRecorderButtonProps) {
   useTimeRecorderGuard("TimeRecorderButton");

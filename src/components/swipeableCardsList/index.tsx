@@ -1,66 +1,32 @@
 import {
   Children,
   cloneElement,
+  createContext,
   isValidElement,
   ReactElement,
   ReactNode,
-  ComponentProps,
-  createContext,
   useContext,
   useMemo,
 } from "react";
-import { FlatList, Pressable, StyleProp, Text, View, ViewStyle } from "react-native";
+import { FlatList, Pressable, Text, View } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { styles } from "./styles";
+import type {
+  EmptySlotProps,
+  SlotProps,
+  SwipeableCardsListContextValue,
+  SwipeableCardsListItemProps,
+  SwipeableCardsListProps,
+  SwipeableItemElement,
+} from "./types";
 
-type SwipeableCardsListProps = {
-  children: ReactNode;
-  contentContainerStyle?: StyleProp<ViewStyle>;
-};
-
-type IconName = ComponentProps<typeof MaterialCommunityIcons>["name"];
-
-type SwipeableCardsListItemProps = {
-  id: string;
-  title: string;
-  subtitle: string;
-  badgeText: string;
-  gradientColors: readonly [string, string, string];
-  onRemove: () => void;
-  onPress?: () => void;
-  note?: string;
-  renderRightActions?: () => ReactNode;
-  badgeIcon?: IconName;
-  noteIcon?: IconName;
-  helperIcon?: IconName;
-};
-
-type SlotProps = {
-  children: ReactNode;
-};
-
-type EmptySlotProps = {
-  text?: string;
-  children?: ReactNode;
-};
-
-const isHeaderElement = (
-  child: ReactNode
-): child is ReactElement<SlotProps> =>
+const isHeaderElement = (child: ReactNode): child is ReactElement<SlotProps> =>
   isValidElement(child) && child.type === SwipeableCardsListHeader;
 
-const isEmptyElement = (
-  child: ReactNode
-): child is ReactElement<EmptySlotProps> =>
+const isEmptyElement = (child: ReactNode): child is ReactElement<EmptySlotProps> =>
   isValidElement(child) && child.type === SwipeableCardsListEmpty;
-
-type SwipeableCardsListContextValue = {
-  isInside: true;
-  headerContent?: ReactNode;
-  emptyProps?: EmptySlotProps;
-};
 
 const SwipeableCardsListContext = createContext<SwipeableCardsListContextValue | null>(null);
 
@@ -69,7 +35,7 @@ export function SwipeableCardsList({
 }: SwipeableCardsListProps) {
   let headerContent: ReactNode | undefined;
   let emptyProps: EmptySlotProps | undefined;
-  const items: ReactElement<any>[] = [];
+  const items: SwipeableItemElement[] = [];
 
   Children.forEach(children, (child) => {
     if (isHeaderElement(child)) {

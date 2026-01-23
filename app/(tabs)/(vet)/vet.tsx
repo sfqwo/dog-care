@@ -26,11 +26,7 @@ import { STORAGE_KEYS } from "@/src/storage/keys";
 import { createUid } from "@/src/utils/createUid";
 import { useVetStats } from "@/src/hooks/useVetStats";
 import { pageGradient, vetStyles } from "./vet.styles";
-
-type VetListItemProps = {
-  record: VetRecord;
-  onRemove: (id: string) => void;
-};
+import type { VetListItemProps } from "./vet.types";
 
 export default function VetScreen() {
   const [records, setRecords] = useState<VetRecord[]>([]);

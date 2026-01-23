@@ -1,20 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import type { UserProfile, UserProfilePayload } from "@/src/domain/types";
+import { useProfileContext } from "@/src/hooks/profileContext";
 import { Input } from "../input";
 import { Modal, ModalActionButton, ModalActions, ModalSubtitle, ModalTitle } from "../modal";
-import { useProfileContext } from "@/src/hooks/profileContext";
+import type { OwnerProfileFields, OwnerProfileModalProps } from "./types";
 
-type OwnerProfileFields = "ownerName" | "email" | "phone" | "city";
-
-type OwnerProfileModalProps = {
-  visible: boolean;
-  onClose: () => void;
-};
-
-export function OwnerProfileModal({
-  visible,
-  onClose,
-}: OwnerProfileModalProps) {
+export function OwnerProfileModal({ visible, onClose }: OwnerProfileModalProps) {
   const { profile, updateOwner } = useProfileContext();
   const [form, setForm] = useState<UserProfile>(profile);
 

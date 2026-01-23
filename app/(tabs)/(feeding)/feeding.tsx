@@ -26,11 +26,7 @@ import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import { STORAGE_KEYS } from "@/src/storage/keys";
 import { createUid, isPositiveNumber, formatDateTime } from "@/src/utils";
 import { feedingStyles, pageGradient } from "./feeding.styles";
-
-type FeedingListItemProps = {
-  feeding: Feeding;
-  onRemove: (id: string) => void;
-}
+import type { FeedingListItemProps } from "./feeding.types";
 
 export default function FeedingScreen() {
   const [items, setItems] = useState<Feeding[]>([]);

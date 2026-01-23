@@ -1,9 +1,6 @@
-import { TextInput, TextInputProps } from "react-native";
+import { TextInput } from "react-native";
 import { styles } from "./styles";
-
-type InputProps = TextInputProps & {
-  variant?: "default" | "note";
-};
+import type { InputProps } from "./types";
 
 export function Input({ style, multiline, variant, ...rest }: InputProps) {
   const resolvedVariant = variant ?? (multiline ? "note" : "default");

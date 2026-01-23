@@ -1,18 +1,8 @@
-import { Children, createContext, isValidElement, ReactElement, ReactNode, useContext } from "react";
+import { Children, createContext, isValidElement, useContext } from "react";
+import type { ReactNode } from "react";
 import { Text, View } from "react-native";
 import { styles } from "./styles";
-
-type StatsBlockProps = {
-  label: string;
-  value: ReactNode;
-};
-
-type StatsBlockElement = ReactElement<StatsBlockProps>;
-
-type StatsBlocksProps = {
-  children: ReactNode;
-  maxPerRow?: number;
-};
+import type { StatsBlockElement, StatsBlockProps, StatsBlocksProps } from "./types";
 
 const StatsBlocksContext = createContext(false);
 

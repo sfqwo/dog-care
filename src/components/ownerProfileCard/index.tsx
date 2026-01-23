@@ -1,11 +1,6 @@
 import { Text, TouchableOpacity, View } from "react-native";
-import type { UserProfile } from "@/src/domain/types";
 import { styles } from "./styles";
-
-type OwnerProfileCardProps = {
-  profile: UserProfile;
-  onEdit: () => void;
-};
+import type { InfoLineProps, OwnerProfileCardProps } from "./types";
 
 export function OwnerProfileCard({ profile, onEdit }: OwnerProfileCardProps) {
   return (
@@ -22,7 +17,7 @@ export function OwnerProfileCard({ profile, onEdit }: OwnerProfileCardProps) {
   );
 }
 
-function InfoLine({ label, value }: { label: string; value?: string | null }) {
+function InfoLine({ label, value }: InfoLineProps) {
   return (
     <View style={styles.infoLine}>
       <Text style={styles.infoLabel}>{label}</Text>

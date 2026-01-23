@@ -1,24 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+import type { PetProfilePayload } from "@/src/domain/types";
 import { useProfileContext } from "@/src/hooks/profileContext";
-import {
-  Modal,
-  ModalTitle,
-  ModalSubtitle,
-  ModalActions,
-  ModalActionButton,
-} from "../modal";
 import { Input } from "../input";
-import { PetProfilePayload } from "@/src/domain/types";
-
-type PetProfileFormState = {
-  name: string;
-  breed: string;
-  species: string;
-  gender: string;
-  birthdate: string;
-  weight: string;
-  notes: string;
-};
+import { Modal, ModalActionButton, ModalActions, ModalSubtitle, ModalTitle } from "../modal";
+import type { PetProfileFormState, PetProfileModalProps } from "./types";
 
 const emptyForm: PetProfileFormState = {
   name: "",
@@ -28,11 +13,6 @@ const emptyForm: PetProfileFormState = {
   birthdate: "",
   weight: "",
   notes: "",
-};
-
-type PetProfileModalProps = {
-  visible: boolean;
-  onClose: () => void;
 };
 
 export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {

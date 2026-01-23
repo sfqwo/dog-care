@@ -18,6 +18,7 @@ import {
   TimeRecorderRow,
   TimeRecorderTitle,
 } from "@/src/components";
+import { LinearGradient } from "expo-linear-gradient";
 import { useWalkCardDetails } from "@/src/hooks/useWalkCardDetails";
 import { useWalkStats } from "@/src/hooks/useWalkStats";
 import { createUid, isPositiveNumber, formatDateTime } from "@/src/utils";
@@ -25,9 +26,7 @@ import { STORAGE_KEYS } from "@/src/storage/keys";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import type { Walk } from "@/src/domain/types";
 import { pageGradient, walkStyles } from "./walks.styles";
-import { LinearGradient } from "expo-linear-gradient";
-
-type WalkListItemProps = { walk: Walk; onRemove: (id: string) => void };
+import type { WalkListItemProps } from "./walks.types";
 
 export default function WalksScreen() {
   const [walks, setWalks] = useState<Walk[]>([]);

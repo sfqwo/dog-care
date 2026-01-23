@@ -1,18 +1,13 @@
-import { ReactNode, useContext, createContext } from "react";
+import { useContext, createContext } from "react";
 import { Modal as RNModal, Pressable, Text, View, StyleSheet, ScrollView } from "react-native";
 import { styles } from "./styles";
-
-type ModalProps = {
-  visible: boolean;
-  onClose: () => void;
-  children: ReactNode;
-  dismissOnBackdropPress?: boolean;
-  animationType?: "none" | "slide" | "fade";
-};
-
-type ModalContextValue = {
-  onClose: () => void;
-};
+import type {
+  ModalActionButtonProps,
+  ModalActionsProps,
+  ModalContextValue,
+  ModalProps,
+  ModalTextProps,
+} from "./types";
 
 const ModalContext = createContext<ModalContextValue | null>(null);
 
@@ -39,8 +34,6 @@ export function Modal({
   );
 }
 
-type ModalTextProps = { children: ReactNode };
-
 export function ModalTitle({ children }: ModalTextProps) {
   useModalGuard("ModalTitle");
   return <Text style={styles.title}>{children}</Text>;
@@ -51,19 +44,10 @@ export function ModalSubtitle({ children }: ModalTextProps) {
   return <Text style={styles.subtitle}>{children}</Text>;
 }
 
-type ModalActionsProps = { children: ReactNode };
-
 export function ModalActions({ children }: ModalActionsProps) {
   useModalGuard("ModalActions");
   return <View style={styles.actions}>{children}</View>;
 }
-
-type ModalActionButtonProps = {
-  children: ReactNode;
-  onPress?: () => void;
-  closeOnPress?: boolean;
-  disabled?: boolean;
-};
 
 export function ModalActionButton({
   children,
