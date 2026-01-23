@@ -60,7 +60,6 @@ export const styles = StyleSheet.create({
   },
   optionsList: {
     borderRadius: 20,
-    backgroundColor: "#F8FAFC",
     flex: 1,
   },
   option: {

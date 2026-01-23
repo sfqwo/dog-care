@@ -11,7 +11,6 @@ export const SPECIES_OPTIONS: Option[] = [
 export const GENDER_OPTIONS: Option[] = [
   { title: "Девочка", value: "female" },
   { title: "Мальчик", value: "male" },
-  { title: "Не указано", value: "" },
 ];
 
 export const WEIGHT_OPTIONS: Option[] = (() => {

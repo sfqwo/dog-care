@@ -1,16 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { GENDER_OPTIONS, SPECIES_OPTIONS, WEIGHT_OPTIONS } from "@dog-care/core/shared";
-import type { PetProfilePayload } from "@/src/domain/types";
-import { useProfileContext } from "@/src/hooks/profileContext";
-import { Input } from "@/packages/ui/input/src";
 import {
+  type ParsedSelectOption,
   Select,
   SelectHeader,
   SelectOption,
   SelectOptionTitle,
-} from "@/packages/ui/select";
-import type { ParsedSelectOption } from "@/packages/ui/select";
+} from "@dog-care/select";
+import type { PetProfilePayload } from "@/src/domain/types";
+import { useProfileContext } from "@/src/hooks/profileContext";
+import { Input } from "@/packages/ui/input/src";
+
 import { useDogBreeds } from "@/src/hooks/useDogBreeds";
 import { Modal, ModalActionButton, ModalActions, ModalSubtitle, ModalTitle } from "../modal";
 import type { PetProfileFormState, PetProfileModalProps } from "./types";
