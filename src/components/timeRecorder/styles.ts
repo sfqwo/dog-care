@@ -17,5 +17,9 @@ export const styles = StyleSheet.create({
     backgroundColor: "#e28ca1ff",
     minWidth: 120,
   },
-  addButtonText: { color: "white", fontWeight: "700", fontSize: 15 }
+  addButtonText: { color: "white", fontWeight: "700", fontSize: 15 },
+  hintText: {
+    fontSize: 13,
+    color: "rgba(15,23,42,0.7)",
+  },
 });

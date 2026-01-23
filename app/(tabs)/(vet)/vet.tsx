@@ -8,6 +8,7 @@ import {
   HeroCardBadge,
   HeroCardSubtitle,
   HeroCardTitle,
+  PetTabs,
   StatsBlock,
   StatsBlocks,
   SwipeableCardsList,
@@ -16,11 +17,13 @@ import {
   SwipeableCardsListItem,
   TimeRecorder,
   TimeRecorderButton,
+  TimeRecorderHint,
   TimeRecorderRow,
   TimeRecorderTitle,
 } from "@/src/components";
 import type { VetRecord } from "@/src/domain/types";
 import { useVetCardDetails } from "@/src/hooks/useVetCardDetails";
+import { useProfileContext } from "@/src/hooks/profileContext";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import { STORAGE_KEYS } from "@/src/storage/keys";
 import { createUid } from "@dog-care/core/utils";
@@ -28,45 +31,88 @@ import { useVetStats } from "@/src/hooks/useVetStats";
 import { pageGradient, vetStyles } from "./vet.styles";
 import type { VetListItemProps } from "./vet.types";
 
+type VetRecordsByPet = Record<string, VetRecord[]>;
+
 export default function VetScreen() {
-  const [records, setRecords] = useState<VetRecord[]>([]);
+  const { profile } = useProfileContext();
+  const [recordsByPet, setRecordsByPet] = useState<VetRecordsByPet>({});
+  const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [clinic, setClinic] = useState("");
   const [note, setNote] = useState("");
+  const hasPets = profile.pets.length > 0;
+  const activePetId = hasPets ? selectedPetId ?? profile.pets[0]?.id ?? null : null;
+  const records = activePetId ? recordsByPet[activePetId] ?? [] : [];
   const stats = useVetStats(records);
 
   useEffect(() => {
-    loadJSON<VetRecord[]>(STORAGE_KEYS.VET, []).then(setRecords);
+    loadJSON<VetRecordsByPet>(STORAGE_KEYS.VET, {}).then((stored) => {
+      setRecordsByPet(stored ?? {});
+    });
   }, []);
 
   useEffect(() => {
-    saveJSON(STORAGE_KEYS.VET, records);
-  }, [records]);
+    saveJSON(STORAGE_KEYS.VET, recordsByPet);
+  }, [recordsByPet]);
 
-  const canAddRecord = useMemo(() => title.trim().length > 0, [title]);
+  useEffect(() => {
+    if (!profile.pets.length) {
+      setSelectedPetId(null);
+      return;
+    }
+    setSelectedPetId((current) => {
+      if (current && profile.pets.some((pet) => pet.id === current)) return current;
+      return profile.pets[0]?.id ?? null;
+    });
+  }, [profile.pets]);
+
+  const canAddRecord = useMemo(
+    () => Boolean(activePetId) && title.trim().length > 0,
+    [activePetId, title]
+  );
 
   const handleAddRecord = () => {
-    if (!canAddRecord) return;
+    if (!canAddRecord || !activePetId) return;
     const newRecord: VetRecord = {
       id: createUid(),
       at: Date.now(),
+      petId: activePetId,
       title: title.trim(),
       clinic: clinic.trim() || undefined,
       note: note.trim() || undefined,
     };
-    setRecords((prev) => [newRecord, ...prev]);
+    setRecordsByPet((prev) => {
+      const current = prev[activePetId] ?? [];
+      return { ...prev, [activePetId]: [newRecord, ...current] };
+    });
     setTitle("");
     setClinic("");
     setNote("");
   };
 
-  const handleRemoveRecord = (id: string) =>
-    setRecords((prev) => prev.filter((record) => record.id !== id));
+  const handleRemoveRecord = (id: string) => {
+    if (!activePetId) return;
+    setRecordsByPet((prev) => {
+      const current = prev[activePetId] ?? [];
+      const filtered = current.filter((record) => record.id !== id);
+      if (filtered.length === current.length) return prev;
+      return { ...prev, [activePetId]: filtered };
+    });
+  };
 
-  const heroBadgeText = records.length ? "Здоровье под контролем" : "Запланируйте прием";
-  const heroSubtitle = records.length
-    ? `Последний визит: ${stats.lastVisitText}`
-    : "Добавьте первую запись";
+  const heroBadgeText = hasPets
+    ? records.length
+      ? "Здоровье под контролем"
+      : "Запланируйте прием"
+    : "Добавьте питомца";
+  const heroSubtitle = hasPets
+    ? records.length
+      ? `Последний визит: ${stats.lastVisitText}`
+      : "Добавьте первую запись"
+    : "Перейдите в профиль и заведите питомца.";
+  const emptyStateText = hasPets
+    ? "Добавьте первую запись о визите к ветеринару."
+    : "Чтобы вести визиты, добавьте питомца.";
 
   return (
     <LinearGradient colors={pageGradient} style={vetStyles.screenGradient}>
@@ -79,6 +125,8 @@ export default function VetScreen() {
                 <HeroCardSubtitle text={heroSubtitle} />
                 <HeroCardBadge text={heroBadgeText} />
               </HeroCard>
+
+              <PetTabs pets={profile.pets} selectedId={activePetId} onSelect={setSelectedPetId} />
 
               <StatsBlocks>
                 <StatsBlock label="Записей" value={records.length} />
@@ -93,6 +141,7 @@ export default function VetScreen() {
                     value={title}
                     onChangeText={setTitle}
                     placeholder="Событие (например вакцинация)"
+                    editable={Boolean(activePetId)}
                   />
                   <TimeRecorderButton label="Сохранить" onPress={handleAddRecord} disabled={!canAddRecord} />
                 </TimeRecorderRow>
@@ -100,17 +149,22 @@ export default function VetScreen() {
                   value={clinic}
                   onChangeText={setClinic}
                   placeholder="Клиника или врач (опционально)"
+                  editable={Boolean(activePetId)}
                 />
                 <Input
                   value={note}
                   onChangeText={setNote}
                   placeholder="Заметка (опционально)"
                   multiline
+                  editable={Boolean(activePetId)}
                 />
+                <TimeRecorderHint visible={!activePetId}>
+                  Добавьте питомца, чтобы фиксировать визиты к ветеринару.
+                </TimeRecorderHint>
               </TimeRecorder>
             </View>
           </SwipeableCardsListHeader>
-          <SwipeableCardsListEmpty text="Добавьте первую запись о визите к ветеринару." />
+          <SwipeableCardsListEmpty text={emptyStateText} />
 
           {records.map((record) => (
             <VetListItem key={record.id} record={record} onRemove={handleRemoveRecord} />

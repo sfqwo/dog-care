@@ -6,3 +6,4 @@ export * from "./modal";
 export * from "./ownerProfileModal";
 export * from "./petProfileModal";
 export * from "./ownerProfileCard";
+export * from "./petTabs";

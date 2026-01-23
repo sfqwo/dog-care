@@ -1,3 +1,4 @@
+import { ProfileProvider } from "@/src/hooks/profileContext";
 import "@/src/setup";
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -5,7 +6,9 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack screenOptions={{ headerShown: false }} />
+        <ProfileProvider>
+            <Stack screenOptions={{ headerShown: false }} />
+        </ProfileProvider>
     </GestureHandlerRootView>
   );
 }

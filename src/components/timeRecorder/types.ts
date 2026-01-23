@@ -17,3 +17,8 @@ export type TimeRecorderButtonProps = {
   onPress: () => void;
   disabled?: boolean;
 };
+
+export type TimeRecorderHintProps = {
+  children: ReactNode;
+  visible?: boolean;
+};

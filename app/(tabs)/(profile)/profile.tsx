@@ -13,20 +13,12 @@ import {
   SwipeableCardsListItem,
 } from "@/src/components";
 import type { Pet } from "@/src/domain/types";
-import { ProfileProvider, useProfileContext } from "@/src/hooks/profileContext";
+import { useProfileContext } from "@/src/hooks/profileContext";
 import { formatGender, formatWeight, getSpeciesLabel } from "@dog-care/core/shared";
 import { profileStyles, pageGradient, petGradient } from "./profile.styles";
 import type { PetListItemProps } from "./profile.types";
 
 export default function ProfileScreen() {
-  return (
-    <ProfileProvider>
-      <ProfileScreenContent />
-    </ProfileProvider>
-  );
-}
-
-function ProfileScreenContent() {
   const {
     profile,
     removePet,

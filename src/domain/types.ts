@@ -2,6 +2,7 @@ export type Walk = {
   id: string;
   startedAt: number;
   durationMin: number;
+  petId: string;
   note?: string;
 };
 
@@ -9,6 +10,7 @@ export type Feeding = {
   id: string;
   at: number;
   grams: number;
+  petId: string;
   food?: string;
 };
 
@@ -16,6 +18,7 @@ export type VetRecord = {
   id: string;
   at: number;
   title: string;
+  petId: string;
   note?: string;
   clinic?: string;
 };
