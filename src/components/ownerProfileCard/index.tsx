@@ -9,6 +9,7 @@ export function OwnerProfileCard({ profile, onEdit }: OwnerProfileCardProps) {
       <InfoLine label="Имя" value={profile.ownerName} />
       <InfoLine label="Email" value={profile.email} />
       <InfoLine label="Телефон" value={profile.phone} />
+      <InfoLine label="Дата рождения" value={profile.birthdate} />
       <InfoLine label="Город" value={profile.city} />
       <TouchableOpacity style={styles.button} onPress={onEdit}>
         <Text style={styles.buttonText}>Редактировать профиль</Text>

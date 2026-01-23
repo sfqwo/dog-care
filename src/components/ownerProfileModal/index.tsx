@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { UserProfile, UserProfilePayload } from "@/src/domain/types";
 import { useProfileContext } from "@/src/hooks/profileContext";
-import { Input } from "../input";
+import { Input } from "@dog-care/input";
 import { Modal, ModalActionButton, ModalActions, ModalSubtitle, ModalTitle } from "../modal";
 import type { OwnerProfileFields, OwnerProfileModalProps } from "./types";
 
@@ -27,6 +27,7 @@ export function OwnerProfileModal({ visible, onClose }: OwnerProfileModalProps) 
       ownerName: form.ownerName.trim(),
       email: form.email?.trim(),
       phone: form.phone?.trim(),
+      birthdate: form.birthdate?.trim(),
       city: form.city?.trim(),
     };
     updateOwner(payload)
@@ -42,6 +43,12 @@ export function OwnerProfileModal({ visible, onClose }: OwnerProfileModalProps) 
         onChangeText={changeHandler("email")}
         placeholder="Email"
         keyboardType="email-address"
+      />
+      <Input
+        type="date"
+        value={form.birthdate ?? ""}
+        onChangeText={changeHandler("birthdate")}
+        placeholder="Дата рождения"
       />
       <Input
         value={form.phone ?? ""}

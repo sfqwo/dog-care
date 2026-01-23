@@ -35,6 +35,7 @@ const DEFAULT_PROFILE: UserProfile = {
   ownerName: "",
   email: "",
   phone: "",
+  birthdate: "",
   city: "",
   pets: [],
 };

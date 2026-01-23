@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { PetProfilePayload } from "@/src/domain/types";
 import { useProfileContext } from "@/src/hooks/profileContext";
-import { Input } from "../input";
+import { Input } from "@dog-care/input";
 import { Modal, ModalActionButton, ModalActions, ModalSubtitle, ModalTitle } from "../modal";
 import type { PetProfileFormState, PetProfileModalProps } from "./types";
 
@@ -97,6 +97,7 @@ export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
         placeholder="Пол (например девочка)"
       />
       <Input
+        type="date"
         value={form.birthdate}
         onChangeText={changeHandler("birthdate")}
         placeholder="Дата рождения (опционально)"

@@ -12,6 +12,7 @@
     "test": "npm run typecheck"
   },
   "dependencies": {
+    "@dog-care/input": "file:packages/input",
     "@expo/vector-icons": "^15.0.3",
     "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "~54.0.31",

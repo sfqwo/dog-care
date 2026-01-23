@@ -45,6 +45,7 @@ export type UserProfile = {
   ownerName: string;
   email?: string;
   phone?: string;
+  birthdate?: string;
   city?: string;
   pets: Pet[];
 };
@@ -53,5 +54,6 @@ export type UserProfilePayload = {
   ownerName: string;
   email?: string;
   phone?: string;
+  birthdate?: string;
   city?: string;
 };
