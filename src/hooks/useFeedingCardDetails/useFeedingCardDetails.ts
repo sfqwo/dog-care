@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { Feeding } from "@/src/domain/types";
+import type { Feeding } from "@dog-care/types";
 import { formatDateTime } from "@dog-care/core/utils";
 
 const LIGHT = ["#faf5ff", "#f5d0fe", "#f0abfc"] as const;

@@ -1,1 +1,1 @@
-export * from './petTabs';
+export * from './PetTabs';

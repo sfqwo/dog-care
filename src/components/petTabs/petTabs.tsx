@@ -1,64 +1,40 @@
-import { memo } from "react";
-import { Pressable, Text, View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useMemo, useCallback } from "react";
+import { Tabs } from "@dog-care/tabs";
+import { useProfileContext } from "@/src/hooks/profileContext";
 import { getSpeciesLabel } from "@dog-care/core/shared";
-import type { PetTabsProps } from "./types";
-import { styles } from "./styles";
 
-function PetTabsComponent({ pets, selectedId, onSelect }: PetTabsProps) {
-  if (!pets.length) {
-    return (
-      <View style={styles.emptyCard}>
-        <View style={styles.emptyIconCircle}>
-          <MaterialCommunityIcons name="paw" size={22} style={styles.emptyIcon} />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.emptyTitle}>Нет питомцев</Text>
-          <Text style={styles.emptySubtitle}>
-            Добавьте питомца в профиле, чтобы вести отдельные журналы прогулок.
-          </Text>
-        </View>
-      </View>
-    );
-  }
+const DEFAULT_EMPTY_STATE = {
+  icon: "paw" as const,
+  title: "Нет питомцев",
+  subtitle: "Добавьте питомца в профиле, чтобы вести отдельные журналы прогулок.",
+};
+
+export function PetTabs() {
+  const { profile, selectedPetId, setSelectedPetId } = useProfileContext();
+
+  const petTabItems = useMemo(
+    () =>
+      profile.pets.map((pet) => {
+        const subtitle = (pet.breed?.trim() || getSpeciesLabel(pet.species)) ?? "Питомец";
+        const iconName = (pet.species as any) ?? "dog";
+        return { id: pet.id, title: pet.name, subtitle, icon: iconName };
+      }),
+    [profile.pets]
+  );
+
+  const handleSelect = useCallback(
+    (id: string) => {
+      setSelectedPetId(id);
+    },
+    [setSelectedPetId]
+  );
 
   return (
-    <View style={styles.tabsGrid}>
-      {pets.map((pet) => {
-        const isActive = pet.id === selectedId;
-        const speciesLabel = getSpeciesLabel(pet.species) ?? "Питомец";
-        const iconName = pet.species ?? "dog";
-
-        return (
-          <Pressable
-            key={pet.id}
-            style={({ pressed }) => [
-              styles.tabCard,
-              isActive && styles.tabCardActive,
-              pressed && styles.tabCardPressed,
-            ]}
-            onPress={() => onSelect(pet.id)}
-          >
-            <View style={styles.tabHeader}>
-              <View style={[styles.iconPill, isActive && styles.iconPillActive]}>
-                <MaterialCommunityIcons
-                  name={iconName as any}
-                  size={18}
-                  style={[styles.icon, isActive && styles.iconActive]}
-                />
-              </View>
-              <Text style={[styles.petName, isActive && styles.petNameActive]} numberOfLines={1}>
-                {pet.name}
-              </Text>
-            </View>
-            <Text style={styles.petMeta} numberOfLines={1}>
-              {pet.breed?.trim() || speciesLabel}
-            </Text>
-          </Pressable>
-        );
-      })}
-    </View>
+    <Tabs
+      items={petTabItems}
+      selectedId={selectedPetId}
+      onSelect={handleSelect}
+      emptyState={DEFAULT_EMPTY_STATE}
+    />
   );
 }
-
-export const PetTabs = memo(PetTabsComponent);

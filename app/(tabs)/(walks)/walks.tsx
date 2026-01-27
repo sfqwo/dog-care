@@ -1,13 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Input } from "@/packages/ui/input/src";
+import { LinearGradient } from "expo-linear-gradient";
+
+import { Input } from "@/packages/ui/input";
 import {
   HeroCard,
   HeroCardBadge,
   HeroCardSubtitle,
   HeroCardTitle,
   PetTabs,
+  Hint,
   StatsBlock,
   StatsBlocks,
   SwipeableCardsList,
@@ -16,32 +19,34 @@ import {
   SwipeableCardsListItem,
   TimeRecorder,
   TimeRecorderButton,
-  TimeRecorderHint,
   TimeRecorderRow,
   TimeRecorderTitle,
 } from "@/src/components";
-import { LinearGradient } from "expo-linear-gradient";
-import { useProfileContext } from "@/src/hooks/profileContext";
-import { useWalkCardDetails } from "@/src/hooks/useWalkCardDetails";
-import { useWalkStats } from "@/src/hooks/useWalkStats";
-import { createUid, isPositiveNumber, formatDateTime } from "@dog-care/core/utils";
+import {
+  useProfileContext,
+  useWalkCardDetails,
+  useWalkStats,
+} from "@/src/hooks";
+import {
+  createUid,
+  isPositiveNumber,
+  formatDateTime,
+} from "@dog-care/core/utils";
 import { STORAGE_KEYS } from "@/src/storage/keys";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
-import type { Walk } from "@/src/domain/types";
+import type { Walk } from "@dog-care/types";
 import { pageGradient, walkStyles } from "./walks.styles";
 import type { WalkListItemProps } from "./walks.types";
 
 type WalksByPet = Record<string, Walk[]>;
 
 export default function WalksScreen() {
-  const { profile } = useProfileContext();
+  const { profile, selectedPetId } = useProfileContext();
   const [walksByPet, setWalksByPet] = useState<WalksByPet>({});
-  const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
   const [durationMin, setDurationMin] = useState("");
   const [note, setNote] = useState("");
   const hasPets = profile.pets.length > 0;
-  const activePetId = hasPets ? selectedPetId ?? profile.pets[0]?.id ?? null : null;
-  const currentWalks = activePetId ? walksByPet[activePetId] ?? [] : [];
+  const currentWalks = selectedPetId ? walksByPet[selectedPetId] ?? [] : [];
   const stats = useWalkStats(currentWalks);
 
   useEffect(() => {
@@ -54,49 +59,35 @@ export default function WalksScreen() {
     saveJSON(STORAGE_KEYS.WALKS, walksByPet);
   }, [walksByPet]);
 
-  useEffect(() => {
-    if (!profile.pets.length) {
-      setSelectedPetId(null);
-      return;
-    }
-
-    setSelectedPetId((current) => {
-      if (current && profile.pets.some((pet) => pet.id === current)) {
-        return current;
-      }
-      return profile.pets[0]?.id ?? null;
-    });
-  }, [profile.pets]);
-
   const canAddWalk = useMemo(
-    () => Boolean(activePetId) && isPositiveNumber(durationMin),
-    [activePetId, durationMin]
+    () => Boolean(selectedPetId) && isPositiveNumber(durationMin),
+    [selectedPetId, durationMin]
   );
 
   const handleAddWalk = () => {
-    if (!canAddWalk || !activePetId) return;
+    if (!canAddWalk || !selectedPetId) return;
     const newItem: Walk = {
       id: createUid(),
       startedAt: Date.now(),
-      petId: activePetId,
+      petId: selectedPetId,
       durationMin: Number(durationMin),
       note: note.trim() || undefined,
     };
     setWalksByPet((prev) => {
-      const nextWalks = [newItem, ...(prev[activePetId] ?? [])];
-      return { ...prev, [activePetId]: nextWalks };
+      const nextWalks = [newItem, ...(prev[selectedPetId] ?? [])];
+      return { ...prev, [selectedPetId]: nextWalks };
     });
     setDurationMin("");
     setNote("");
   };
 
   const handleRemoveWalk = (id: string) => {
-    if (!activePetId) return;
+    if (!selectedPetId) return;
     setWalksByPet((prev) => {
-      const current = prev[activePetId] ?? [];
+      const current = prev[selectedPetId] ?? [];
       const filtered = current.filter((walk) => walk.id !== id);
       if (filtered.length === current.length) return prev;
-      return { ...prev, [activePetId]: filtered };
+      return { ...prev, [selectedPetId]: filtered };
     });
   };
 
@@ -127,11 +118,7 @@ export default function WalksScreen() {
                 <HeroCardBadge text={heroBadgeText} />
               </HeroCard>
 
-              <PetTabs
-                pets={profile.pets}
-                selectedId={activePetId}
-                onSelect={(id) => setSelectedPetId(id)}
-              />
+              <PetTabs />
 
               <StatsBlocks>
                 <StatsBlock label="Прогулок" value={currentWalks.length} />
@@ -147,7 +134,7 @@ export default function WalksScreen() {
                     onChangeText={setDurationMin}
                     placeholder="Минуты (например 25)"
                     keyboardType="number-pad"
-                    editable={Boolean(activePetId)}
+                    editable={Boolean(selectedPetId)}
                   />
                   <TimeRecorderButton label="Добавить" onPress={handleAddWalk} disabled={!canAddWalk} />
                 </TimeRecorderRow>
@@ -156,11 +143,11 @@ export default function WalksScreen() {
                   onChangeText={setNote}
                   placeholder="Заметка (опционально)"
                   multiline
-                  editable={Boolean(activePetId)}
+                  editable={Boolean(selectedPetId)}
                 />
-                <TimeRecorderHint visible={!activePetId}>
+                <Hint visible={!selectedPetId}>
                   Добавьте питомца в профиле и выберите его, чтобы вести записи.
-                </TimeRecorderHint>
+                </Hint>
               </TimeRecorder>
             </View>
           </SwipeableCardsListHeader>

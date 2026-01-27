@@ -1,4 +1,4 @@
-import type { UserProfile } from "@/src/domain/types";
+import type { UserProfile } from "@dog-care/types";
 
 export type OwnerProfileCardProps = {
   profile: UserProfile;

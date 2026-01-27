@@ -8,8 +8,10 @@
       "@/*": ["./*"],
       "@dog-care/input": ["packages/ui/input/src"],
       "@dog-care/select": ["packages/ui/select"],
+      "@dog-care/tabs": ["packages/ui/tabs/src"],
       "@dog-care/core/shared": ["packages/core/shared"],
-      "@dog-care/core/utils": ["packages/core/utils"]
+      "@dog-care/core/utils": ["packages/core/utils"],
+      "@dog-care/types": ["packages/types/src"]
     },
   }
 }

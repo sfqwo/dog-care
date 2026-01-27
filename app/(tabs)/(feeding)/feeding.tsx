@@ -2,7 +2,21 @@ import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import { Input } from "@/packages/ui/input/src";
+
+import {
+  createUid,
+  isPositiveNumber,
+  formatDateTime,
+} from "@dog-care/core/utils";
+import type { Feeding } from "@dog-care/types";
+import {
+  useFeedingCardDetails,
+  useFeedingStats,
+  useProfileContext,
+} from "@/src/hooks";
+import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
+import { STORAGE_KEYS } from "@/src/storage/keys";
+import { Input } from "@/packages/ui/input";
 import {
   HeroCard,
   HeroCardBadge,
@@ -11,37 +25,28 @@ import {
   PetTabs,
   StatsBlock,
   StatsBlocks,
+  Hint,
   SwipeableCardsList,
   SwipeableCardsListEmpty,
   SwipeableCardsListHeader,
   SwipeableCardsListItem,
   TimeRecorder,
   TimeRecorderButton,
-  TimeRecorderHint,
   TimeRecorderRow,
   TimeRecorderTitle,
 } from "@/src/components";
-import type { Feeding } from "@/src/domain/types";
-import { useFeedingCardDetails } from "@/src/hooks/useFeedingCardDetails";
-import { useFeedingStats } from "@/src/hooks/useFeedingStats";
-import { useProfileContext } from "@/src/hooks/profileContext";
-import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
-import { STORAGE_KEYS } from "@/src/storage/keys";
-import { createUid, isPositiveNumber, formatDateTime } from "@dog-care/core/utils";
 import { feedingStyles, pageGradient } from "./feeding.styles";
 import type { FeedingListItemProps } from "./feeding.types";
 
 type FeedingsByPet = Record<string, Feeding[]>;
 
 export default function FeedingScreen() {
-  const { profile } = useProfileContext();
+  const { profile, selectedPetId } = useProfileContext();
   const [feedingsByPet, setFeedingsByPet] = useState<FeedingsByPet>({});
-  const [selectedPetId, setSelectedPetId] = useState<string | null>(null);
   const [grams, setGrams] = useState("");
   const [food, setFood] = useState("");
   const hasPets = profile.pets.length > 0;
-  const activePetId = hasPets ? selectedPetId ?? profile.pets[0]?.id ?? null : null;
-  const items = activePetId ? feedingsByPet[activePetId] ?? [] : [];
+  const items = selectedPetId ? feedingsByPet[selectedPetId] ?? [] : [];
   const stats = useFeedingStats(items);
 
   useEffect(() => {
@@ -54,47 +59,35 @@ export default function FeedingScreen() {
     saveJSON(STORAGE_KEYS.FEEDING, feedingsByPet);
   }, [feedingsByPet]);
 
-  useEffect(() => {
-    if (!profile.pets.length) {
-      setSelectedPetId(null);
-      return;
-    }
-
-    setSelectedPetId((current) => {
-      if (current && profile.pets.some((pet) => pet.id === current)) return current;
-      return profile.pets[0]?.id ?? null;
-    });
-  }, [profile.pets]);
-
   const canAddFeeding = useMemo(
-    () => Boolean(activePetId) && isPositiveNumber(grams),
-    [activePetId, grams]
+    () => Boolean(selectedPetId) && isPositiveNumber(grams),
+    [selectedPetId, grams]
   );
 
   const handleAddFeeding = () => {
-    if (!canAddFeeding || !activePetId) return;
+    if (!canAddFeeding || !selectedPetId) return;
     const newItem: Feeding = {
       id: createUid(),
       at: Date.now(),
-      petId: activePetId,
+      petId: selectedPetId,
       grams: Number(grams),
       food: food.trim() || undefined,
     };
     setFeedingsByPet((prev) => {
-      const current = prev[activePetId] ?? [];
-      return { ...prev, [activePetId]: [newItem, ...current] };
+      const current = prev[selectedPetId] ?? [];
+      return { ...prev, [selectedPetId]: [newItem, ...current] };
     });
     setGrams("");
     setFood("");
   };
 
   const handleRemoveFeeding = (id: string) => {
-    if (!activePetId) return;
+    if (!selectedPetId) return;
     setFeedingsByPet((prev) => {
-      const current = prev[activePetId] ?? [];
+      const current = prev[selectedPetId] ?? [];
       const filtered = current.filter((feed) => feed.id !== id);
       if (filtered.length === current.length) return prev;
-      return { ...prev, [activePetId]: filtered };
+      return { ...prev, [selectedPetId]: filtered };
     });
   };
 
@@ -125,7 +118,7 @@ export default function FeedingScreen() {
                 <HeroCardBadge text={heroBadgeText} />
               </HeroCard>
 
-              <PetTabs pets={profile.pets} selectedId={activePetId} onSelect={setSelectedPetId} />
+              <PetTabs />
 
               <StatsBlocks>
                 <StatsBlock label="Приемов" value={items.length} />
@@ -141,7 +134,7 @@ export default function FeedingScreen() {
                     onChangeText={setGrams}
                     placeholder="Граммы (например 120)"
                     keyboardType="number-pad"
-                    editable={Boolean(activePetId)}
+                    editable={Boolean(selectedPetId)}
                   />
                   <TimeRecorderButton label="Добавить" onPress={handleAddFeeding} disabled={!canAddFeeding} />
                 </TimeRecorderRow>
@@ -149,11 +142,11 @@ export default function FeedingScreen() {
                   value={food}
                   onChangeText={setFood}
                   placeholder="Корм или вкусняшка (опционально)"
-                  editable={Boolean(activePetId)}
+                  editable={Boolean(selectedPetId)}
                 />
-                <TimeRecorderHint visible={!activePetId}>
+                <Hint visible={!selectedPetId}>
                   Добавьте питомца в профиле, чтобы вести записи кормления.
-                </TimeRecorderHint>
+                </Hint>
               </TimeRecorder>
             </View>
           </SwipeableCardsListHeader>

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { UserProfile, UserProfilePayload } from "@/src/domain/types";
+import type { UserProfile, UserProfilePayload } from "@dog-care/types";
 import { useProfileContext } from "@/src/hooks/profileContext";
 import { Input } from "@/packages/ui/input/src";
 import { Modal, ModalActionButton, ModalActions, ModalSubtitle, ModalTitle } from "../modal";

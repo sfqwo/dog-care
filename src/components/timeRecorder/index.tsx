@@ -6,7 +6,6 @@ import type {
   TimeRecorderProps,
   TimeRecorderRowProps,
   TimeRecorderTitleProps,
-  TimeRecorderHintProps,
 } from "./types";
 
 const TimeRecorderContext = createContext(false);
@@ -40,12 +39,6 @@ export function TimeRecorderButton({ label, onPress, disabled }: TimeRecorderBut
       <Text style={styles.addButtonText}>{label}</Text>
     </TouchableOpacity>
   );
-}
-
-export function TimeRecorderHint({ children, visible = true }: TimeRecorderHintProps) {
-  useTimeRecorderGuard("TimeRecorderHint");
-  if (!visible) return null;
-  return <Text style={styles.hintText}>{children}</Text>;
 }
 
 function useTimeRecorderGuard(componentName: string) {

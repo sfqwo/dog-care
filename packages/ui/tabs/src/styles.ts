@@ -86,4 +86,53 @@ export const styles = StyleSheet.create({
     color: "rgba(15,23,42,0.65)",
     fontSize: 13,
   },
+  segmentContainer: {
+    flexDirection: "row",
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "rgba(15,23,42,0.15)",
+    backgroundColor: "rgba(15,23,42,0.06)",
+    overflow: "hidden",
+  },
+  segmentWrapper: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  segmentButton: {
+    flex: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+  },
+  segmentButtonActive: {
+    backgroundColor: "#0ea5e9",
+  },
+  segmentButtonPressed: {
+    opacity: 0.85,
+  },
+  segmentText: {
+    fontWeight: "600",
+    color: "#0f172a",
+    fontSize: 12,
+  },
+  segmentTextActive: {
+    color: "white",
+  },
+  segmentSubtitle: {
+    fontSize: 12,
+    color: "rgba(15,23,42,0.7)",
+  },
+  segmentIcon: {
+    color: "#0f172a",
+  },
+  segmentIconActive: {
+    color: "white",
+  },
+  segmentDivider: {
+    width: StyleSheet.hairlineWidth,
+    backgroundColor: "rgba(15,23,42,0.15)",
+  },
 });

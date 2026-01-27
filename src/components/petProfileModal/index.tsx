@@ -8,12 +8,17 @@ import {
   SelectOption,
   SelectOptionTitle,
 } from "@dog-care/select";
-import type { PetProfilePayload } from "@/src/domain/types";
-import { useProfileContext } from "@/src/hooks/profileContext";
-import { Input } from "@/packages/ui/input/src";
+import type { PetProfilePayload } from "@dog-care/types";
+import { useProfileContext, useDogBreeds } from "@/src/hooks";
+import { Input } from "@/packages/ui/input";
 
-import { useDogBreeds } from "@/src/hooks/useDogBreeds";
-import { Modal, ModalActionButton, ModalActions, ModalSubtitle, ModalTitle } from "../modal";
+import {
+  Modal,
+  ModalActionButton,
+  ModalActions,
+  ModalSubtitle,
+  ModalTitle,
+} from "../modal";
 import type { PetProfileFormState, PetProfileModalProps } from "./types";
 
 const emptyForm: PetProfileFormState = {

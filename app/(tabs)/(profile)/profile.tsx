@@ -1,6 +1,13 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
+
+import {
+  formatGender,
+  formatWeight,
+  getSpeciesLabel,
+} from "@dog-care/core/shared";
+import type { Pet } from "@dog-care/types";
 import {
   HeroCard,
   HeroCardBadge,
@@ -12,9 +19,7 @@ import {
   SwipeableCardsListHeader,
   SwipeableCardsListItem,
 } from "@/src/components";
-import type { Pet } from "@/src/domain/types";
-import { useProfileContext } from "@/src/hooks/profileContext";
-import { formatGender, formatWeight, getSpeciesLabel } from "@dog-care/core/shared";
+import { useProfileContext } from "@/src/hooks";
 import { profileStyles, pageGradient, petGradient } from "./profile.styles";
 import type { PetListItemProps } from "./profile.types";
 

@@ -12,9 +12,10 @@
     "test": "npm run typecheck"
   },
   "dependencies": {
-    "@dog-care/input": "file:packages/input",
-    "@dog-care/select": "file:packages/select",
     "@dog-care/core": "file:packages/core",
+    "@dog-care/input": "file:packages/ui/input",
+    "@dog-care/select": "file:packages/ui/select",
+    "@dog-care/tabs": "file:packages/ui/tabs",
     "@expo/vector-icons": "^15.0.3",
     "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "~54.0.31",

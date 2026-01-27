@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { Walk } from "@/src/domain/types";
+import type { Walk } from "@dog-care/types";
 
 export function useWalkStats(walks: Walk[]) {
   return useMemo(() => {

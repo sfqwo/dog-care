@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { Feeding } from "@/src/domain/types";
+import type { Feeding } from "@dog-care/types";
 
 export function useFeedingStats(items: Feeding[]) {
   return useMemo(() => {
