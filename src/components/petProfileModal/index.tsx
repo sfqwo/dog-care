@@ -110,7 +110,7 @@ export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
       />
 
       <View style={petProfileModalStyles.inlineRow}>
-        <View style={petProfileModalStyles.inlineFieldNarrow}>
+        <View style={petProfileModalStyles.inlineFieldWide}>
           <Controller
             control={control}
             name="species"
@@ -129,7 +129,7 @@ export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
             )}
           />
         </View>
-        <View style={petProfileModalStyles.inlineFieldWide}>
+        <View style={petProfileModalStyles.inlineFieldNarrow}>
           <Controller
             control={control}
             name="gender"

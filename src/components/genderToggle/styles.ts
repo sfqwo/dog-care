@@ -64,7 +64,7 @@ export const genderToggleStyles = StyleSheet.create({
   optionContent: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
+    gap: 2,
     paddingHorizontal: 4,
   },
 });

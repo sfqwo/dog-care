@@ -7,10 +7,10 @@ export const petProfileModalStyles = StyleSheet.create({
     alignItems: "stretch",
   },
   inlineFieldNarrow: {
-    flex: 1,
+    flex: 2,
   },
   inlineFieldWide: {
-    flex: 2,
+    flex: 3,
     minWidth: 0,
   },
   inlineInput: {
