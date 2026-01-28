@@ -1,2 +1,2 @@
-export * from './EmailInput';
+export * from './CustomInput';
 export * from './types';
