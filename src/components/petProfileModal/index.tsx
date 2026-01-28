@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
+import { Text, View } from "react-native";
 
-import { GENDER_OPTIONS, SPECIES_OPTIONS, WEIGHT_OPTIONS } from "@dog-care/core/shared";
+import { GENDER_OPTIONS, SPECIES_OPTIONS } from "@dog-care/core/shared";
 import {
   type ParsedSelectOption,
   Select,
@@ -20,6 +21,18 @@ import {
   ModalTitle,
 } from "../modal";
 import type { PetProfileFormState, PetProfileModalProps } from "./types";
+import { GenderToggle, type GenderToggleOption } from "../genderToggle";
+import { petProfileModalStyles } from "./styles";
+
+const GENDER_ICON_MAP: Record<string, GenderToggleOption["icon"]> = {
+  female: "gender-female",
+  male: "gender-male",
+};
+
+const genderToggleOptions: GenderToggleOption[] = GENDER_OPTIONS.map((option) => ({
+  ...option,
+  icon: GENDER_ICON_MAP[option.value] ?? "account",
+}));
 
 const emptyForm: PetProfileFormState = {
   name: "",
@@ -115,18 +128,34 @@ export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
     <Modal visible={visible} onClose={onClose}>
       <ModalTitle>{title}</ModalTitle>
       <ModalSubtitle>{subtitle}</ModalSubtitle>
-      <Input value={form.name} onChangeText={changeHandler("name")} placeholder="Кличка питомца" />
-      <Select
-        value={form.species}
-        placeholder="Выберите тип животного"
-        onChange={(nextValue) => handleSpeciesChange(nextValue)}
-      >
-        {SPECIES_OPTIONS.map((type) => (
-          <SelectOption key={type.title} value={type.value}>
-            <SelectOptionTitle text={type.title} />
-          </SelectOption>
-        ))}
-      </Select>
+      <Input
+        value={form.name}
+        onChangeText={changeHandler("name")}
+        placeholder="Кличка питомца"
+      />
+
+      <View style={petProfileModalStyles.inlineRow}>
+        <View style={petProfileModalStyles.inlineInput}>
+          <Select
+            value={form.species}
+            placeholder="Выберите тип животного"
+            onChange={(nextValue) => handleSpeciesChange(nextValue)}
+          >
+            {SPECIES_OPTIONS.map((type) => (
+              <SelectOption key={type.title} value={type.value}>
+                <SelectOptionTitle text={type.title} />
+              </SelectOption>
+            ))}
+          </Select>
+        </View>
+        <View style={petProfileModalStyles.inlineInput}>
+          <GenderToggle
+            value={form.gender}
+            options={genderToggleOptions}
+            onChange={(value) => setForm((prev) => ({ ...prev, gender: value }))}
+          />
+        </View>
+      </View>
 
       <Select
         value={form.breed}
@@ -147,34 +176,25 @@ export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
           </SelectOption>
         ))}
       </Select>
-      <Select
-        value={form.gender}
-        placeholder="Выберите пол"
-        onChange={(value) => setForm((prev) => ({ ...prev, gender: value }))}
-      >
-        {GENDER_OPTIONS.map((gender) => (
-          <SelectOption key={gender.value} value={gender.value}>
-            <SelectOptionTitle text={gender.title} />
-          </SelectOption>
-        ))}
-      </Select>
-      <Input
-        type="date"
-        value={form.birthdate}
-        onChangeText={changeHandler("birthdate")}
-        placeholder="Дата рождения (опционально)"
-      />
-      <Select
-        value={form.weight}
-        placeholder="Вес (кг)"
-        onChange={(value) => setForm((prev) => ({ ...prev, weight: value }))}
-      >
-        {WEIGHT_OPTIONS.map((option) => (
-          <SelectOption key={option.value} value={option.value}>
-            <SelectOptionTitle text={option.title} />
-          </SelectOption>
-        ))}
-      </Select>
+      <View style={petProfileModalStyles.inlineRow}>
+        <Input
+          type="date"
+          value={form.birthdate}
+          onChangeText={changeHandler("birthdate")}
+          placeholder="Дата рождения (опционально)"
+          style={petProfileModalStyles.inlineInput}
+        />
+        <View style={petProfileModalStyles.unitInputWrapper}>
+          <Input
+            keyboardType="decimal-pad"
+            value={form.weight}
+            onChangeText={changeHandler("weight")}
+            placeholder="Вес"
+            style={petProfileModalStyles.unitInput}
+          />
+          <Text style={petProfileModalStyles.weightUnit}>кг</Text>
+        </View>
+      </View>
       <Input
         value={form.notes}
         onChangeText={changeHandler("notes")}
