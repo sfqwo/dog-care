@@ -3,13 +3,7 @@ import { Text, View } from "react-native";
 import { Controller, useForm } from "react-hook-form";
 
 import { GENDER_OPTIONS, SPECIES_OPTIONS } from "@dog-care/core/shared";
-import {
-  type ParsedSelectOption,
-  Select,
-  SelectHeader,
-  SelectOption,
-  SelectOptionTitle,
-} from "@dog-care/select";
+import { Select, SelectHeader, SelectOption, SelectOptionTitle } from "@dog-care/select";
 import type { Pet, PetProfilePayload } from "@dog-care/types";
 import { useProfileContext, useDogBreeds } from "@/src/hooks";
 import { DateInput, Input } from "@/packages/ui/input";
@@ -84,18 +78,9 @@ export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
     }
   };
 
-  const handleSpeciesChange = (value: string, onChange: (next: string) => void) => {
-    onChange(value);
+  const handleSpeciesChange = (value: string) => {
     setValue("breed", "", { shouldValidate: true, shouldDirty: true });
     setBreedQuery("");
-  };
-
-  const handleBreedChange = (
-    value: string,
-    option: ParsedSelectOption | undefined,
-    onChange: (next: string) => void
-  ) => {
-    onChange(option?.title ?? value);
   };
 
   return (
@@ -111,23 +96,18 @@ export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
 
       <View style={petProfileModalStyles.inlineRow}>
         <View style={petProfileModalStyles.inlineFieldWide}>
-          <Controller
+          <Select
             control={control}
             name="species"
-            render={({ field }) => (
-              <Select
-                value={field.value}
-                placeholder="Выберите тип животного"
-                onChange={(nextValue) => handleSpeciesChange(nextValue, field.onChange)}
-              >
-                {SPECIES_OPTIONS.map((type) => (
-                  <SelectOption key={type.title} value={type.value}>
-                    <SelectOptionTitle text={type.title} />
-                  </SelectOption>
-                ))}
-              </Select>
-            )}
-          />
+            placeholder="Выберите тип животного"
+            onChange={handleSpeciesChange}
+          >
+            {SPECIES_OPTIONS.map((type) => (
+              <SelectOption key={type.title} value={type.value}>
+                <SelectOptionTitle text={type.title} />
+              </SelectOption>
+            ))}
+          </Select>
         </View>
         <View style={petProfileModalStyles.inlineFieldNarrow}>
           <Controller
@@ -144,31 +124,21 @@ export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
         </View>
       </View>
 
-      <Controller
+      <Select
         control={control}
         name="breed"
-        render={({ field }) => (
-          <Select
-            value={field.value}
-            placeholder="Выберите породу (опционально)"
-            disabled={breedsLoading || !breeds.length || !selectedSpecies}
-            onChange={(nextValue, option) => handleBreedChange(nextValue, option, field.onChange)}
-          >
-            <SelectHeader>
-              <Input
-                value={breedQuery}
-                onChangeText={setBreedQuery}
-                placeholder="Поиск породы"
-              />
-            </SelectHeader>
-            {breeds.map((breed) => (
-              <SelectOption key={breed.value} value={breed.title}>
-                <SelectOptionTitle text={breed.title} />
-              </SelectOption>
-            ))}
-          </Select>
-        )}
-      />
+        placeholder="Выберите породу (опционально)"
+        disabled={breedsLoading || !breeds.length || !selectedSpecies}
+      >
+        <SelectHeader>
+          <Input value={breedQuery} onChangeText={setBreedQuery} placeholder="Поиск породы" />
+        </SelectHeader>
+        {breeds.map((breed) => (
+          <SelectOption key={breed.value} value={breed.title}>
+            <SelectOptionTitle text={breed.title} />
+          </SelectOption>
+        ))}
+      </Select>
       <View style={petProfileModalStyles.inlineRow}>
         <DateInput
           control={control}

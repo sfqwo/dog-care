@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { FlatList, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { useController } from "react-hook-form";
 import { styles } from "./styles";
 import type {
   ParsedSelectOption,
@@ -20,15 +21,21 @@ import type {
 } from "./types";
 
 function SelectComponent({
-  value,
+  value: valueProp,
   placeholder = "Выберите значение",
   disabled,
   modalTitle = "Выберите вариант",
   onChange,
   children,
+  control,
+  name,
+  rules,
 }: SelectProps) {
   const [visible, setVisible] = useState(false);
   const { options, header } = useParsedChildren(children);
+  const controller = control && name ? useController({ control, name, rules }) : undefined;
+  const value = controller ? controller.field.value : valueProp;
+  const isInvalid = controller?.fieldState.invalid ?? false;
 
   const selected = useMemo(
     () => options.find((option) => option.value === value),
@@ -46,9 +53,10 @@ function SelectComponent({
   const handleSelect = useCallback(
     (option: ParsedSelectOption) => {
       setVisible(false);
+      controller?.field.onChange(option.value);
       onChange?.(option.value, option);
     },
-    [onChange]
+    [controller, onChange]
   );
 
   const renderItem = useOptionRenderer({
@@ -69,6 +77,7 @@ function SelectComponent({
           styles.trigger,
           pressed && !disabled && styles.triggerPressed,
           disabled && styles.triggerDisabled,
+          isInvalid && styles.triggerInvalid,
         ]}
       >
         <Text
@@ -93,8 +102,8 @@ function SelectComponent({
           <View style={styles.modalCard}>
             <View style={styles.sheetHandle} />
             <Text style={styles.modalTitle}>{modalTitle}</Text>
-            {header ? <View style={styles.modalHeader}>{header}</View> : null}
             <View style={styles.optionsList}>
+              {header ? <View style={styles.modalHeader}>{header}</View> : null}
               <FlatList
                 data={options}
                 keyExtractor={(item) => item.value}
@@ -118,25 +127,21 @@ Select.displayName = "@dog-care/select/Select";
 export function SelectOption(_: SelectOptionProps) {
   return null;
 }
-
 SelectOption.displayName = "@dog-care/select/SelectOption";
 
 export function SelectOptionTitle(_: SelectOptionSlotTextProps) {
   return null;
 }
-
 SelectOptionTitle.displayName = "@dog-care/select/SelectOptionTitle";
 
 export function SelectOptionText(_: SelectOptionSlotTextProps) {
   return null;
 }
-
 SelectOptionText.displayName = "@dog-care/select/SelectOptionText";
 
 export function SelectOptionDescription(_: SelectOptionSlotTextProps) {
   return null;
 }
-
 SelectOptionDescription.displayName = "@dog-care/select/SelectOptionDescription";
 
 type SelectChild = ReactElement<SelectOptionProps, typeof SelectOption>;
@@ -145,7 +150,6 @@ type SelectHeaderElement = ReactElement<SelectHeaderProps, typeof SelectHeader>;
 export function SelectHeader({ children }: SelectHeaderProps) {
   return <>{children}</>;
 }
-
 SelectHeader.displayName = "@dog-care/select/SelectHeader";
 
 function useParsedChildren(children: ReactNode): {
@@ -169,11 +173,21 @@ function useParsedChildren(children: ReactNode): {
 }
 
 function isSelectOptionElement(child: ReactNode): child is SelectChild {
-  return isValidElement(child) && child.type === SelectOption;
+  return (
+    isValidElement(child) &&
+    (child.type === SelectOption ||
+      (typeof child.type === "function" &&
+        (child.type as any).displayName === SelectOption.displayName))
+  );
 }
 
 function isSelectHeaderElement(child: ReactNode): child is SelectHeaderElement {
-  return isValidElement(child) && child.type === SelectHeader;
+  return (
+    isValidElement(child) &&
+    (child.type === SelectHeader ||
+      (typeof child.type === "function" &&
+        (child.type as any).displayName === SelectHeader.displayName))
+  );
 }
 
 function extractOption(element: SelectChild): ParsedSelectOption {
@@ -181,19 +195,33 @@ function extractOption(element: SelectChild): ParsedSelectOption {
 
   Children.forEach(element.props.children, (child) => {
     if (!isValidElement(child)) return;
-    if (child.type === SelectOptionTitle) {
+    if (isSlotElement(child, SelectOptionTitle)) {
       const node = child as ReactElement<SelectOptionSlotTextProps, typeof SelectOptionTitle>;
       option.title = node.props.text;
-    } else if (child.type === SelectOptionText) {
+    } else if (isSlotElement(child, SelectOptionText)) {
       const node = child as ReactElement<SelectOptionSlotTextProps, typeof SelectOptionText>;
       option.text = node.props.text;
-    } else if (child.type === SelectOptionDescription) {
+    } else if (isSlotElement(child, SelectOptionDescription)) {
       const node = child as ReactElement<SelectOptionSlotTextProps, typeof SelectOptionDescription>;
       option.description = node.props.text;
     }
   });
 
   return option;
+}
+
+function isSlotElement<
+  T extends
+    | typeof SelectOptionTitle
+    | typeof SelectOptionText
+    | typeof SelectOptionDescription
+>(child: ReactNode, component: T): child is ReactElement<SelectOptionSlotTextProps, T> {
+  return (
+    isValidElement(child) &&
+    (child.type === component ||
+      (typeof child.type === "function" &&
+        (child.type as any).displayName === component.displayName))
+  );
 }
 
 function useOptionRenderer({

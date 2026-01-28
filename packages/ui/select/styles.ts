@@ -16,6 +16,9 @@ export const styles = StyleSheet.create({
   triggerDisabled: {
     opacity: 0.5,
   },
+  triggerInvalid: {
+    borderColor: "#f87171",
+  },
   label: {
     fontSize: 16,
     color: "#111827",
@@ -55,8 +58,10 @@ export const styles = StyleSheet.create({
   },
   modalHeader: {
     paddingHorizontal: 4,
-    paddingVertical: 4,
+    paddingBlockEnd: 30,
     gap: 8,
+    width: "100%",
+    backgroundColor: "#FFFFFF",
   },
   optionsList: {
     borderRadius: 20,
