@@ -32,19 +32,10 @@ export const vetPassportStyles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: "rgba(15,23,42,0.08)",
   },
-  listHeader: {
+  addButtonContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-  },
-  listTitle: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#0f172a",
-  },
-  listDescription: {
-    fontSize: 13,
-    color: "rgba(15,23,42,0.7)",
+    justifyContent: "flex-end"
   },
   entryCountLabel: {
     fontSize: 13,
@@ -81,6 +72,7 @@ export const vetPassportStyles = StyleSheet.create({
     fontWeight: "600",
   },
   emptyNote: {
+    flex: 1,
     fontSize: 13,
     color: "rgba(15,23,42,0.6)",
   },

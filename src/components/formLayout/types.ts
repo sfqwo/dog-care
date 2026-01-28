@@ -6,6 +6,8 @@ export type FormStackProps = {
 
 export type FormCardProps = {
   children: ReactNode;
+  collapsible?: boolean;
+  defaultCollapsed?: boolean;
 };
 
 export type FormCardTitleProps = {

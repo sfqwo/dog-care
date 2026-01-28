@@ -101,18 +101,18 @@ export function VaccineCard() {
       <FormCardSubtitle>{activeSection.description}</FormCardSubtitle>
       <View style={vetPassportStyles.tabsRow}>
         <Text style={vetPassportStyles.entryCountLabel}>
-        {hasEntries ? `Записей: ${entries.length}` : "Нет записей"}
-      </Text>
-      <Pressable
-        style={[
-          vetPassportStyles.addVaccineButton,
-          disabled && vetPassportStyles.addVaccineButtonDisabled,
-        ]}
-        onPress={handleAddEntry}
-        disabled={disabled}
-      >
-        <Text style={vetPassportStyles.addVaccineButtonText}>Добавить прививку</Text>
-      </Pressable>
+          {hasEntries ? `Записей: ${entries.length}` : "Нет записей"}
+        </Text>
+        <Pressable
+          style={[
+            vetPassportStyles.addVaccineButton,
+            disabled && vetPassportStyles.addVaccineButtonDisabled,
+          ]}
+          onPress={handleAddEntry}
+          disabled={disabled}
+        >
+          <Text style={vetPassportStyles.addVaccineButtonText}>Добавить прививку</Text>
+        </Pressable>
       </View>
       <View style={vetPassportStyles.vaccineGroup}>
         {hasEntries ? (
@@ -220,15 +220,23 @@ export function OptionalVaccinesCard() {
     setOptionalVaccines(entries.filter((_, i) => i !== index));
   };
 
+  const isExistEntries = entries.length;
+  const descriptionText = !isExistEntries ?
+    'Пока нет записей — добавьте первую вакцину.'
+    : `Сделано вакцинаций: ${entries.length}`;
+
   return (
     <FormCard>
-      <View style={vetPassportStyles.listHeader}>
-        <Text style={vetPassportStyles.listTitle}>Дополнительные вакцины</Text>
+      <FormCardTitle>Дополнительные вакцины</FormCardTitle>
+      <View style={vetPassportStyles.addButtonContainer}>
+        <Text style={vetPassportStyles.emptyNote}>
+          {descriptionText}
+        </Text>
         <Pressable style={vetPassportStyles.addButton} onPress={handleAdd} disabled={disabled}>
           <Text style={vetPassportStyles.addButtonText}>Добавить</Text>
         </Pressable>
       </View>
-      {entries.length ? (
+      {isExistEntries ? (
         entries.map((entry, index) => (
           <View key={`optional-${index}`} style={vetPassportStyles.listCard}>
             <Input
@@ -285,11 +293,7 @@ export function OptionalVaccinesCard() {
             </Pressable>
           </View>
         ))
-      ) : (
-        <Text style={vetPassportStyles.emptyNote}>
-          Пока нет записей — добавьте первую вакцину.
-        </Text>
-      )}
+      ) : null}
     </FormCard>
   );
 }
@@ -318,16 +322,24 @@ export function TreatmentSectionCard({ section }: TreatmentSectionCardProps) {
     setTreatmentEntries(section.key, entries.filter((_, i) => i !== index));
   };
 
+  const isExistEntries = entries.length;
+  const descriptionText = !isExistEntries ?
+    'Нет записей — нажмите «Добавить», чтобы сохранить обработку.'
+    : `Сделано обработок: ${entries.length}`;
+
   return (
     <FormCard>
-      <View style={vetPassportStyles.listHeader}>
-        <Text style={vetPassportStyles.listTitle}>{section.title}</Text>
+      <FormCardTitle>{section.title}</FormCardTitle>
+      <FormCardSubtitle>{section.description}</FormCardSubtitle>
+      <View style={vetPassportStyles.addButtonContainer}>
+        <Text style={vetPassportStyles.emptyNote}>
+          {descriptionText}
+        </Text>
         <Pressable style={vetPassportStyles.addButton} onPress={handleAdd} disabled={disabled}>
           <Text style={vetPassportStyles.addButtonText}>Добавить</Text>
         </Pressable>
       </View>
-      <Text style={vetPassportStyles.listDescription}>{section.description}</Text>
-      {entries.length ? (
+      {isExistEntries ? (
         entries.map((entry, index) => (
           <View key={`${section.key}-${index}`} style={vetPassportStyles.listCard}>
             <Input
@@ -365,11 +377,7 @@ export function TreatmentSectionCard({ section }: TreatmentSectionCardProps) {
             </Pressable>
           </View>
         ))
-      ) : (
-        <Text style={vetPassportStyles.emptyNote}>
-          Нет записей — нажмите «Добавить», чтобы сохранить обработку.
-        </Text>
-      )}
+      ) : null}
     </FormCard>
   );
 }
@@ -395,18 +403,26 @@ export function AllergyCard() {
     setAllergyEntries(entries.filter((_, i) => i !== index));
   };
 
+  const isExistEntries = entries.length;
+  const descriptionText = !isExistEntries ?
+    'Нет записей — добавьте первую аллергию и реакцию.'
+    : `Всего записей: ${entries.length}`;
+
   return (
     <FormCard>
-      <View style={vetPassportStyles.listHeader}>
-        <Text style={vetPassportStyles.listTitle}>Аллергии</Text>
+      <FormCardTitle>Аллергии</FormCardTitle>
+      <FormCardSubtitle>
+        Добавьте триггер, реакцию и рекомендации
+      </FormCardSubtitle>
+      <View style={vetPassportStyles.addButtonContainer}>
+        <Text style={vetPassportStyles.emptyNote}>
+          {descriptionText}
+        </Text>
         <Pressable style={vetPassportStyles.addButton} onPress={handleAdd} disabled={disabled}>
           <Text style={vetPassportStyles.addButtonText}>Добавить</Text>
         </Pressable>
       </View>
-      <Text style={vetPassportStyles.listDescription}>
-        Добавьте триггер, реакцию и рекомендации
-      </Text>
-      {entries.length ? (
+      {isExistEntries ? (
         entries.map((entry, index) => (
           <View key={`allergy-${index}`} style={vetPassportStyles.listCard}>
             <Input
@@ -438,11 +454,7 @@ export function AllergyCard() {
             </Pressable>
           </View>
         ))
-      ) : (
-        <Text style={vetPassportStyles.emptyNote}>
-          Нет записей — добавьте первую аллергию и реакцию.
-        </Text>
-      )}
+      ) : null}
     </FormCard>
   );
 }
