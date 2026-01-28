@@ -1,16 +1,9 @@
 import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+
 import type { UserProfile, UserProfilePayload } from "@dog-care/types";
 import { useProfileContext } from "@/src/hooks/profileContext";
-import {
-  DateInput,
-  EmailInput,
-  Input,
-  PhoneInput,
-  isDateValueValid,
-  isEmailValueValid,
-  isPhoneValueValid,
-} from "@/packages/ui/input";
+import { DateInput, EmailInput, Input, PhoneInput } from "@/packages/ui/input";
 import { Modal, ModalActionButton, ModalActions, ModalSubtitle, ModalTitle } from "../modal";
 import type { OwnerProfileModalProps, OwnerFormValues } from "./types";
 
@@ -47,42 +40,15 @@ export function OwnerProfileModal({ visible, onClose }: OwnerProfileModalProps) 
     <Modal visible={visible} onClose={onClose}>
       <ModalTitle>Редактировать профиль</ModalTitle>
       <ModalSubtitle>Обновите данные владельца.</ModalSubtitle>
-      <Controller
+      <Input
         control={control}
         name="ownerName"
         rules={{ required: true }}
-        render={({ field }) => (
-          <Input
-            value={field.value}
-            onChangeText={field.onChange}
-            placeholder="Имя владельца"
-          />
-        )}
+        placeholder="Имя владельца"
       />
-      <Controller
-        control={control}
-        name="email"
-        rules={{ validate: isEmailValueValid }}
-        render={({ field }) => (
-          <EmailInput value={field.value} onChangeText={field.onChange} placeholder="Email" />
-        )}
-      />
-      <Controller
-        control={control}
-        name="birthdate"
-        rules={{ validate: isDateValueValid }}
-        render={({ field }) => (
-          <DateInput value={field.value} onChangeText={field.onChange} placeholder="Дата рождения" />
-        )}
-      />
-      <Controller
-        control={control}
-        name="phone"
-        rules={{ validate: isPhoneValueValid }}
-        render={({ field }) => (
-          <PhoneInput value={field.value} onChangeText={field.onChange} placeholder="Телефон" />
-        )}
-      />
+      <EmailInput control={control} name="email" placeholder="Email" />
+      <DateInput control={control} name="birthdate" placeholder="Дата рождения" />
+      <PhoneInput control={control} name="phone" placeholder="Телефон" />
       <ModalActions>
         <ModalActionButton closeOnPress>Отменить</ModalActionButton>
         <ModalActionButton

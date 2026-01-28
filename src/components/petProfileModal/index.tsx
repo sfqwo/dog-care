@@ -12,7 +12,7 @@ import {
 } from "@dog-care/select";
 import type { Pet, PetProfilePayload } from "@dog-care/types";
 import { useProfileContext, useDogBreeds } from "@/src/hooks";
-import { DateInput, Input, isDateValueValid } from "@/packages/ui/input";
+import { DateInput, Input } from "@/packages/ui/input";
 
 import {
   Modal,
@@ -102,18 +102,11 @@ export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
     <Modal visible={visible} onClose={onClose}>
       <ModalTitle>{title}</ModalTitle>
       <ModalSubtitle>{subtitle}</ModalSubtitle>
-      <Controller
+      <Input
         control={control}
         name="name"
         rules={{ required: true }}
-        render={({ field, fieldState }) => (
-          <Input
-            value={field.value}
-            onChangeText={field.onChange}
-            placeholder="Кличка питомца"
-            style={fieldState.invalid ? petProfileModalStyles.inputInvalid : undefined}
-          />
-        )}
+        placeholder="Кличка питомца"
       />
 
       <View style={petProfileModalStyles.inlineRow}>
@@ -177,50 +170,28 @@ export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
         )}
       />
       <View style={petProfileModalStyles.inlineRow}>
-        <Controller
+        <DateInput
           control={control}
           name="birthdate"
-          rules={{ validate: isDateValueValid }}
-          render={({ field, fieldState }) => (
-            <DateInput
-              value={field.value}
-              onChangeText={field.onChange}
-              placeholder="Дата рождения (опционально)"
-              style={[
-                petProfileModalStyles.inlineInput,
-                fieldState.invalid && petProfileModalStyles.inputInvalid,
-              ]}
-            />
-          )}
+          placeholder="Дата рождения (опционально)"
+          style={petProfileModalStyles.inlineInput}
         />
         <View style={petProfileModalStyles.unitInputWrapper}>
-          <Controller
+          <Input
             control={control}
             name="weight"
-            render={({ field }) => (
-              <Input
-                keyboardType="decimal-pad"
-                value={field.value}
-                onChangeText={field.onChange}
-                placeholder="Вес"
-                style={petProfileModalStyles.unitInput}
-              />
-            )}
+            keyboardType="decimal-pad"
+            placeholder="Вес"
+            style={petProfileModalStyles.unitInput}
           />
           <Text style={petProfileModalStyles.weightUnit}>кг</Text>
         </View>
       </View>
-      <Controller
+      <Input
         control={control}
         name="notes"
-        render={({ field }) => (
-          <Input
-            value={field.value}
-            onChangeText={field.onChange}
-            placeholder="Заметки"
-            multiline
-          />
-        )}
+        placeholder="Заметки"
+        multiline
       />
       <ModalActions>
         <ModalActionButton closeOnPress>Отменить</ModalActionButton>
