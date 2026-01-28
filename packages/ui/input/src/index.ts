@@ -1,3 +1,6 @@
-export { BaseInput } from "./BaseInput";
-export { Input } from "./Input";
-export type { BaseInputProps, InputProps } from "./types";
+export * from "./BaseInput";
+export * from "./Input";
+export * from "./EmailInput";
+export * from "./PhoneInput";
+export * from "./DateInput";
+export { isEmailValueValid, isPhoneValueValid, isDateValueValid } from "@dog-care/core/utils";

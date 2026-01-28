@@ -15,7 +15,7 @@ import {
   FormCardTitle,
   FormCardSubtitle,
 } from "@/src/components";
-import { Input } from "@/packages/ui/input";
+import { DateInput, Input } from "@/packages/ui/input";
 import type {
   AllergyEntry,
   TreatmentEntry,
@@ -118,15 +118,13 @@ export function VaccineCard() {
         {hasEntries ? (
           entries.map((entry, index) => (
             <View key={`${activeSection.key}-${index}`} style={vetPassportStyles.listCard}>
-              <Input
-                type="date"
+              <DateInput
                 value={entry?.date ?? ""}
                 onChangeText={handleEntryFieldChange(index, "date")}
                 placeholder="Дата вакцинации"
                 editable={!disabled}
               />
-              <Input
-                type="date"
+              <DateInput
                 value={entry?.validUntil ?? ""}
                 onChangeText={handleEntryFieldChange(index, "validUntil")}
                 placeholder="Действительна до"
@@ -257,15 +255,13 @@ export function OptionalVaccinesCard() {
               placeholder="Серия / партия"
               editable={!disabled}
             />
-            <Input
-              type="date"
+            <DateInput
               value={entry?.date ?? ""}
               onChangeText={handleChangeField(index, "date")}
               placeholder="Дата вакцинации"
               editable={!disabled}
             />
-            <Input
-              type="date"
+            <DateInput
               value={entry?.validUntil ?? ""}
               onChangeText={handleChangeField(index, "validUntil")}
               placeholder="Действительна до"
@@ -342,8 +338,7 @@ export function TreatmentSectionCard({ section }: TreatmentSectionCardProps) {
       {isExistEntries ? (
         entries.map((entry, index) => (
           <View key={`${section.key}-${index}`} style={vetPassportStyles.listCard}>
-            <Input
-              type="date"
+            <DateInput
               value={entry?.date ?? ""}
               onChangeText={handleFieldChange(index, "date")}
               placeholder="Дата"

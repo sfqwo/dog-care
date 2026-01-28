@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
+import { Controller, useForm } from "react-hook-form";
 
 import { GENDER_OPTIONS, SPECIES_OPTIONS } from "@dog-care/core/shared";
 import {
@@ -9,9 +10,9 @@ import {
   SelectOption,
   SelectOptionTitle,
 } from "@dog-care/select";
-import type { PetProfilePayload } from "@dog-care/types";
+import type { Pet, PetProfilePayload } from "@dog-care/types";
 import { useProfileContext, useDogBreeds } from "@/src/hooks";
-import { Input } from "@/packages/ui/input";
+import { DateInput, Input, isDateValueValid } from "@/packages/ui/input";
 
 import {
   Modal,
@@ -34,21 +35,21 @@ const genderToggleOptions: GenderToggleOption[] = GENDER_OPTIONS.map((option) =>
   icon: GENDER_ICON_MAP[option.value] ?? "account",
 }));
 
-const emptyForm: PetProfileFormState = {
-  name: "",
-  breed: "",
-  species: "",
-  gender: "",
-  birthdate: "",
-  weight: "",
-  notes: "",
-};
-
 export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
   const { addPet, updatePet, editingPet } = useProfileContext();
-  const [form, setForm] = useState<PetProfileFormState>(emptyForm);
   const [breedQuery, setBreedQuery] = useState("");
-  const selectedSpecies = form.species || SPECIES_OPTIONS[0].value;
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { isValid },
+  } = useForm<PetProfileFormState>({
+    mode: "onChange",
+    defaultValues: buildPetFormDefaults(),
+  });
+  const selectedSpecies = watch("species") || SPECIES_OPTIONS[0].value;
   const { breeds, loading: breedsLoading } = useDogBreeds(selectedSpecies, breedQuery);
   const isEditing = Boolean(editingPet);
   const title = isEditing ? "Редактировать питомца" : "Добавить питомца";
@@ -56,54 +57,24 @@ export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
     ? "Обновите данные и сохраните изменения."
     : "Заполните данные нового питомца.";
   const submitLabel = isEditing ? "Сохранить" : "Добавить";
+  const canSubmit = isValid && (!isEditing || Boolean(editingPet));
 
   useEffect(() => {
     if (visible) {
-      if (editingPet) {
-        setForm({
-          name: editingPet.name,
-          breed: editingPet.breed ?? "",
-          species: editingPet.species ?? SPECIES_OPTIONS[0].value,
-          gender: editingPet.gender ?? "",
-          birthdate: editingPet.birthdate ?? "",
-          weight: editingPet.weight ?? "",
-          notes: editingPet.notes ?? "",
-        });
-      } else {
-        setForm({
-          ...emptyForm,
-          species: SPECIES_OPTIONS[0].value,
-        });
-      }
-      setBreedQuery("");
-    } else {
-      setForm(emptyForm);
+      reset(buildPetFormDefaults(editingPet));
       setBreedQuery("");
     }
-  }, [visible, editingPet]);
+  }, [visible, editingPet, reset]);
 
-  const canSubmit = useMemo(() => {
-    if (!form.name.trim()) return false;
-    if (isEditing && !editingPet) return false;
-    return true;
-  }, [form.name, isEditing, editingPet]);
-
-  const handleChange = (field: keyof PetProfileFormState, value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-  };
-  const changeHandler = (field: keyof PetProfileFormState) => (value: string) =>
-    handleChange(field, value);
-
-  const handleSubmit = () => {
-    if (!canSubmit) return;
+  const onSubmit = (values: PetProfileFormState) => {
     const payload: PetProfilePayload = {
-      name: form.name.trim(),
-      breed: form.breed.trim() || undefined,
-      species: form.species.trim() || undefined,
-      gender: form.gender.trim() || undefined,
-      birthdate: form.birthdate.trim() || undefined,
-      weight: form.weight.trim() || undefined,
-      notes: form.notes.trim() || undefined,
+      name: values.name.trim(),
+      breed: values.breed.trim() || undefined,
+      species: values.species.trim() || undefined,
+      gender: values.gender.trim() || undefined,
+      birthdate: values.birthdate.trim() || undefined,
+      weight: values.weight.trim() || undefined,
+      notes: values.notes.trim() || undefined,
     };
 
     if (isEditing && editingPet) {
@@ -113,100 +84,166 @@ export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
     }
   };
 
-  const handleBreedChange = (value: string, option?: ParsedSelectOption) => {
-    const label = option?.title ?? value;
-    setForm((prev) => ({ ...prev, breed: label }));
-  };
-  const handleSpeciesChange = (value: string) => {
-    setForm((prev) => (
-      prev.species !== value ? { ...prev, species: value, breed: "" } : prev
-    ));
+  const handleSpeciesChange = (value: string, onChange: (next: string) => void) => {
+    onChange(value);
+    setValue("breed", "", { shouldValidate: true, shouldDirty: true });
     setBreedQuery("");
+  };
+
+  const handleBreedChange = (
+    value: string,
+    option: ParsedSelectOption | undefined,
+    onChange: (next: string) => void
+  ) => {
+    onChange(option?.title ?? value);
   };
 
   return (
     <Modal visible={visible} onClose={onClose}>
       <ModalTitle>{title}</ModalTitle>
       <ModalSubtitle>{subtitle}</ModalSubtitle>
-      <Input
-        value={form.name}
-        onChangeText={changeHandler("name")}
-        placeholder="Кличка питомца"
+      <Controller
+        control={control}
+        name="name"
+        rules={{ required: true }}
+        render={({ field, fieldState }) => (
+          <Input
+            value={field.value}
+            onChangeText={field.onChange}
+            placeholder="Кличка питомца"
+            style={fieldState.invalid ? petProfileModalStyles.inputInvalid : undefined}
+          />
+        )}
       />
 
       <View style={petProfileModalStyles.inlineRow}>
-        <View style={petProfileModalStyles.inlineInput}>
-          <Select
-            value={form.species}
-            placeholder="Выберите тип животного"
-            onChange={(nextValue) => handleSpeciesChange(nextValue)}
-          >
-            {SPECIES_OPTIONS.map((type) => (
-              <SelectOption key={type.title} value={type.value}>
-                <SelectOptionTitle text={type.title} />
-              </SelectOption>
-            ))}
-          </Select>
+        <View style={petProfileModalStyles.inlineFieldNarrow}>
+          <Controller
+            control={control}
+            name="species"
+            render={({ field }) => (
+              <Select
+                value={field.value}
+                placeholder="Выберите тип животного"
+                onChange={(nextValue) => handleSpeciesChange(nextValue, field.onChange)}
+              >
+                {SPECIES_OPTIONS.map((type) => (
+                  <SelectOption key={type.title} value={type.value}>
+                    <SelectOptionTitle text={type.title} />
+                  </SelectOption>
+                ))}
+              </Select>
+            )}
+          />
         </View>
-        <View style={petProfileModalStyles.inlineInput}>
-          <GenderToggle
-            value={form.gender}
-            options={genderToggleOptions}
-            onChange={(value) => setForm((prev) => ({ ...prev, gender: value }))}
+        <View style={petProfileModalStyles.inlineFieldWide}>
+          <Controller
+            control={control}
+            name="gender"
+            render={({ field }) => (
+              <GenderToggle
+                value={field.value}
+                options={genderToggleOptions}
+                onChange={field.onChange}
+              />
+            )}
           />
         </View>
       </View>
 
-      <Select
-        value={form.breed}
-        placeholder="Выберите породу (опционально)"
-        disabled={breedsLoading || !breeds.length || !form.species}
-        onChange={(nextValue, option) => handleBreedChange(nextValue, option)}
-      >
-        <SelectHeader>
-          <Input
-            value={breedQuery}
-            onChangeText={setBreedQuery}
-            placeholder="Поиск породы"
-          />
-        </SelectHeader>
-        {breeds.map((breed) => (
-          <SelectOption key={breed.value} value={breed.title}>
-            <SelectOptionTitle text={breed.title} />
-          </SelectOption>
-        ))}
-      </Select>
+      <Controller
+        control={control}
+        name="breed"
+        render={({ field }) => (
+          <Select
+            value={field.value}
+            placeholder="Выберите породу (опционально)"
+            disabled={breedsLoading || !breeds.length || !selectedSpecies}
+            onChange={(nextValue, option) => handleBreedChange(nextValue, option, field.onChange)}
+          >
+            <SelectHeader>
+              <Input
+                value={breedQuery}
+                onChangeText={setBreedQuery}
+                placeholder="Поиск породы"
+              />
+            </SelectHeader>
+            {breeds.map((breed) => (
+              <SelectOption key={breed.value} value={breed.title}>
+                <SelectOptionTitle text={breed.title} />
+              </SelectOption>
+            ))}
+          </Select>
+        )}
+      />
       <View style={petProfileModalStyles.inlineRow}>
-        <Input
-          type="date"
-          value={form.birthdate}
-          onChangeText={changeHandler("birthdate")}
-          placeholder="Дата рождения (опционально)"
-          style={petProfileModalStyles.inlineInput}
+        <Controller
+          control={control}
+          name="birthdate"
+          rules={{ validate: isDateValueValid }}
+          render={({ field, fieldState }) => (
+            <DateInput
+              value={field.value}
+              onChangeText={field.onChange}
+              placeholder="Дата рождения (опционально)"
+              style={[
+                petProfileModalStyles.inlineInput,
+                fieldState.invalid && petProfileModalStyles.inputInvalid,
+              ]}
+            />
+          )}
         />
         <View style={petProfileModalStyles.unitInputWrapper}>
-          <Input
-            keyboardType="decimal-pad"
-            value={form.weight}
-            onChangeText={changeHandler("weight")}
-            placeholder="Вес"
-            style={petProfileModalStyles.unitInput}
+          <Controller
+            control={control}
+            name="weight"
+            render={({ field }) => (
+              <Input
+                keyboardType="decimal-pad"
+                value={field.value}
+                onChangeText={field.onChange}
+                placeholder="Вес"
+                style={petProfileModalStyles.unitInput}
+              />
+            )}
           />
           <Text style={petProfileModalStyles.weightUnit}>кг</Text>
         </View>
       </View>
-      <Input
-        value={form.notes}
-        onChangeText={changeHandler("notes")}
-        placeholder="Заметки"
-        multiline
+      <Controller
+        control={control}
+        name="notes"
+        render={({ field }) => (
+          <Input
+            value={field.value}
+            onChangeText={field.onChange}
+            placeholder="Заметки"
+            multiline
+          />
+        )}
       />
       <ModalActions>
         <ModalActionButton closeOnPress>Отменить</ModalActionButton>
-        <ModalActionButton closeOnPress onPress={handleSubmit} disabled={!canSubmit}>
+        <ModalActionButton
+          closeOnPress
+          onPress={handleSubmit(onSubmit)}
+          disabled={!canSubmit}
+        >
           {submitLabel}
         </ModalActionButton>
       </ModalActions>
     </Modal>
   );
+}
+
+function buildPetFormDefaults(pet?: Pet | null): PetProfileFormState {
+  return {
+    name: pet?.name ?? "",
+    breed: pet?.breed ?? "",
+    species: pet?.species ?? SPECIES_OPTIONS[0].value,
+    gender: pet?.gender ?? "",
+    birthdate: pet?.birthdate ?? "",
+    weight: pet?.weight ?? "",
+    notes: pet?.notes ?? "",
+  };
 }

@@ -16,4 +16,7 @@ export const styles = StyleSheet.create({
   note: {
     minHeight: 48,
   },
+  invalid: {
+    borderColor: "#f87171",
+  },
 });

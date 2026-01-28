@@ -6,6 +6,13 @@ export const petProfileModalStyles = StyleSheet.create({
     gap: 12,
     alignItems: "stretch",
   },
+  inlineFieldNarrow: {
+    flex: 1,
+  },
+  inlineFieldWide: {
+    flex: 2,
+    minWidth: 0,
+  },
   inlineInput: {
     flex: 1,
   },
@@ -23,5 +30,8 @@ export const petProfileModalStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#0f172a",
+  },
+  inputInvalid: {
+    borderColor: "#f87171",
   },
 });

@@ -1,33 +1,44 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
 import type { UserProfile, UserProfilePayload } from "@dog-care/types";
 import { useProfileContext } from "@/src/hooks/profileContext";
-import { Input } from "@/packages/ui/input/src";
+import {
+  DateInput,
+  EmailInput,
+  Input,
+  PhoneInput,
+  isDateValueValid,
+  isEmailValueValid,
+  isPhoneValueValid,
+} from "@/packages/ui/input";
 import { Modal, ModalActionButton, ModalActions, ModalSubtitle, ModalTitle } from "../modal";
-import type { OwnerProfileFields, OwnerProfileModalProps } from "./types";
+import type { OwnerProfileModalProps, OwnerFormValues } from "./types";
 
 export function OwnerProfileModal({ visible, onClose }: OwnerProfileModalProps) {
   const { profile, updateOwner } = useProfileContext();
-  const [form, setForm] = useState<UserProfile>(profile);
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isValid },
+  } = useForm<OwnerFormValues>({
+    mode: "onChange",
+    reValidateMode: "onChange",
+    defaultValues: mapProfileToForm(profile),
+  });
 
   useEffect(() => {
     if (visible) {
-      setForm(profile);
+      reset(mapProfileToForm(profile));
     }
-  }, [visible, profile]);
+  }, [visible, profile, reset]);
 
-  const canSubmit = useMemo(() => form.ownerName.trim().length > 0, [form.ownerName]);
-
-  const changeHandler = (field: OwnerProfileFields) => (value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = () => {
-    if (!canSubmit) return;
+  const onSubmit = (values: OwnerFormValues) => {
     const payload: UserProfilePayload = {
-      ownerName: form.ownerName.trim(),
-      email: form.email?.trim(),
-      phone: form.phone?.trim(),
-      birthdate: form.birthdate?.trim(),
+      ownerName: values.ownerName.trim(),
+      email: values.email.trim() || undefined,
+      phone: values.phone.trim() || undefined,
+      birthdate: values.birthdate.trim() || undefined,
     };
     updateOwner(payload);
   };
@@ -36,31 +47,61 @@ export function OwnerProfileModal({ visible, onClose }: OwnerProfileModalProps) 
     <Modal visible={visible} onClose={onClose}>
       <ModalTitle>Редактировать профиль</ModalTitle>
       <ModalSubtitle>Обновите данные владельца.</ModalSubtitle>
-      <Input value={form.ownerName} onChangeText={changeHandler("ownerName")} placeholder="Имя владельца" />
-      <Input
-        value={form.email ?? ""}
-        onChangeText={changeHandler("email")}
-        placeholder="Email"
-        keyboardType="email-address"
+      <Controller
+        control={control}
+        name="ownerName"
+        rules={{ required: true }}
+        render={({ field }) => (
+          <Input
+            value={field.value}
+            onChangeText={field.onChange}
+            placeholder="Имя владельца"
+          />
+        )}
       />
-      <Input
-        type="date"
-        value={form.birthdate ?? ""}
-        onChangeText={changeHandler("birthdate")}
-        placeholder="Дата рождения"
+      <Controller
+        control={control}
+        name="email"
+        rules={{ validate: isEmailValueValid }}
+        render={({ field }) => (
+          <EmailInput value={field.value} onChangeText={field.onChange} placeholder="Email" />
+        )}
       />
-      <Input
-        value={form.phone ?? ""}
-        onChangeText={changeHandler("phone")}
-        placeholder="Телефон"
-        keyboardType="phone-pad"
+      <Controller
+        control={control}
+        name="birthdate"
+        rules={{ validate: isDateValueValid }}
+        render={({ field }) => (
+          <DateInput value={field.value} onChangeText={field.onChange} placeholder="Дата рождения" />
+        )}
+      />
+      <Controller
+        control={control}
+        name="phone"
+        rules={{ validate: isPhoneValueValid }}
+        render={({ field }) => (
+          <PhoneInput value={field.value} onChangeText={field.onChange} placeholder="Телефон" />
+        )}
       />
       <ModalActions>
         <ModalActionButton closeOnPress>Отменить</ModalActionButton>
-        <ModalActionButton closeOnPress onPress={handleSubmit} disabled={!canSubmit}>
+        <ModalActionButton
+          closeOnPress
+          onPress={handleSubmit(onSubmit)}
+          disabled={!isValid}
+        >
           Сохранить
         </ModalActionButton>
       </ModalActions>
     </Modal>
   );
+}
+
+function mapProfileToForm(profile: UserProfile): OwnerFormValues {
+  return {
+    ownerName: profile.ownerName ?? "",
+    email: profile.email ?? "",
+    birthdate: profile.birthdate ?? "",
+    phone: profile.phone ?? "",
+  };
 }
