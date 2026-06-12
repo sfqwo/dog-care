@@ -48,12 +48,10 @@ app/                         # Экранные маршруты Expo Router (ta
 packages/
 ├─ core/                     # shared + utils (форматирование, константы)
 ├─ domain/                   # Доменные типы и бизнес-логика ухода
-├─ ui/input, ui/tabs         # Переиспользуемые UI-блоки
-├─ select/                   # Выпадающие списки
+├─ ui/                       # Переиспользуемые UI-блоки
 src/
 ├─ components/               # HeroCard, GenderToggle, модалки, списки и т.д.
 ├─ hooks/                    # Логика (useVetStorage, useWalkStats...)
 ├─ presentation/             # UI-конфигурация и presentation mappings
 ├─ storage/                  # JSON-хранилище и ключи
-assets/                      # Шрифты, иконки
 ```
