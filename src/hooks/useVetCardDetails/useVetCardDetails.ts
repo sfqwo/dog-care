@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import type { VetRecord } from "@dog-care/types";
-import { formatDateTime } from "@dog-care/core/utils";
 
 const CLINIC_GRADIENT = ["#e0f2fe", "#bae6fd", "#93c5fd"] as const;
 const HOMECARE_GRADIENT = ["#ede9fe", "#ddd6fe", "#c4b5fd"] as const;
@@ -10,7 +9,7 @@ export function useVetCardDetails(record: VetRecord) {
   return useMemo(() => {
     const gradientColors = getGradient(record);
     const cardTitle = record.title;
-    const cardSubtitle = formatDateTime(record.at);
+    const cardSubtitle =`${record.date} • ${record.time}`;
     const badgeText = record.clinic?.trim() || "Домашний уход";
     const noteText = record.note?.trim();
 

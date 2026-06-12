@@ -1,6 +1,6 @@
 import { View } from "react-native";
 
-import { Input } from "@/packages/ui/input";
+import { DateInput, Input } from "@/packages/ui/input";
 import {
   Hint,
   SwipeableCardsListEmpty,
@@ -16,6 +16,7 @@ import type {
   VetRecordsSectionProps,
 } from "./types";
 import { vetRecordsStyles } from "./styles";
+import { formatReminderTimeInput } from "@/packages/core";
 
 export function VetRecordsSection({
   isActive,
@@ -32,6 +33,10 @@ export function VetRecordsSection({
     setClinic,
     note,
     setNote,
+    date,
+    setDate,
+    time,
+    setTime,
     canSubmit,
     handleSubmit,
   } = useVetRecordForm({ selectedPetId, onSubmit: onAddRecord });
@@ -59,6 +64,22 @@ export function VetRecordsSection({
             disabled={!canSubmit}
           />
         </TimeRecorderRow>
+
+        <DateInput
+          value={date}
+          onChangeText={setDate}
+          placeholder="Дата приема"
+          editable={Boolean(selectedPetId)}
+        />
+
+        <Input
+          value={time}
+          onChangeText={(value) => setTime(formatReminderTimeInput(value))}
+          placeholder="Время приема"
+          keyboardType="number-pad"
+          editable={Boolean(selectedPetId)}
+        />
+
         <Input
           value={clinic}
           onChangeText={setClinic}

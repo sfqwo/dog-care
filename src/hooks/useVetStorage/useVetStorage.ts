@@ -1,169 +1,110 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import type { VetRecord ,
+import { useCallback, useMemo } from "react";
+import type {
   AllergyEntry,
   HealthNoteField,
   TreatmentEntry,
   TreatmentType,
   VaccineEntry,
   VaccineType,
-  VetHealthByPet,
-  VetHealthInfo,
-  VetRecordsByPet,
+  VetRecord,
 } from "@dog-care/types";
-import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
-import { STORAGE_KEYS } from "@/src/storage/keys";
-import { EMPTY_HEALTH } from "@/app/(tabs)/(vet)/vet.constants";
-
-type UseVetStorageResult = {
-  records: VetRecord[];
-  healthInfo: VetHealthInfo;
-  addRecord: (record: VetRecord) => void;
-  removeRecord: (id: string) => void;
-  setVaccineEntries: (type: VaccineType, entries: VaccineEntry[]) => void;
-  setOptionalVaccines: (next: VaccineEntry[]) => void;
-  setTreatmentEntries: (type: TreatmentType, next: TreatmentEntry[]) => void;
-  setAllergyEntries: (next: AllergyEntry[]) => void;
-  setHealthNoteField: (field: HealthNoteField, value: string) => void;
-};
+import { useCareRecordsContext } from "@/src/hooks/careRecordsContext";
+import type { UseVetStorageResult } from "./types";
 
 export function useVetStorage(selectedPetId?: string | null): UseVetStorageResult {
-  const [recordsByPet, setRecordsByPet] = useState<VetRecordsByPet>({});
-  const [healthByPet, setHealthByPet] = useState<VetHealthByPet>({});
+  const {
+    getVetRecords,
+    getVetHealth,
+    addVetRecord,
+    removeVetRecord,
+    setVaccineEntries: setVaccineEntriesInStore,
+    setOptionalVaccines: setOptionalVaccinesInStore,
+    setTreatmentEntries: setTreatmentEntriesInStore,
+    setAllergyEntries: setAllergyEntriesInStore,
+    setHealthNoteField: setHealthNoteFieldInStore,
+  } = useCareRecordsContext();
 
-  useEffect(() => {
-    loadJSON<VetRecordsByPet>(STORAGE_KEYS.VET, {}).then((stored) => {
-      setRecordsByPet(stored ?? {});
-    });
-    loadJSON<VetHealthByPet>(STORAGE_KEYS.VET_HEALTH, {}).then((stored) => {
-      setHealthByPet(stored ?? {});
-    });
-  }, []);
-
-  useEffect(() => {
-    saveJSON(STORAGE_KEYS.VET, recordsByPet);
-  }, [recordsByPet]);
-
-  useEffect(() => {
-    saveJSON(STORAGE_KEYS.VET_HEALTH, healthByPet);
-  }, [healthByPet]);
-
-  const records = useMemo(
-    () => (selectedPetId ? recordsByPet[selectedPetId] ?? [] : []),
-    [recordsByPet, selectedPetId]
-  );
-
-  const healthInfo = useMemo(
-    () => (selectedPetId && healthByPet[selectedPetId]) || EMPTY_HEALTH,
-    [healthByPet, selectedPetId]
-  );
-
-  const updateRecords = useCallback(
-    (updater: (current: VetRecord[]) => VetRecord[]) => {
-      if (!selectedPetId) return;
-      setRecordsByPet((prev) => {
-        const current = prev[selectedPetId] ?? [];
-        const next = updater(current);
-        if (next === current) return prev;
-        return { ...prev, [selectedPetId]: next };
-      });
-    },
-    [selectedPetId]
-  );
-
-  const updateHealth = useCallback(
-    (updater: (current: VetHealthInfo) => VetHealthInfo) => {
-      if (!selectedPetId) return;
-      setHealthByPet((prev) => {
-        const current = cloneHealth(prev[selectedPetId]);
-        const next = updater(current);
-        return { ...prev, [selectedPetId]: next };
-      });
-    },
-    [selectedPetId]
-  );
+  const records = getVetRecords(selectedPetId);
+  const healthInfo = getVetHealth(selectedPetId);
 
   const addRecord = useCallback(
     (record: VetRecord) => {
-      updateRecords((current) => [record, ...current]);
+      if (!selectedPetId) return;
+      addVetRecord(selectedPetId, record);
     },
-    [updateRecords]
+    [addVetRecord, selectedPetId]
   );
 
   const removeRecord = useCallback(
     (id: string) => {
-      updateRecords((current) => current.filter((record) => record.id !== id));
+      if (!selectedPetId) return;
+      removeVetRecord(selectedPetId, id);
     },
-    [updateRecords]
+    [removeVetRecord, selectedPetId]
   );
 
   const setVaccineEntries = useCallback(
     (type: VaccineType, entries: VaccineEntry[]) => {
-      updateHealth((current) => {
-        const vaccines = { ...(current.vaccines ?? {}) };
-        vaccines[type] = entries;
-        return { ...current, vaccines };
-      });
+      if (!selectedPetId) return;
+      setVaccineEntriesInStore(selectedPetId, type, entries);
     },
-    [updateHealth]
+    [selectedPetId, setVaccineEntriesInStore]
   );
 
   const setOptionalVaccines = useCallback(
     (next: VaccineEntry[]) => {
-      updateHealth((current) => ({ ...current, optionalVaccines: next }));
+      if (!selectedPetId) return;
+      setOptionalVaccinesInStore(selectedPetId, next);
     },
-    [updateHealth]
+    [selectedPetId, setOptionalVaccinesInStore]
   );
 
   const setTreatmentEntries = useCallback(
     (type: TreatmentType, next: TreatmentEntry[]) => {
-      updateHealth((current) => ({ ...current, [type]: next }));
+      if (!selectedPetId) return;
+      setTreatmentEntriesInStore(selectedPetId, type, next);
     },
-    [updateHealth]
+    [selectedPetId, setTreatmentEntriesInStore]
   );
 
   const setAllergyEntries = useCallback(
     (next: AllergyEntry[]) => {
-      updateHealth((current) => ({ ...current, allergyEntries: next }));
+      if (!selectedPetId) return;
+      setAllergyEntriesInStore(selectedPetId, next);
     },
-    [updateHealth]
+    [selectedPetId, setAllergyEntriesInStore]
   );
 
   const setHealthNoteField = useCallback(
     (field: HealthNoteField, value: string) => {
-      updateHealth((current) => ({ ...current, [field]: value }));
+      if (!selectedPetId) return;
+      setHealthNoteFieldInStore(selectedPetId, field, value);
     },
-    [updateHealth]
+    [selectedPetId, setHealthNoteFieldInStore]
   );
 
-  return {
-    records,
-    healthInfo,
-    addRecord,
-    removeRecord,
-    setVaccineEntries,
-    setOptionalVaccines,
-    setTreatmentEntries,
-    setAllergyEntries,
-    setHealthNoteField,
-  };
-}
-
-function cloneHealth(info?: VetHealthInfo | null): VetHealthInfo {
-  const base = info ?? EMPTY_HEALTH;
-  const cloneVaccines = Object.entries(base.vaccines ?? {}).reduce<
-    NonNullable<VetHealthInfo["vaccines"]>
-  >((acc, [key, list]) => {
-    acc[key as VaccineType] = [...(list ?? [])].map((entry) => ({ ...(entry ?? {}) }));
-    return acc;
-  }, {} as NonNullable<VetHealthInfo["vaccines"]>);
-
-  return {
-    vaccines: cloneVaccines,
-    optionalVaccines: [...(base.optionalVaccines ?? [])].map((entry) => ({ ...(entry ?? {}) })),
-    deworming: [...(base.deworming ?? [])].map((entry) => ({ ...(entry ?? {}) })),
-    ectoparasites: [...(base.ectoparasites ?? [])].map((entry) => ({ ...(entry ?? {}) })),
-    allergyEntries: [...(base.allergyEntries ?? [])].map((entry) => ({ ...(entry ?? {}) })),
-    contraindicationNotes: base.contraindicationNotes,
-    healthNotes: base.healthNotes,
-  };
+  return useMemo(
+    () => ({
+      records,
+      healthInfo,
+      addRecord,
+      removeRecord,
+      setVaccineEntries,
+      setOptionalVaccines,
+      setTreatmentEntries,
+      setAllergyEntries,
+      setHealthNoteField,
+    }),
+    [
+      addRecord,
+      healthInfo,
+      records,
+      removeRecord,
+      setAllergyEntries,
+      setHealthNoteField,
+      setOptionalVaccines,
+      setTreatmentEntries,
+      setVaccineEntries,
+    ]
+  );
 }

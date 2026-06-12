@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -29,6 +29,7 @@ import {
 } from "@/src/components";
 import {
   useProfileContext,
+  useCareRecordsContext,
   useWalkCardDetails,
   useWalkStats,
 } from "@/src/hooks";
@@ -37,35 +38,21 @@ import {
   isPositiveNumber,
   formatDateTime,
 } from "@dog-care/core/utils";
-import { STORAGE_KEYS } from "@/src/storage/keys";
-import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import type { Walk } from "@dog-care/types";
 import { pageGradient, walkStyles } from "./walks.styles";
 import type { WalkListItemProps } from "./walks.types";
 
-type WalksByPet = Record<string, Walk[]>;
-
 export default function WalksScreen() {
   const { profile, selectedPetId } = useProfileContext();
-  const [walksByPet, setWalksByPet] = useState<WalksByPet>({});
+  const { getWalks, addWalk, updateWalk, removeWalk } = useCareRecordsContext();
   const [durationMin, setDurationMin] = useState("");
   const [note, setNote] = useState("");
   const [editingWalk, setEditingWalk] = useState<Walk | null>(null);
   const [editDurationMin, setEditDurationMin] = useState("");
   const [editNote, setEditNote] = useState("");
   const hasPets = profile.pets.length > 0;
-  const currentWalks = selectedPetId ? walksByPet[selectedPetId] ?? [] : [];
+  const currentWalks = getWalks(selectedPetId);
   const stats = useWalkStats(currentWalks);
-
-  useEffect(() => {
-    loadJSON<WalksByPet>(STORAGE_KEYS.WALKS, {}).then((stored) => {
-      setWalksByPet(stored ?? {});
-    });
-  }, []);
-
-  useEffect(() => {
-    saveJSON(STORAGE_KEYS.WALKS, walksByPet);
-  }, [walksByPet]);
 
   const canAddWalk = useMemo(
     () => Boolean(selectedPetId) && isPositiveNumber(durationMin),
@@ -85,22 +72,14 @@ export default function WalksScreen() {
       durationMin: Number(durationMin),
       note: note.trim() || undefined,
     };
-    setWalksByPet((prev) => {
-      const nextWalks = [newItem, ...(prev[selectedPetId] ?? [])];
-      return { ...prev, [selectedPetId]: nextWalks };
-    });
+    addWalk(selectedPetId, newItem);
     setDurationMin("");
     setNote("");
   };
 
   const handleRemoveWalk = (id: string) => {
     if (!selectedPetId) return;
-    setWalksByPet((prev) => {
-      const current = prev[selectedPetId] ?? [];
-      const filtered = current.filter((walk) => walk.id !== id);
-      if (filtered.length === current.length) return prev;
-      return { ...prev, [selectedPetId]: filtered };
-    });
+    removeWalk(selectedPetId, id);
     if (editingWalk?.id === id) {
       closeEditWalkModal();
     }
@@ -120,18 +99,10 @@ export default function WalksScreen() {
 
   const handleSaveEditedWalk = () => {
     if (!canSaveEditedWalk || !selectedPetId || !editingWalk) return;
-    setWalksByPet((prev) => {
-      const current = prev[selectedPetId] ?? [];
-      const next = current.map((walk) =>
-        walk.id === editingWalk.id
-          ? {
-              ...walk,
-              durationMin: Number(editDurationMin),
-              note: editNote.trim() || undefined,
-            }
-          : walk
-      );
-      return { ...prev, [selectedPetId]: next };
+    updateWalk(selectedPetId, {
+      ...editingWalk,
+      durationMin: Number(editDurationMin),
+      note: editNote.trim() || undefined,
     });
     closeEditWalkModal();
   };
@@ -282,7 +253,7 @@ function WalkListItem({ walk, onRemove, onEdit }: WalkListItemProps) {
       gradientColors={gradientColors}
       onRemove={handleRemove}
       onLongPress={handleEdit}
-      helperText="Долгое нажатие — редактировать • свайп влево — удалить"
+      helperText="Долгое нажатие — редактировать • свайп влево — кнопка удаления"
     />
   );
 }

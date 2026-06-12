@@ -47,3 +47,26 @@ function pad2(value: number) {
 function daysInMonth(month: number, year: number) {
   return new Date(year, month, 0).getDate();
 }
+
+export function parseDate(dateValue: string): Date | null {
+  const match = dateValue.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+
+  if (!match) return null;
+
+  const [, dayStr, monthStr, yearStr] = match;
+
+  const day = Number(dayStr);
+  const month = Number(monthStr);
+  const year = Number(yearStr);
+
+  if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+
+  const date = new Date(year, month - 1, day);
+
+  const isValid =
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day;
+
+  return isValid ? date : null;
+}

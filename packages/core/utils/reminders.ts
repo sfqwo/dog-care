@@ -1,4 +1,4 @@
-import type { Reminder, ReminderRepeat } from "@dog-care/types";
+import type { CompletedCareTask, Reminder, ReminderRepeat } from "@dog-care/types";
 
 export function getNextReminderDueAt(dueAt: number, repeat: ReminderRepeat) {
   const next = new Date(Math.max(dueAt, Date.now()));
@@ -41,6 +41,11 @@ export function getDayPlanReminders(reminders: Reminder[], now = Date.now()) {
         (isSameLocalDay(reminder.dueAt, now) || isBeforeToday(reminder.dueAt, now))
     )
   );
+}
+
+export function getCompletedSourceId(item: CompletedCareTask) {
+  const prefix = `${item.source}-`;
+  return item.id.startsWith(prefix) ? item.id.slice(prefix.length) : item.id;
 }
 
 export function parseReminderDateTime(dateValue: string, timeValue: string) {

@@ -18,6 +18,8 @@ export type VetRecord = {
   id: string;
   at: number;
   title: string;
+  date: string;
+  time: string;
   petId: string;
   note?: string;
   clinic?: string;

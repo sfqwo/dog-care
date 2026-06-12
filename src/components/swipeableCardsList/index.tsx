@@ -89,15 +89,16 @@ export function SwipeableCardsListItem({
   onCheckPress,
   checkLabel = "Отметить",
   checked = false,
+  checkDisabled = false,
 }: SwipeableCardsListItemProps) {
   useSwipeableCardsListGuard("SwipeableCardsListItem");
   const hasCustomPress = typeof onPress === "function";
   const helperText =
     helperTextProp ??
-    (hasCustomPress ? "Свайп влево — удалить" : "Свайп влево или долгое нажатие — удалить");
+    (hasCustomPress ? "Тап — открыть • свайп влево — кнопка удаления" : "Свайп влево — кнопка удаления");
   const gradientArray = [...gradientColors] as [string, string, string];
   const handlePress = hasCustomPress ? onPress : undefined;
-  const handleLongPress = onLongPress ?? (hasCustomPress ? onPress : onRemove);
+  const handleLongPress = onLongPress;
   const rightActions =
     renderRightActions ??
     (() => (
@@ -112,11 +113,6 @@ export function SwipeableCardsListItem({
       rightThreshold={64}
       overshootRight={false}
       renderRightActions={rightActions}
-      onSwipeableOpen={(direction) => {
-        if (direction === "left") {
-          onRemove?.();
-        }
-      }}
     >
       <Pressable
         style={({ pressed }) => [styles.cardPressable, pressed && styles.cardPressablePressed]}
@@ -154,18 +150,30 @@ export function SwipeableCardsListItem({
             </View>
             {onCheckPress ? (
               <Pressable
-                style={[styles.checkButton, checked && styles.checkButtonChecked]}
+                style={[
+                  styles.checkButton,
+                  checked && styles.checkButtonChecked,
+                  checkDisabled && styles.checkButtonDisabled,
+                ]}
                 onPress={(event) => {
                   event.stopPropagation();
+                  if (checkDisabled) return;
                   onCheckPress();
                 }}
+                disabled={checkDisabled}
               >
                 <MaterialCommunityIcons
                   name={checked ? "checkbox-marked" : "checkbox-blank-outline"}
                   size={17}
-                  style={[styles.checkIcon, checked && styles.checkIconChecked]}
+                  style={[
+                    styles.checkIcon,
+                    checked && styles.checkIconChecked,
+                    checkDisabled && styles.checkIconDisabled,
+                  ]}
                 />
-                <Text style={styles.checkButtonText}>{checkLabel}</Text>
+                <Text style={[styles.checkButtonText, checkDisabled && styles.checkButtonTextDisabled]}>
+                  {checkLabel}
+                </Text>
               </Pressable>
             ) : null}
           </View>

@@ -12,6 +12,9 @@ import {
 } from "./reminderNotifications";
 
 type CompletedTasksByPet = Record<string, CompletedCareTask[]>;
+type CompleteReminderInListOptions = {
+  onCompletedTask?: (petId: string, task: CompletedCareTask) => void;
+};
 
 export async function removeReminderFromList(reminders: Reminder[], id: string) {
   const reminder = reminders.find((item) => item.id === id);
@@ -19,12 +22,21 @@ export async function removeReminderFromList(reminders: Reminder[], id: string) 
   return reminders.filter((item) => item.id !== id);
 }
 
-export async function completeReminderInList(reminders: Reminder[], id: string) {
+export async function completeReminderInList(
+  reminders: Reminder[],
+  id: string,
+  options: CompleteReminderInListOptions = {}
+) {
   const reminder = reminders.find((item) => item.id === id);
   if (!reminder) return reminders;
 
   await cancelReminderNotification(reminder.notificationId);
-  await appendCompletedReminderTask(reminder);
+  const completedTask = createCompletedReminderTask(reminder);
+  if (options.onCompletedTask) {
+    options.onCompletedTask(reminder.petId, completedTask);
+  } else {
+    await appendCompletedReminderTask(reminder.petId, completedTask);
+  }
 
   if (reminder.repeat === "none") {
     return reminders.filter((item) => item.id !== id);
@@ -46,9 +58,17 @@ export async function completeReminderInList(reminders: Reminder[], id: string) 
   );
 }
 
-async function appendCompletedReminderTask(reminder: Reminder) {
+async function appendCompletedReminderTask(petId: string, completedTask: CompletedCareTask) {
   const stored = await loadJSON<CompletedTasksByPet>(STORAGE_KEYS.COMPLETED_TASKS, {});
-  const current = stored[reminder.petId] ?? [];
+  const current = stored[petId] ?? [];
+
+  await saveJSON(STORAGE_KEYS.COMPLETED_TASKS, {
+    ...stored,
+    [petId]: [completedTask, ...current],
+  });
+}
+
+function createCompletedReminderTask(reminder: Reminder): CompletedCareTask {
   const completedTask: CompletedCareTask = {
     id: createUid(),
     petId: reminder.petId,
@@ -59,9 +79,5 @@ async function appendCompletedReminderTask(reminder: Reminder) {
     note: reminder.note,
     detail: REMINDER_CATEGORY_LABELS[reminder.category],
   };
-
-  await saveJSON(STORAGE_KEYS.COMPLETED_TASKS, {
-    ...stored,
-    [reminder.petId]: [completedTask, ...current],
-  });
+  return completedTask;
 }

@@ -116,15 +116,25 @@ export const styles = StyleSheet.create({
   checkButtonChecked: {
     backgroundColor: "rgba(220,252,231,0.92)",
   },
+  checkButtonDisabled: {
+    backgroundColor: "rgba(255,255,255,0.5)",
+    opacity: 0.7,
+  },
   checkIcon: {
     color: "#0f172a",
   },
   checkIconChecked: {
     color: "#166534",
   },
+  checkIconDisabled: {
+    color: "rgba(15,23,42,0.45)",
+  },
   checkButtonText: {
     color: "#0f172a",
     fontSize: 12,
     fontWeight: "700",
+  },
+  checkButtonTextDisabled: {
+    color: "rgba(15,23,42,0.55)",
   },
 });

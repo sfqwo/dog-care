@@ -25,7 +25,6 @@ import {
   sortReminders,
 } from "@dog-care/core/utils";
 import type {
-  CompletedCareTask,
   Reminder,
   ReminderCategory,
   ReminderRepeat,
@@ -49,7 +48,7 @@ import {
   TimeRecorderRow,
   TimeRecorderTitle,
 } from "@/src/components";
-import { useProfileContext } from "@/src/hooks";
+import { useCareRecordsContext, useProfileContext } from "@/src/hooks";
 import {
   scheduleReminderNotification,
 } from "@/src/services/reminderNotifications";
@@ -72,7 +71,6 @@ import type {
 } from "./reminders.types";
 
 type RemindersByPet = Record<string, Reminder[]>;
-type CompletedTasksByPet = Record<string, CompletedCareTask[]>;
 
 const CATEGORY_ICONS: Record<ReminderCategory, ReminderCardIcon> = {
   feeding: "food-variant",
@@ -86,8 +84,8 @@ type ReminderCardIcon = "food-variant" | "walk" | "medical-bag" | "pill" | "bell
 
 export default function RemindersScreen() {
   const { profile, selectedPetId } = useProfileContext();
+  const { getCompletedTasks, addCompletedTask, removeCompletedTask } = useCareRecordsContext();
   const [remindersByPet, setRemindersByPet] = useState<RemindersByPet>({});
-  const [completedTasksByPet, setCompletedTasksByPet] = useState<CompletedTasksByPet>({});
   const [storageLoaded, setStorageLoaded] = useState(false);
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(formatReminderDateForInput(Date.now()));
@@ -103,10 +101,10 @@ export default function RemindersScreen() {
   const sortedReminders = useMemo(() => sortReminders(reminders), [reminders]);
   const completedReminderItems = useMemo(
     () =>
-      (selectedPetId ? completedTasksByPet[selectedPetId] ?? [] : [])
+      getCompletedTasks(selectedPetId)
         .filter((item) => item.source === "reminder")
         .sort((a, b) => b.completedAt - a.completedAt),
-    [completedTasksByPet, selectedPetId]
+    [getCompletedTasks, selectedPetId]
   );
   const dueAt = useMemo(() => parseReminderDateTime(date, time), [date, time]);
   const canAddReminder = Boolean(selectedPetId && title.trim() && dueAt);
@@ -115,13 +113,9 @@ export default function RemindersScreen() {
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
-      Promise.all([
-        loadJSON<RemindersByPet>(STORAGE_KEYS.REMINDERS, {}),
-        loadJSON<CompletedTasksByPet>(STORAGE_KEYS.COMPLETED_TASKS, {}),
-      ]).then(([storedReminders, storedCompleted]) => {
+      loadJSON<RemindersByPet>(STORAGE_KEYS.REMINDERS, {}).then((storedReminders) => {
         if (!isActive) return;
         setRemindersByPet(storedReminders ?? {});
-        setCompletedTasksByPet(storedCompleted ?? {});
         setStorageLoaded(true);
       });
       return () => {
@@ -134,11 +128,6 @@ export default function RemindersScreen() {
     if (!storageLoaded) return;
     saveJSON(STORAGE_KEYS.REMINDERS, remindersByPet);
   }, [remindersByPet, storageLoaded]);
-
-  useEffect(() => {
-    if (!storageLoaded) return;
-    saveJSON(STORAGE_KEYS.COMPLETED_TASKS, completedTasksByPet);
-  }, [completedTasksByPet, storageLoaded]);
 
   const handleAddReminder = async () => {
     if (!canAddReminder || !selectedPetId || !dueAt) return;
@@ -180,16 +169,13 @@ export default function RemindersScreen() {
 
   const handleToggleReminderDone = async (id: string) => {
     if (!selectedPetId) return;
-    const nextList = await completeReminderInList(reminders, id);
-    const nextCompletedTasks = await loadJSON<CompletedTasksByPet>(
-      STORAGE_KEYS.COMPLETED_TASKS,
-      {}
-    );
+    const nextList = await completeReminderInList(reminders, id, {
+      onCompletedTask: addCompletedTask,
+    });
     setRemindersByPet((prev) => {
       if (nextList === reminders) return prev;
       return { ...prev, [selectedPetId]: nextList };
     });
-    setCompletedTasksByPet(nextCompletedTasks);
   };
 
   const handleOpenReminder = (reminder: Reminder) => {
@@ -198,13 +184,7 @@ export default function RemindersScreen() {
 
   const handleRemoveCompletedReminder = (id: string) => {
     if (!selectedPetId) return;
-    setCompletedTasksByPet((prev) => {
-      const current = prev[selectedPetId] ?? [];
-      return {
-        ...prev,
-        [selectedPetId]: current.filter((item) => item.id !== id),
-      };
-    });
+    removeCompletedTask(selectedPetId, id);
   };
 
   const nextReminder = sortedReminders.find((reminder) => !reminder.completedAt);
@@ -432,7 +412,7 @@ function CompletedReminderListItem({
       note={item.note}
       gradientColors={completedGradient}
       badgeIcon={item.category ? CATEGORY_ICONS[item.category] : "bell-outline"}
-      helperText="Свайп влево — удалить"
+      helperText="Свайп влево — кнопка удаления"
       onRemove={() => onRemove(item.id)}
     />
   );

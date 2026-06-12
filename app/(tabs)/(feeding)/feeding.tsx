@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -12,10 +12,9 @@ import type { Feeding } from "@dog-care/types";
 import {
   useFeedingCardDetails,
   useFeedingStats,
+  useCareRecordsContext,
   useProfileContext,
 } from "@/src/hooks";
-import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
-import { STORAGE_KEYS } from "@/src/storage/keys";
 import { Input } from "@/packages/ui/input";
 import {
   HeroCard,
@@ -43,29 +42,17 @@ import {
 import { feedingStyles, pageGradient } from "./feeding.styles";
 import type { FeedingListItemProps } from "./feeding.types";
 
-type FeedingsByPet = Record<string, Feeding[]>;
-
 export default function FeedingScreen() {
   const { profile, selectedPetId } = useProfileContext();
-  const [feedingsByPet, setFeedingsByPet] = useState<FeedingsByPet>({});
+  const { getFeedings, addFeeding, updateFeeding, removeFeeding } = useCareRecordsContext();
   const [grams, setGrams] = useState("");
   const [food, setFood] = useState("");
   const [editingFeeding, setEditingFeeding] = useState<Feeding | null>(null);
   const [editGrams, setEditGrams] = useState("");
   const [editFood, setEditFood] = useState("");
   const hasPets = profile.pets.length > 0;
-  const items = selectedPetId ? feedingsByPet[selectedPetId] ?? [] : [];
+  const items = getFeedings(selectedPetId);
   const stats = useFeedingStats(items);
-
-  useEffect(() => {
-    loadJSON<FeedingsByPet>(STORAGE_KEYS.FEEDING, {}).then((stored) => {
-      setFeedingsByPet(stored ?? {});
-    });
-  }, []);
-
-  useEffect(() => {
-    saveJSON(STORAGE_KEYS.FEEDING, feedingsByPet);
-  }, [feedingsByPet]);
 
   const canAddFeeding = useMemo(
     () => Boolean(selectedPetId) && isPositiveNumber(grams),
@@ -90,21 +77,13 @@ export default function FeedingScreen() {
       grams: Number(grams),
       food: food.trim() || undefined,
     };
-    setFeedingsByPet((prev) => {
-      const current = prev[selectedPetId] ?? [];
-      return { ...prev, [selectedPetId]: [newItem, ...current] };
-    });
+    addFeeding(selectedPetId, newItem);
     resetForm();
   };
 
   const handleRemoveFeeding = (id: string) => {
     if (!selectedPetId) return;
-    setFeedingsByPet((prev) => {
-      const current = prev[selectedPetId] ?? [];
-      const filtered = current.filter((feed) => feed.id !== id);
-      if (filtered.length === current.length) return prev;
-      return { ...prev, [selectedPetId]: filtered };
-    });
+    removeFeeding(selectedPetId, id);
     if (editingFeeding?.id === id) {
       closeEditFeedingModal();
     }
@@ -124,18 +103,10 @@ export default function FeedingScreen() {
 
   const handleSaveEditedFeeding = () => {
     if (!canSaveEditedFeeding || !selectedPetId || !editingFeeding) return;
-    setFeedingsByPet((prev) => {
-      const current = prev[selectedPetId] ?? [];
-      const next = current.map((feeding) =>
-        feeding.id === editingFeeding.id
-          ? {
-              ...feeding,
-              grams: Number(editGrams),
-              food: editFood.trim() || undefined,
-            }
-          : feeding
-      );
-      return { ...prev, [selectedPetId]: next };
+    updateFeeding(selectedPetId, {
+      ...editingFeeding,
+      grams: Number(editGrams),
+      food: editFood.trim() || undefined,
     });
     closeEditFeedingModal();
   };

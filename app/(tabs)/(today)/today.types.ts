@@ -9,4 +9,5 @@ export type TodayPlanItemProps = {
 
 export type TodayCompletedItemProps = {
   item: CompletedCareTask;
+  onRemove: (item: CompletedCareTask) => void;
 };

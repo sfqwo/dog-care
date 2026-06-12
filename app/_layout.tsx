@@ -1,3 +1,4 @@
+import { CareRecordsProvider } from "@/src/hooks/careRecordsContext";
 import { ProfileProvider } from "@/src/hooks/profileContext";
 import "@/src/setup";
 import { Stack } from "expo-router";
@@ -7,7 +8,9 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
         <ProfileProvider>
+          <CareRecordsProvider>
             <Stack screenOptions={{ headerShown: false }} />
+          </CareRecordsProvider>
         </ProfileProvider>
     </GestureHandlerRootView>
   );

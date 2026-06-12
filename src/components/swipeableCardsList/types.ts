@@ -27,6 +27,7 @@ export type SwipeableCardsListItemProps = {
   onCheckPress?: () => void;
   checkLabel?: string;
   checked?: boolean;
+  checkDisabled?: boolean;
 };
 
 export type SlotProps = {
