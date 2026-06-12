@@ -1,16 +1,11 @@
-import { useMemo, useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 
-import {
-  createUid,
-  isPositiveNumber,
-  formatDateTime,
-} from "@dog-care/core/utils";
-import type { Feeding } from "@dog-care/types";
+import { formatDateTime } from "@dog-care/core/utils";
 import {
   useFeedingCardDetails,
+  useFeedingEntryEditor,
   useFeedingStats,
   useCareRecordsContext,
   useProfileContext,
@@ -33,7 +28,15 @@ import {
   SwipeableCardsList,
   SwipeableCardsListEmpty,
   SwipeableCardsListHeader,
+  SwipeableCardsListItemBadge,
+  SwipeableCardsListItemFooter,
+  SwipeableCardsListItemHeader,
+  SwipeableCardsListItemHelper,
   SwipeableCardsListItem,
+  SwipeableCardsListItemNote,
+  SwipeableCardsListItemSubtitle,
+  SwipeableCardsListItemTextBlock,
+  SwipeableCardsListItemTitle,
   TimeRecorder,
   TimeRecorderButton,
   TimeRecorderRow,
@@ -45,71 +48,32 @@ import type { FeedingListItemProps } from "./feeding.types";
 export default function FeedingScreen() {
   const { profile, selectedPetId } = useProfileContext();
   const { getFeedings, addFeeding, updateFeeding, removeFeeding } = useCareRecordsContext();
-  const [grams, setGrams] = useState("");
-  const [food, setFood] = useState("");
-  const [editingFeeding, setEditingFeeding] = useState<Feeding | null>(null);
-  const [editGrams, setEditGrams] = useState("");
-  const [editFood, setEditFood] = useState("");
+  const {
+    grams,
+    setGrams,
+    food,
+    setFood,
+    editingFeeding,
+    editGrams,
+    setEditGrams,
+    editFood,
+    setEditFood,
+    canAddFeeding,
+    canSaveEditedFeeding,
+    handleSubmitFeeding,
+    handleRemoveFeeding,
+    handleEditFeeding,
+    handleSaveEditedFeeding,
+    closeEditFeedingModal,
+  } = useFeedingEntryEditor({
+    selectedPetId,
+    addFeeding,
+    updateFeeding,
+    removeFeeding,
+  });
   const hasPets = profile.pets.length > 0;
   const items = getFeedings(selectedPetId);
   const stats = useFeedingStats(items);
-
-  const canAddFeeding = useMemo(
-    () => Boolean(selectedPetId) && isPositiveNumber(grams),
-    [selectedPetId, grams]
-  );
-  const canSaveEditedFeeding = useMemo(
-    () => Boolean(editingFeeding) && isPositiveNumber(editGrams),
-    [editingFeeding, editGrams]
-  );
-
-  const resetForm = () => {
-    setGrams("");
-    setFood("");
-  };
-
-  const handleSubmitFeeding = () => {
-    if (!canAddFeeding || !selectedPetId) return;
-    const newItem: Feeding = {
-      id: createUid(),
-      at: Date.now(),
-      petId: selectedPetId,
-      grams: Number(grams),
-      food: food.trim() || undefined,
-    };
-    addFeeding(selectedPetId, newItem);
-    resetForm();
-  };
-
-  const handleRemoveFeeding = (id: string) => {
-    if (!selectedPetId) return;
-    removeFeeding(selectedPetId, id);
-    if (editingFeeding?.id === id) {
-      closeEditFeedingModal();
-    }
-  };
-
-  const handleEditFeeding = (feeding: Feeding) => {
-    setEditingFeeding(feeding);
-    setEditGrams(feeding.grams.toString());
-    setEditFood(feeding.food ?? "");
-  };
-
-  const closeEditFeedingModal = () => {
-    setEditingFeeding(null);
-    setEditGrams("");
-    setEditFood("");
-  };
-
-  const handleSaveEditedFeeding = () => {
-    if (!canSaveEditedFeeding || !selectedPetId || !editingFeeding) return;
-    updateFeeding(selectedPetId, {
-      ...editingFeeding,
-      grams: Number(editGrams),
-      food: editFood.trim() || undefined,
-    });
-    closeEditFeedingModal();
-  };
 
   const lastMealText = items[0] ? formatDateTime(items[0].at) : "Еще нет записей";
   const heroBadgeText = hasPets
@@ -258,15 +222,21 @@ function FeedingListItem({ feeding, onRemove, onEdit }: FeedingListItemProps) {
   return (
     <SwipeableCardsListItem
       id={feeding.id}
-      title={cardTitle}
-      subtitle={cardSubtitle}
-      badgeText={`${feeding.grams} г`}
-      note={noteText}
       gradientColors={gradientColors}
-      badgeIcon="food-variant"
-      noteIcon="silverware-fork-knife"
       onRemove={handleRemove}
       onPress={handleEdit}
-    />
+    >
+      <SwipeableCardsListItemHeader>
+        <SwipeableCardsListItemTextBlock>
+          <SwipeableCardsListItemTitle text={cardTitle} />
+          <SwipeableCardsListItemSubtitle text={cardSubtitle} />
+        </SwipeableCardsListItemTextBlock>
+        <SwipeableCardsListItemBadge text={`${feeding.grams} г`} icon="food-variant" />
+      </SwipeableCardsListItemHeader>
+      <SwipeableCardsListItemNote text={noteText} icon="silverware-fork-knife" />
+      <SwipeableCardsListItemFooter>
+        <SwipeableCardsListItemHelper text="Тап — открыть • свайп влево — кнопка удаления" />
+      </SwipeableCardsListItemFooter>
+    </SwipeableCardsListItem>
   );
 }

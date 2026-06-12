@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { router, useFocusEffect } from "expo-router";
+import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
@@ -9,22 +9,22 @@ import {
   getReminderRoute,
 } from "@dog-care/core/shared";
 import {
+  buildCompletedTodayItems,
   buildReminderStats,
-  formatDateTime,
-  getDayPlanReminders,
+  buildVetPlanItems,
+  type CompletedCareTask,
   getCompletedSourceId,
+  getCompletedSourceLabel,
+  getDayPlanReminders,
+  getNextPlanItemAt,
+  type Reminder,
+  type TodayVetPlanItem as TodayVetPlanEntry,
+  type VetRecord,
+} from "@dog-care/domain";
+import {
+  formatDateTime,
   isBeforeToday,
-  isSameLocalDay,
-  parseReminderDateTime,
 } from "@dog-care/core/utils";
-import type {
-  CompletedCareTask,
-  Feeding,
-  Reminder,
-  ReminderCategory,
-  VetRecord,
-  Walk,
-} from "@dog-care/types";
 import {
   HeroCard,
   HeroCardBadge,
@@ -36,15 +36,22 @@ import {
   SwipeableCardsList,
   SwipeableCardsListEmpty,
   SwipeableCardsListHeader,
+  SwipeableCardsListItemBadge,
+  SwipeableCardsListItemCheckAction,
+  SwipeableCardsListItemFooter,
+  SwipeableCardsListItemHeader,
+  SwipeableCardsListItemHelper,
   SwipeableCardsListItem,
+  SwipeableCardsListItemNote,
+  SwipeableCardsListItemSubtitle,
+  SwipeableCardsListItemTextBlock,
+  SwipeableCardsListItemTitle,
 } from "@/src/components";
-import { useCareRecordsContext, useProfileContext } from "@/src/hooks";
+import { useCareRecordsContext, useProfileContext, useRemindersStorage } from "@/src/hooks";
 import {
-  completeReminderInList,
-  removeReminderFromList,
-} from "@/src/services/reminderActions";
-import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
-import { STORAGE_KEYS } from "@/src/storage/keys";
+  REMINDER_CATEGORY_ICONS,
+  type ReminderCategoryIcon,
+} from "@/src/presentation/reminders";
 import {
   dueGradient,
   overdueGradient,
@@ -54,27 +61,7 @@ import {
 } from "./today.styles";
 import type { TodayCompletedItemProps, TodayPlanItemProps } from "./today.types";
 
-type RemindersByPet = Record<string, Reminder[]>;
-type TodayVetPlanItemData = {
-  record: VetRecord;
-  scheduledAt: number;
-};
-
-const CATEGORY_ICONS: Record<ReminderCategory, ReminderCardIcon> = {
-  feeding: "food-variant",
-  walk: "walk",
-  vet: "medical-bag",
-  treatment: "pill",
-  other: "bell-outline",
-};
-
-type ReminderCardIcon =
-  | "food-variant"
-  | "walk"
-  | "medical-bag"
-  | "pill"
-  | "bell-outline"
-  | "check-circle-outline";
+type ReminderCardIcon = ReminderCategoryIcon | "check-circle-outline";
 
 export default function TodayScreen() {
   const { profile, selectedPetId } = useProfileContext();
@@ -89,13 +76,8 @@ export default function TodayScreen() {
     addCompletedTask,
     removeCompletedTask,
   } = useCareRecordsContext();
-  const [remindersByPet, setRemindersByPet] = useState<RemindersByPet>({});
-  const [storageLoaded, setStorageLoaded] = useState(false);
+  const { reminders, removeReminder, completeReminder } = useRemindersStorage(selectedPetId);
   const hasPets = profile.pets.length > 0;
-  const reminders = useMemo(
-    () => (selectedPetId ? remindersByPet[selectedPetId] ?? [] : []),
-    [remindersByPet, selectedPetId]
-  );
   const feedings = getFeedings(selectedPetId);
   const walks = getWalks(selectedPetId);
   const vetRecords = getVetRecords(selectedPetId);
@@ -126,47 +108,20 @@ export default function TodayScreen() {
   const plannedLaterToday = Math.max(stats.today - stats.dueNow, 0) + plannedVetCount;
   const nextItemAt = getNextPlanItemAt(planItems, vetPlanItems);
 
-  useFocusEffect(
-    useCallback(() => {
-      let isActive = true;
-      loadJSON<RemindersByPet>(STORAGE_KEYS.REMINDERS, {}).then((storedReminders) => {
-        if (!isActive) return;
-        setRemindersByPet(storedReminders ?? {});
-        setStorageLoaded(true);
-      });
-      return () => {
-        isActive = false;
-      };
-    }, [])
-  );
-
-  useEffect(() => {
-    if (!storageLoaded) return;
-    saveJSON(STORAGE_KEYS.REMINDERS, remindersByPet);
-  }, [remindersByPet, storageLoaded]);
-
   const handleOpenReminder = (reminder: Reminder) => {
     router.push(getReminderRoute(reminder.category));
   };
 
   const handleCompleteReminder = async (id: string) => {
     if (!selectedPetId) return;
-    const nextList = await completeReminderInList(reminders, id, {
+    await completeReminder(id, {
       onCompletedTask: addCompletedTask,
-    });
-    setRemindersByPet((prev) => {
-      if (nextList === reminders) return prev;
-      return { ...prev, [selectedPetId]: nextList };
     });
   };
 
   const handleRemoveReminder = async (id: string) => {
     if (!selectedPetId) return;
-    const nextList = await removeReminderFromList(reminders, id);
-    setRemindersByPet((prev) => {
-      if (nextList === reminders) return prev;
-      return { ...prev, [selectedPetId]: nextList };
-    });
+    await removeReminder(id);
   };
 
   const handleRemoveCompletedItem = async (item: CompletedCareTask) => {
@@ -291,22 +246,32 @@ function TodayPlanItem({
   return (
     <SwipeableCardsListItem
       id={reminder.id}
-      title={reminder.title}
-      subtitle={`${REMINDER_CATEGORY_LABELS[reminder.category]} • ${formatDateTime(reminder.dueAt)}`}
-      badgeText={statusText}
-      note={reminder.note}
       gradientColors={gradientColors}
-      badgeIcon={CATEGORY_ICONS[reminder.category]}
-      noteIcon="calendar-check-outline"
-      helperIcon="check-circle-outline"
-      checkLabel="Отметить"
-      checked={false}
-      checkDisabled={!canComplete}
-      onCheckPress={() => onComplete(reminder.id)}
       onPress={() => onOpen(reminder)}
       onLongPress={canComplete ? () => onComplete(reminder.id) : undefined}
       onRemove={() => onRemove(reminder.id)}
-    />
+    >
+      <SwipeableCardsListItemHeader>
+        <SwipeableCardsListItemTextBlock>
+          <SwipeableCardsListItemTitle text={reminder.title} />
+          <SwipeableCardsListItemSubtitle
+            text={`${REMINDER_CATEGORY_LABELS[reminder.category]} • ${formatDateTime(reminder.dueAt)}`}
+          />
+        </SwipeableCardsListItemTextBlock>
+        <SwipeableCardsListItemBadge
+          text={statusText}
+          icon={REMINDER_CATEGORY_ICONS[reminder.category]}
+        />
+      </SwipeableCardsListItemHeader>
+      <SwipeableCardsListItemNote text={reminder.note} icon="calendar-check-outline" />
+      <SwipeableCardsListItemFooter>
+        <SwipeableCardsListItemHelper icon="check-circle-outline" />
+        <SwipeableCardsListItemCheckAction
+          onPress={() => onComplete(reminder.id)}
+          disabled={!canComplete}
+        />
+      </SwipeableCardsListItemFooter>
+    </SwipeableCardsListItem>
   );
 }
 
@@ -316,7 +281,7 @@ function TodayVetPlanItem({
   onComplete,
   onRemove,
 }: {
-  item: TodayVetPlanItemData;
+  item: TodayVetPlanEntry;
   onOpen: () => void;
   onComplete: (record: VetRecord) => void;
   onRemove: (id: string) => void;
@@ -331,22 +296,27 @@ function TodayVetPlanItem({
   return (
     <SwipeableCardsListItem
       id={item.record.id}
-      title={item.record.title}
-      subtitle={`Вет • ${formatDateTime(item.scheduledAt)}`}
-      badgeText={statusText}
-      note={item.record.note ?? item.record.clinic}
       gradientColors={gradientColors}
-      badgeIcon="medical-bag"
-      noteIcon="stethoscope"
-      helperIcon="check-circle-outline"
-      checkLabel="Отметить"
-      checked={false}
-      checkDisabled={!canComplete}
-      onCheckPress={() => onComplete(item.record)}
       onPress={onOpen}
       onLongPress={canComplete ? () => onComplete(item.record) : undefined}
       onRemove={() => onRemove(item.record.id)}
-    />
+    >
+      <SwipeableCardsListItemHeader>
+        <SwipeableCardsListItemTextBlock>
+          <SwipeableCardsListItemTitle text={item.record.title} />
+          <SwipeableCardsListItemSubtitle text={`Вет • ${formatDateTime(item.scheduledAt)}`} />
+        </SwipeableCardsListItemTextBlock>
+        <SwipeableCardsListItemBadge text={statusText} icon="medical-bag" />
+      </SwipeableCardsListItemHeader>
+      <SwipeableCardsListItemNote text={item.record.note ?? item.record.clinic} icon="stethoscope" />
+      <SwipeableCardsListItemFooter>
+        <SwipeableCardsListItemHelper icon="check-circle-outline" />
+        <SwipeableCardsListItemCheckAction
+          onPress={() => onComplete(item.record)}
+          disabled={!canComplete}
+        />
+      </SwipeableCardsListItemFooter>
+    </SwipeableCardsListItem>
   );
 }
 
@@ -354,104 +324,28 @@ function TodayCompletedItem({ item, onRemove }: TodayCompletedItemProps) {
   return (
     <SwipeableCardsListItem
       id={item.id}
-      title={item.title}
-      subtitle={`${item.detail ?? getCompletedSourceLabel(item.source)} • ${formatDateTime(item.completedAt)}`}
-      badgeText="Сделано"
-      note={item.note}
       gradientColors={planGradient}
-      badgeIcon={getCompletedSourceIcon(item)}
-      helperIcon="checkbox-marked"
-      helperText="Отмечено сегодня"
       onRemove={() => onRemove(item)}
-    />
+    >
+      <SwipeableCardsListItemHeader>
+        <SwipeableCardsListItemTextBlock>
+          <SwipeableCardsListItemTitle text={item.title} />
+          <SwipeableCardsListItemSubtitle
+            text={`${item.detail ?? getCompletedSourceLabel(item.source)} • ${formatDateTime(item.completedAt)}`}
+          />
+        </SwipeableCardsListItemTextBlock>
+        <SwipeableCardsListItemBadge text="Сделано" icon={getCompletedSourceIcon(item)} />
+      </SwipeableCardsListItemHeader>
+      <SwipeableCardsListItemNote text={item.note} />
+      <SwipeableCardsListItemFooter>
+        <SwipeableCardsListItemHelper text="Отмечено сегодня" icon="checkbox-marked" />
+      </SwipeableCardsListItemFooter>
+    </SwipeableCardsListItem>
   );
-}
-
-function buildCompletedTodayItems({
-  feedings,
-  walks,
-  completedTasks,
-}: {
-  feedings: Feeding[];
-  walks: Walk[];
-  completedTasks: CompletedCareTask[];
-}) {
-  const now = Date.now();
-  const feedingItems = feedings
-    .filter((item) => isSameLocalDay(item.at, now))
-    .map<CompletedCareTask>((item) => ({
-      id: `feeding-${item.id}`,
-      petId: item.petId,
-      title: "Кормление",
-      completedAt: item.at,
-      source: "feeding",
-      category: "feeding",
-      detail: `${item.grams} г`,
-      note: item.food,
-    }));
-  const walkItems = walks
-    .filter((item) => isSameLocalDay(item.startedAt, now))
-    .map<CompletedCareTask>((item) => ({
-      id: `walk-${item.id}`,
-      petId: item.petId,
-      title: "Прогулка",
-      completedAt: item.startedAt,
-      source: "walk",
-      category: "walk",
-      detail: `${item.durationMin} мин`,
-      note: item.note,
-    }));
-  const vetItems = completedTasks
-    .filter((item) => item.source === "vet" && isSameLocalDay(item.completedAt, now));
-
-  return [...feedingItems, ...walkItems, ...vetItems]
-    .sort((a, b) => b.completedAt - a.completedAt);
-}
-
-function buildVetPlanItems({
-  vetRecords,
-  completedTasks,
-}: {
-  vetRecords: VetRecord[];
-  completedTasks: CompletedCareTask[];
-}) {
-  const now = Date.now();
-  const completedVetRecordIds = new Set(
-    completedTasks
-      .filter((task) => task.source === "vet")
-      .map(getCompletedSourceId)
-  );
-
-  return vetRecords
-    .map<TodayVetPlanItemData>((record) => ({
-      record,
-      scheduledAt: parseReminderDateTime(record.date, record.time) ?? record.at,
-    }))
-    .filter(
-      (item) =>
-        isSameLocalDay(item.scheduledAt, now) && !completedVetRecordIds.has(item.record.id)
-    )
-    .sort((a, b) => a.scheduledAt - b.scheduledAt);
-}
-
-function getNextPlanItemAt(reminders: Reminder[], vetItems: TodayVetPlanItemData[]) {
-  const timestamps = [
-    ...reminders.map((reminder) => reminder.dueAt),
-    ...vetItems.map((item) => item.scheduledAt),
-  ];
-  if (!timestamps.length) return null;
-  return Math.min(...timestamps);
-}
-
-function getCompletedSourceLabel(source: CompletedCareTask["source"]) {
-  if (source === "feeding") return "Кормление";
-  if (source === "walk") return "Прогулка";
-  if (source === "vet") return "Вет";
-  return "Напоминание";
 }
 
 function getCompletedSourceIcon(item: CompletedCareTask): ReminderCardIcon {
-  if (item.category) return CATEGORY_ICONS[item.category];
+  if (item.category) return REMINDER_CATEGORY_ICONS[item.category];
   if (item.source === "feeding") return "food-variant";
   if (item.source === "walk") return "walk";
   if (item.source === "vet") return "medical-bag";

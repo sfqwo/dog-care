@@ -4,7 +4,15 @@ import { DateInput, Input } from "@/packages/ui/input";
 import {
   Hint,
   SwipeableCardsListEmpty,
+  SwipeableCardsListItemBadge,
+  SwipeableCardsListItemFooter,
+  SwipeableCardsListItemHeader,
+  SwipeableCardsListItemHelper,
   SwipeableCardsListItem,
+  SwipeableCardsListItemNote,
+  SwipeableCardsListItemSubtitle,
+  SwipeableCardsListItemTextBlock,
+  SwipeableCardsListItemTitle,
   TimeRecorder,
   TimeRecorderButton,
   TimeRecorderRow,
@@ -16,7 +24,7 @@ import type {
   VetRecordsSectionProps,
 } from "./types";
 import { vetRecordsStyles } from "./styles";
-import { formatReminderTimeInput } from "@/packages/core";
+import { formatReminderTimeInput } from "@dog-care/domain";
 
 export function VetRecordsSection({
   isActive,
@@ -115,14 +123,20 @@ function VetRecordCard({ record, onRemove }: VetRecordCardProps) {
   return (
     <SwipeableCardsListItem
       id={record.id}
-      title={cardTitle}
-      subtitle={cardSubtitle}
-      badgeText={badgeText}
-      note={noteText}
       gradientColors={gradientColors}
-      badgeIcon="medical-bag"
-      noteIcon="stethoscope"
       onRemove={handleRemove}
-    />
+    >
+      <SwipeableCardsListItemHeader>
+        <SwipeableCardsListItemTextBlock>
+          <SwipeableCardsListItemTitle text={cardTitle} />
+          <SwipeableCardsListItemSubtitle text={cardSubtitle} />
+        </SwipeableCardsListItemTextBlock>
+        <SwipeableCardsListItemBadge text={badgeText} icon="medical-bag" />
+      </SwipeableCardsListItemHeader>
+      <SwipeableCardsListItemNote text={noteText} icon="stethoscope" />
+      <SwipeableCardsListItemFooter>
+        <SwipeableCardsListItemHelper />
+      </SwipeableCardsListItemFooter>
+    </SwipeableCardsListItem>
   );
 }

@@ -1,4 +1,4 @@
-import type { Walk } from "@dog-care/types";
+import type { Walk } from "@dog-care/domain";
 
 export type WalkListItemProps = {
   walk: Walk;

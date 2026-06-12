@@ -7,7 +7,7 @@ import type {
   VaccineEntry,
   VaccineType,
   VetRecord,
-} from "@dog-care/types";
+} from "@dog-care/domain";
 import { useCareRecordsContext } from "@/src/hooks/careRecordsContext";
 import type { UseVetStorageResult } from "./types";
 

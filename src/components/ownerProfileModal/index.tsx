@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import type { UserProfile, UserProfilePayload } from "@dog-care/types";
+import type { UserProfile, UserProfilePayload } from "@dog-care/domain";
 import { useProfileContext } from "@/src/hooks/profileContext";
 import { DateInput, EmailInput, Input, PhoneInput } from "@/packages/ui/input";
 import { Modal, ModalActionButton, ModalActions, ModalSubtitle, ModalTitle } from "../modal";

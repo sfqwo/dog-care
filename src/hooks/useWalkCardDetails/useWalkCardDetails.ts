@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { Walk } from "@dog-care/types";
+import type { Walk } from "@dog-care/domain";
 import { formatDateTime } from "@dog-care/core/utils";
 
 const SHORT = ["#fdf2f8", "#fce7f3", "#ffe4e6"] as const;

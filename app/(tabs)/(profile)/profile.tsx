@@ -7,7 +7,7 @@ import {
   formatWeight,
   getSpeciesLabel,
 } from "@dog-care/core/shared";
-import type { Pet } from "@dog-care/types";
+import type { Pet } from "@dog-care/domain";
 import {
   HeroCard,
   HeroCardBadge,
@@ -17,7 +17,15 @@ import {
   SwipeableCardsList,
   SwipeableCardsListEmpty,
   SwipeableCardsListHeader,
+  SwipeableCardsListItemBadge,
+  SwipeableCardsListItemFooter,
+  SwipeableCardsListItemHeader,
+  SwipeableCardsListItemHelper,
   SwipeableCardsListItem,
+  SwipeableCardsListItemNote,
+  SwipeableCardsListItemSubtitle,
+  SwipeableCardsListItemTextBlock,
+  SwipeableCardsListItemTitle,
 } from "@/src/components";
 import { useProfileContext } from "@/src/hooks";
 import { profileStyles, pageGradient, petGradient } from "./profile.styles";
@@ -111,15 +119,22 @@ function PetListItem({ pet, onRemove, onEdit }: PetListItemProps) {
   return (
     <SwipeableCardsListItem
       id={pet.id}
-      title={pet.name}
-      subtitle={subtitle}
-      badgeText={badgeText}
       gradientColors={petGradient}
       onRemove={handleRemove}
       onPress={handleEdit}
-      note={note}
-      noteIcon={noteIcon}
-    />
+    >
+      <SwipeableCardsListItemHeader>
+        <SwipeableCardsListItemTextBlock>
+          <SwipeableCardsListItemTitle text={pet.name} />
+          <SwipeableCardsListItemSubtitle text={subtitle} />
+        </SwipeableCardsListItemTextBlock>
+        <SwipeableCardsListItemBadge text={badgeText} />
+      </SwipeableCardsListItemHeader>
+      <SwipeableCardsListItemNote text={note} icon={noteIcon} />
+      <SwipeableCardsListItemFooter>
+        <SwipeableCardsListItemHelper text="Тап — открыть • свайп влево — кнопка удаления" />
+      </SwipeableCardsListItemFooter>
+    </SwipeableCardsListItem>
   );
 }
 

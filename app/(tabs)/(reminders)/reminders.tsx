@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import { router, useFocusEffect } from "expo-router";
+import { router } from "expo-router";
 
 import { Select, SelectOption, SelectOptionTitle } from "@dog-care/select";
 import {
@@ -14,21 +14,20 @@ import {
 } from "@dog-care/core/shared";
 import {
   buildReminderStats,
-  createUid,
-  formatReminderDateForInput,
   formatReminderDateInput,
-  formatReminderTimeForInput,
   formatReminderTimeInput,
+  sortReminders,
+} from "@dog-care/domain";
+import {
+  createUid,
   formatDateTime,
   isBeforeToday,
-  parseReminderDateTime,
-  sortReminders,
 } from "@dog-care/core/utils";
 import type {
   Reminder,
   ReminderCategory,
   ReminderRepeat,
-} from "@dog-care/types";
+} from "@dog-care/domain";
 import { Input } from "@/packages/ui/input";
 import {
   HeroCard,
@@ -42,22 +41,31 @@ import {
   SwipeableCardsList,
   SwipeableCardsListEmpty,
   SwipeableCardsListHeader,
+  SwipeableCardsListItemBadge,
+  SwipeableCardsListItemCheckAction,
+  SwipeableCardsListItemFooter,
+  SwipeableCardsListItemHeader,
+  SwipeableCardsListItemHelper,
   SwipeableCardsListItem,
+  SwipeableCardsListItemNote,
+  SwipeableCardsListItemSubtitle,
+  SwipeableCardsListItemTextBlock,
+  SwipeableCardsListItemTitle,
   TimeRecorder,
   TimeRecorderButton,
   TimeRecorderRow,
   TimeRecorderTitle,
 } from "@/src/components";
-import { useCareRecordsContext, useProfileContext } from "@/src/hooks";
+import {
+  useCareRecordsContext,
+  useProfileContext,
+  useReminderForm,
+  useRemindersStorage,
+} from "@/src/hooks";
+import { REMINDER_CATEGORY_ICONS } from "@/src/presentation/reminders";
 import {
   scheduleReminderNotification,
 } from "@/src/services/reminderNotifications";
-import {
-  completeReminderInList,
-  removeReminderFromList,
-} from "@/src/services/reminderActions";
-import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
-import { STORAGE_KEYS } from "@/src/storage/keys";
 import {
   completedGradient,
   overdueGradient,
@@ -70,34 +78,33 @@ import type {
   ReminderListItemProps,
 } from "./reminders.types";
 
-type RemindersByPet = Record<string, Reminder[]>;
-
-const CATEGORY_ICONS: Record<ReminderCategory, ReminderCardIcon> = {
-  feeding: "food-variant",
-  walk: "walk",
-  vet: "medical-bag",
-  treatment: "pill",
-  other: "bell-outline",
-};
-
-type ReminderCardIcon = "food-variant" | "walk" | "medical-bag" | "pill" | "bell-outline";
-
 export default function RemindersScreen() {
   const { profile, selectedPetId } = useProfileContext();
   const { getCompletedTasks, addCompletedTask, removeCompletedTask } = useCareRecordsContext();
-  const [remindersByPet, setRemindersByPet] = useState<RemindersByPet>({});
-  const [storageLoaded, setStorageLoaded] = useState(false);
-  const [title, setTitle] = useState("");
-  const [date, setDate] = useState(formatReminderDateForInput(Date.now()));
-  const [time, setTime] = useState(formatReminderTimeForInput(Date.now()));
-  const [category, setCategory] = useState<ReminderCategory>("feeding");
-  const [repeat, setRepeat] = useState<ReminderRepeat>("none");
-  const [note, setNote] = useState("");
+  const {
+    reminders,
+    addReminder,
+    removeReminder,
+    completeReminder,
+  } = useRemindersStorage(selectedPetId);
+  const {
+    title,
+    setTitle,
+    date,
+    setDate,
+    time,
+    setTime,
+    category,
+    setCategory,
+    repeat,
+    setRepeat,
+    note,
+    setNote,
+    dueAt,
+    canAddReminder,
+    resetReminderForm,
+  } = useReminderForm(selectedPetId);
   const hasPets = profile.pets.length > 0;
-  const reminders = useMemo(
-    () => (selectedPetId ? remindersByPet[selectedPetId] ?? [] : []),
-    [remindersByPet, selectedPetId]
-  );
   const sortedReminders = useMemo(() => sortReminders(reminders), [reminders]);
   const completedReminderItems = useMemo(
     () =>
@@ -106,28 +113,7 @@ export default function RemindersScreen() {
         .sort((a, b) => b.completedAt - a.completedAt),
     [getCompletedTasks, selectedPetId]
   );
-  const dueAt = useMemo(() => parseReminderDateTime(date, time), [date, time]);
-  const canAddReminder = Boolean(selectedPetId && title.trim() && dueAt);
   const stats = useMemo(() => buildReminderStats(reminders), [reminders]);
-
-  useFocusEffect(
-    useCallback(() => {
-      let isActive = true;
-      loadJSON<RemindersByPet>(STORAGE_KEYS.REMINDERS, {}).then((storedReminders) => {
-        if (!isActive) return;
-        setRemindersByPet(storedReminders ?? {});
-        setStorageLoaded(true);
-      });
-      return () => {
-        isActive = false;
-      };
-    }, [])
-  );
-
-  useEffect(() => {
-    if (!storageLoaded) return;
-    saveJSON(STORAGE_KEYS.REMINDERS, remindersByPet);
-  }, [remindersByPet, storageLoaded]);
 
   const handleAddReminder = async () => {
     if (!canAddReminder || !selectedPetId || !dueAt) return;
@@ -150,31 +136,19 @@ export default function RemindersScreen() {
       notificationId,
     };
 
-    setRemindersByPet((prev) => {
-      const current = prev[selectedPetId] ?? [];
-      return { ...prev, [selectedPetId]: [newReminder, ...current] };
-    });
-    setTitle("");
-    setNote("");
+    addReminder(newReminder);
+    resetReminderForm();
   };
 
   const handleRemoveReminder = async (id: string) => {
     if (!selectedPetId) return;
-    const nextList = await removeReminderFromList(reminders, id);
-    setRemindersByPet((prev) => {
-      if (nextList === reminders) return prev;
-      return { ...prev, [selectedPetId]: nextList };
-    });
+    await removeReminder(id);
   };
 
   const handleToggleReminderDone = async (id: string) => {
     if (!selectedPetId) return;
-    const nextList = await completeReminderInList(reminders, id, {
+    await completeReminder(id, {
       onCompletedTask: addCompletedTask,
-    });
-    setRemindersByPet((prev) => {
-      if (nextList === reminders) return prev;
-      return { ...prev, [selectedPetId]: nextList };
     });
   };
 
@@ -366,20 +340,29 @@ function ReminderListItem({
   return (
     <SwipeableCardsListItem
       id={reminder.id}
-      title={reminder.title}
-      subtitle={`Напоминание • ${REMINDER_CATEGORY_LABELS[reminder.category]} • ${formatDateTime(reminder.dueAt)}`}
-      badgeText={statusText}
-      note={noteParts.join(" • ")}
       gradientColors={gradientColors}
-      badgeIcon={CATEGORY_ICONS[reminder.category]}
-      noteIcon="bell-ring-outline"
-      checkLabel="Отметить"
-      checked={false}
-      onCheckPress={() => onToggleDone(reminder.id)}
       onPress={() => onOpen(reminder)}
       onLongPress={() => onToggleDone(reminder.id)}
       onRemove={() => onRemove(reminder.id)}
-    />
+    >
+      <SwipeableCardsListItemHeader>
+        <SwipeableCardsListItemTextBlock>
+          <SwipeableCardsListItemTitle text={reminder.title} />
+          <SwipeableCardsListItemSubtitle
+            text={`Напоминание • ${REMINDER_CATEGORY_LABELS[reminder.category]} • ${formatDateTime(reminder.dueAt)}`}
+          />
+        </SwipeableCardsListItemTextBlock>
+        <SwipeableCardsListItemBadge
+          text={statusText}
+          icon={REMINDER_CATEGORY_ICONS[reminder.category]}
+        />
+      </SwipeableCardsListItemHeader>
+      <SwipeableCardsListItemNote text={noteParts.join(" • ")} icon="bell-ring-outline" />
+      <SwipeableCardsListItemFooter>
+        <SwipeableCardsListItemHelper text="Тап — открыть • свайп влево — кнопка удаления" />
+        <SwipeableCardsListItemCheckAction onPress={() => onToggleDone(reminder.id)} />
+      </SwipeableCardsListItemFooter>
+    </SwipeableCardsListItem>
   );
 }
 
@@ -406,14 +389,25 @@ function CompletedReminderListItem({
   return (
     <SwipeableCardsListItem
       id={item.id}
-      title={item.title}
-      subtitle={`Напоминание • ${item.detail ?? "Выполнено"} • ${formatDateTime(item.completedAt)}`}
-      badgeText="Выполнено"
-      note={item.note}
       gradientColors={completedGradient}
-      badgeIcon={item.category ? CATEGORY_ICONS[item.category] : "bell-outline"}
-      helperText="Свайп влево — кнопка удаления"
       onRemove={() => onRemove(item.id)}
-    />
+    >
+      <SwipeableCardsListItemHeader>
+        <SwipeableCardsListItemTextBlock>
+          <SwipeableCardsListItemTitle text={item.title} />
+          <SwipeableCardsListItemSubtitle
+            text={`Напоминание • ${item.detail ?? "Выполнено"} • ${formatDateTime(item.completedAt)}`}
+          />
+        </SwipeableCardsListItemTextBlock>
+        <SwipeableCardsListItemBadge
+          text="Выполнено"
+          icon={item.category ? REMINDER_CATEGORY_ICONS[item.category] : "bell-outline"}
+        />
+      </SwipeableCardsListItemHeader>
+      <SwipeableCardsListItemNote text={item.note} />
+      <SwipeableCardsListItemFooter>
+        <SwipeableCardsListItemHelper />
+      </SwipeableCardsListItemFooter>
+    </SwipeableCardsListItem>
   );
 }

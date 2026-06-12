@@ -7,7 +7,7 @@ import type {
   VaccineType,
   VetHealthInfo,
   VetRecord,
-} from "@dog-care/types";
+} from "@dog-care/domain";
 
 export type UseVetStorageResult = {
   records: VetRecord[];

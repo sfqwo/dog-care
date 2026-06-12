@@ -47,6 +47,9 @@ export const styles = StyleSheet.create({
     alignItems: "flex-start",
     gap: 12,
   },
+  cardTextBlock: {
+    flex: 1,
+  },
   cardTitle: {
     color: "#0f172a",
     fontSize: 17,

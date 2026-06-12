@@ -1,4 +1,4 @@
-import type { ReminderCategory, ReminderRepeat } from "@dog-care/types";
+import type { ReminderCategory, ReminderRepeat } from "@dog-care/domain";
 
 export type ReminderCategoryOption = {
   value: ReminderCategory;

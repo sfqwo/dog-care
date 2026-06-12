@@ -11,7 +11,7 @@
       "@dog-care/tabs": ["packages/ui/tabs/src"],
       "@dog-care/core/shared": ["packages/core/shared"],
       "@dog-care/core/utils": ["packages/core/utils"],
-      "@dog-care/types": ["packages/types/src"]
+      "@dog-care/domain": ["packages/domain/src"]
     },
   }
 }

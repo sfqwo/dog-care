@@ -17,7 +17,15 @@ import type {
   EmptySlotProps,
   SlotProps,
   SwipeableCardsListContextValue,
+  SwipeableCardsListItemBadgeProps,
+  SwipeableCardsListItemCheckActionProps,
+  SwipeableCardsListItemFooterProps,
+  SwipeableCardsListItemHeaderProps,
+  SwipeableCardsListItemHelperProps,
+  SwipeableCardsListItemNoteProps,
   SwipeableCardsListItemProps,
+  SwipeableCardsListItemSubtitleProps,
+  SwipeableCardsListItemTitleProps,
   SwipeableCardsListProps,
   SwipeableItemElement,
 } from "./types";
@@ -73,32 +81,15 @@ export function SwipeableCardsList({
 }
 
 export function SwipeableCardsListItem({
-  title,
-  subtitle,
-  badgeText,
+  children,
   gradientColors,
-  note,
   onRemove,
   onPress,
   onLongPress,
   renderRightActions,
-  badgeIcon = "paw-outline",
-  noteIcon = "notebook-outline",
-  helperIcon = "gesture-swipe-left",
-  helperText: helperTextProp,
-  onCheckPress,
-  checkLabel = "Отметить",
-  checked = false,
-  checkDisabled = false,
 }: SwipeableCardsListItemProps) {
   useSwipeableCardsListGuard("SwipeableCardsListItem");
-  const hasCustomPress = typeof onPress === "function";
-  const helperText =
-    helperTextProp ??
-    (hasCustomPress ? "Тап — открыть • свайп влево — кнопка удаления" : "Свайп влево — кнопка удаления");
   const gradientArray = [...gradientColors] as [string, string, string];
-  const handlePress = hasCustomPress ? onPress : undefined;
-  const handleLongPress = onLongPress;
   const rightActions =
     renderRightActions ??
     (() => (
@@ -116,8 +107,8 @@ export function SwipeableCardsListItem({
     >
       <Pressable
         style={({ pressed }) => [styles.cardPressable, pressed && styles.cardPressablePressed]}
-        onLongPress={handleLongPress}
-        onPress={handlePress}
+        onLongPress={onLongPress}
+        onPress={onPress}
       >
         <LinearGradient
           colors={gradientArray}
@@ -125,61 +116,112 @@ export function SwipeableCardsListItem({
           end={{ x: 1, y: 1 }}
           style={styles.card}
         >
-          <View style={styles.cardHeader}>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.cardTitle}>{title}</Text>
-              <Text style={styles.cardSubtitle}>{subtitle}</Text>
-            </View>
-            <View style={styles.durationPill}>
-              <MaterialCommunityIcons name={badgeIcon} size={16} style={styles.icon} />
-              <Text style={styles.durationValue}>{badgeText}</Text>
-            </View>
-          </View>
-
-          {note ? (
-            <View style={styles.noteBox}>
-              <MaterialCommunityIcons name={noteIcon} size={18} style={styles.icon} />
-              <Text style={styles.noteText}>{note}</Text>
-            </View>
-          ) : null}
-
-          <View style={styles.cardFooter}>
-            <View style={styles.helperRow}>
-              <MaterialCommunityIcons name={helperIcon} size={16} style={styles.icon} />
-              <Text style={styles.helperText}>{helperText}</Text>
-            </View>
-            {onCheckPress ? (
-              <Pressable
-                style={[
-                  styles.checkButton,
-                  checked && styles.checkButtonChecked,
-                  checkDisabled && styles.checkButtonDisabled,
-                ]}
-                onPress={(event) => {
-                  event.stopPropagation();
-                  if (checkDisabled) return;
-                  onCheckPress();
-                }}
-                disabled={checkDisabled}
-              >
-                <MaterialCommunityIcons
-                  name={checked ? "checkbox-marked" : "checkbox-blank-outline"}
-                  size={17}
-                  style={[
-                    styles.checkIcon,
-                    checked && styles.checkIconChecked,
-                    checkDisabled && styles.checkIconDisabled,
-                  ]}
-                />
-                <Text style={[styles.checkButtonText, checkDisabled && styles.checkButtonTextDisabled]}>
-                  {checkLabel}
-                </Text>
-              </Pressable>
-            ) : null}
-          </View>
+          {children}
         </LinearGradient>
       </Pressable>
     </Swipeable>
+  );
+}
+
+export function SwipeableCardsListItemHeader({
+  children,
+}: SwipeableCardsListItemHeaderProps) {
+  return <View style={styles.cardHeader}>{children}</View>;
+}
+
+export function SwipeableCardsListItemTitle({
+  text,
+}: SwipeableCardsListItemTitleProps) {
+  return <Text style={styles.cardTitle}>{text}</Text>;
+}
+
+export function SwipeableCardsListItemSubtitle({
+  text,
+}: SwipeableCardsListItemSubtitleProps) {
+  return <Text style={styles.cardSubtitle}>{text}</Text>;
+}
+
+export function SwipeableCardsListItemTextBlock({ children }: SlotProps) {
+  return <View style={styles.cardTextBlock}>{children}</View>;
+}
+
+export function SwipeableCardsListItemBadge({
+  text,
+  icon = "paw-outline",
+}: SwipeableCardsListItemBadgeProps) {
+  return (
+    <View style={styles.durationPill}>
+      <MaterialCommunityIcons name={icon} size={16} style={styles.icon} />
+      <Text style={styles.durationValue}>{text}</Text>
+    </View>
+  );
+}
+
+export function SwipeableCardsListItemNote({
+  text,
+  icon = "notebook-outline",
+}: SwipeableCardsListItemNoteProps) {
+  if (!text) return null;
+
+  return (
+    <View style={styles.noteBox}>
+      <MaterialCommunityIcons name={icon} size={18} style={styles.icon} />
+      <Text style={styles.noteText}>{text}</Text>
+    </View>
+  );
+}
+
+export function SwipeableCardsListItemFooter({
+  children,
+}: SwipeableCardsListItemFooterProps) {
+  return <View style={styles.cardFooter}>{children}</View>;
+}
+
+export function SwipeableCardsListItemHelper({
+  text = "Свайп влево — кнопка удаления",
+  icon = "gesture-swipe-left",
+}: SwipeableCardsListItemHelperProps) {
+  return (
+    <View style={styles.helperRow}>
+      <MaterialCommunityIcons name={icon} size={16} style={styles.icon} />
+      <Text style={styles.helperText}>{text}</Text>
+    </View>
+  );
+}
+
+export function SwipeableCardsListItemCheckAction({
+  onPress,
+  label = "Отметить",
+  checked = false,
+  disabled = false,
+}: SwipeableCardsListItemCheckActionProps) {
+  return (
+    <Pressable
+      style={[
+        styles.checkButton,
+        checked && styles.checkButtonChecked,
+        disabled && styles.checkButtonDisabled,
+      ]}
+      onPress={(event) => {
+        event.stopPropagation();
+        if (disabled) return;
+        onPress();
+      }}
+      disabled={disabled}
+    >
+      <MaterialCommunityIcons
+        name={checked ? "checkbox-marked" : "checkbox-blank-outline"}
+        size={17}
+        style={[
+          styles.checkIcon,
+          checked && styles.checkIconChecked,
+          disabled && styles.checkIconDisabled,
+        ]}
+      />
+      <Text style={[styles.checkButtonText, disabled && styles.checkButtonTextDisabled]}>
+        {label}
+      </Text>
+    </Pressable>
   );
 }
 

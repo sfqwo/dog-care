@@ -1,4 +1,5 @@
-import type { CompletedCareTask, Reminder, ReminderRepeat } from "@dog-care/types";
+import type { Reminder, ReminderRepeat } from "./domain";
+import { isBeforeToday, isSameLocalDay } from "@dog-care/core/utils";
 
 export function getNextReminderDueAt(dueAt: number, repeat: ReminderRepeat) {
   const next = new Date(Math.max(dueAt, Date.now()));
@@ -41,11 +42,6 @@ export function getDayPlanReminders(reminders: Reminder[], now = Date.now()) {
         (isSameLocalDay(reminder.dueAt, now) || isBeforeToday(reminder.dueAt, now))
     )
   );
-}
-
-export function getCompletedSourceId(item: CompletedCareTask) {
-  const prefix = `${item.source}-`;
-  return item.id.startsWith(prefix) ? item.id.slice(prefix.length) : item.id;
 }
 
 export function parseReminderDateTime(dateValue: string, timeValue: string) {
@@ -98,22 +94,6 @@ export function formatReminderDateForInput(timestamp: number) {
 export function formatReminderTimeForInput(timestamp: number) {
   const date = new Date(timestamp);
   return [pad2(date.getHours()), pad2(date.getMinutes())].join(":");
-}
-
-export function isSameLocalDay(first: number, second: number) {
-  const firstDate = new Date(first);
-  const secondDate = new Date(second);
-  return (
-    firstDate.getFullYear() === secondDate.getFullYear() &&
-    firstDate.getMonth() === secondDate.getMonth() &&
-    firstDate.getDate() === secondDate.getDate()
-  );
-}
-
-export function isBeforeToday(timestamp: number, now: number) {
-  const today = new Date(now);
-  today.setHours(0, 0, 0, 0);
-  return timestamp < today.getTime();
 }
 
 function pad2(value: number) {

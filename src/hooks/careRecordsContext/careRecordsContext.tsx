@@ -19,9 +19,9 @@ import type {
   VetHealthInfo,
   VetRecord,
   Walk,
-} from "@dog-care/types";
+} from "@dog-care/domain";
 import { EMPTY_HEALTH } from "@/app/(tabs)/(vet)/vet.constants";
-import { getCompletedSourceId } from "@dog-care/core/utils";
+import { getCompletedSourceId } from "@dog-care/domain";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import { STORAGE_KEYS } from "@/src/storage/keys";
 import type {

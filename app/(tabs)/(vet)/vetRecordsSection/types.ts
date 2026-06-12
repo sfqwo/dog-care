@@ -1,4 +1,4 @@
-import type { VetRecord } from "@dog-care/types";
+import type { VetRecord } from "@dog-care/domain";
 
 export type VetRecordsSectionProps = {
   isActive: boolean;

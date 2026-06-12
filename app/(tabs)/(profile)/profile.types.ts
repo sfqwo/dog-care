@@ -1,4 +1,4 @@
-import type { Pet } from "@dog-care/types";
+import type { Pet } from "@dog-care/domain";
 
 export type PetListItemProps = {
   pet: Pet;

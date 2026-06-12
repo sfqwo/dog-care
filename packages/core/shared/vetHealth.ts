@@ -1,4 +1,4 @@
-import type { VetRecord } from "@dog-care/types";
+import type { VetRecord } from "@dog-care/domain";
 import { formatDateTime } from "../utils";
 
 export type VetRecordSummary = Pick<VetRecord, "at" | "title" | "note" | "clinic">;

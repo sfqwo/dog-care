@@ -1,8 +1,6 @@
-import type { CompletedCareTask, Reminder } from "@dog-care/types";
-import {
-  getNextReminderDueAt,
-  REMINDER_CATEGORY_LABELS,
-} from "@/packages/core";
+import type { CompletedCareTask, Reminder } from "@dog-care/domain";
+import { REMINDER_CATEGORY_LABELS } from "@dog-care/core/shared";
+import { getNextReminderDueAt } from "@dog-care/domain";
 import { createUid } from "@dog-care/core/utils";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import { STORAGE_KEYS } from "@/src/storage/keys";

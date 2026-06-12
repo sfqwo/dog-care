@@ -1,4 +1,4 @@
-import type { VetRecord } from "@/packages/types/src";
+import type { VetRecord } from "@dog-care/domain";
 
 export type UseVetRecordFormOptions = {
   selectedPetId?: string | null;

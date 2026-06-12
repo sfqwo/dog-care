@@ -20,3 +20,19 @@ export function parseTime(timeValue: string): Date | null {
 
   return date;
 }
+
+export function isSameLocalDay(first: number, second: number) {
+  const firstDate = new Date(first);
+  const secondDate = new Date(second);
+  return (
+    firstDate.getFullYear() === secondDate.getFullYear() &&
+    firstDate.getMonth() === secondDate.getMonth() &&
+    firstDate.getDate() === secondDate.getDate()
+  );
+}
+
+export function isBeforeToday(timestamp: number, now: number) {
+  const today = new Date(now);
+  today.setHours(0, 0, 0, 0);
+  return timestamp < today.getTime();
+}

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@dog-care/core": "file:packages/core",
+    "@dog-care/domain": "file:packages/domain",
     "@dog-care/input": "file:packages/ui/input",
     "@dog-care/select": "file:packages/ui/select",
     "@dog-care/tabs": "file:packages/ui/tabs",

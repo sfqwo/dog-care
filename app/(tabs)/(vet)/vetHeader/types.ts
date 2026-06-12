@@ -1,4 +1,4 @@
-import type { VetRecord } from "@dog-care/types";
+import type { VetRecord } from "@dog-care/domain";
 import type { VetHealthInfo } from "../vet.types";
 
 export type VetHeaderProps = {

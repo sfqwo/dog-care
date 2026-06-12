@@ -11,7 +11,7 @@ import type {
   VetHealthInfo,
   VetRecord,
   Walk,
-} from "@dog-care/types";
+} from "@dog-care/domain";
 
 export type FeedingsByPet = Record<string, Feeding[]>;
 export type WalksByPet = Record<string, Walk[]>;

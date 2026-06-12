@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import { GENDER_OPTIONS, SPECIES_OPTIONS } from "@dog-care/core/shared";
 import { Select, SelectHeader, SelectOption, SelectOptionTitle } from "@dog-care/select";
-import type { Pet, PetProfilePayload } from "@dog-care/types";
+import type { Pet, PetProfilePayload } from "@dog-care/domain";
 import { useProfileContext, useDogBreeds } from "@/src/hooks";
 import { DateInput, Input } from "@/packages/ui/input";
 

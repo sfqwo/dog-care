@@ -1,4 +1,4 @@
-import { Pet, PetProfilePayload, UserProfile, UserProfilePayload } from "@dog-care/types";
+import { Pet, PetProfilePayload, UserProfile, UserProfilePayload } from "@dog-care/domain";
 
 export type ProfileContextValue = {
   profile: UserProfile;

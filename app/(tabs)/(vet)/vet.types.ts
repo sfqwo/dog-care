@@ -10,7 +10,7 @@ import type {
   VetHealthInfo,
   VetRecord,
   VetRecordsByPet,
-} from "@dog-care/types";
+} from "@dog-care/domain";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
 

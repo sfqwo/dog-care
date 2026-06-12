@@ -1,5 +1,6 @@
-import { createUid, formatReminderDateInput, formatReminderTimeInput } from "@/packages/core";
 import { useCallback, useMemo, useState } from "react";
+import { formatReminderDateInput, formatReminderTimeInput } from "@dog-care/domain";
+import { createUid } from "@dog-care/core/utils";
 import type { UseVetRecordFormOptions } from "./types";
 
 export function useVetRecordForm({ selectedPetId, onSubmit }: UseVetRecordFormOptions) {

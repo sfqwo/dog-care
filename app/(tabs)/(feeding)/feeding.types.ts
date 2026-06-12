@@ -1,4 +1,4 @@
-import type { Feeding } from "@dog-care/types";
+import type { Feeding } from "@dog-care/domain";
 
 export type FeedingListItemProps = {
   feeding: Feeding;

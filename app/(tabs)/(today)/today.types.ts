@@ -1,4 +1,4 @@
-import type { CompletedCareTask, Reminder } from "@dog-care/types";
+import type { CompletedCareTask, Reminder } from "@dog-care/domain";
 
 export type TodayPlanItemProps = {
   reminder: Reminder;

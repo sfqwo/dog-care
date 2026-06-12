@@ -1,4 +1,3 @@
-import { useMemo, useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -21,7 +20,15 @@ import {
   SwipeableCardsList,
   SwipeableCardsListEmpty,
   SwipeableCardsListHeader,
+  SwipeableCardsListItemBadge,
+  SwipeableCardsListItemFooter,
+  SwipeableCardsListItemHeader,
+  SwipeableCardsListItemHelper,
   SwipeableCardsListItem,
+  SwipeableCardsListItemNote,
+  SwipeableCardsListItemSubtitle,
+  SwipeableCardsListItemTextBlock,
+  SwipeableCardsListItemTitle,
   TimeRecorder,
   TimeRecorderButton,
   TimeRecorderRow,
@@ -31,81 +38,42 @@ import {
   useProfileContext,
   useCareRecordsContext,
   useWalkCardDetails,
+  useWalkEntryEditor,
   useWalkStats,
 } from "@/src/hooks";
-import {
-  createUid,
-  isPositiveNumber,
-  formatDateTime,
-} from "@dog-care/core/utils";
-import type { Walk } from "@dog-care/types";
+import { formatDateTime } from "@dog-care/core/utils";
 import { pageGradient, walkStyles } from "./walks.styles";
 import type { WalkListItemProps } from "./walks.types";
 
 export default function WalksScreen() {
   const { profile, selectedPetId } = useProfileContext();
   const { getWalks, addWalk, updateWalk, removeWalk } = useCareRecordsContext();
-  const [durationMin, setDurationMin] = useState("");
-  const [note, setNote] = useState("");
-  const [editingWalk, setEditingWalk] = useState<Walk | null>(null);
-  const [editDurationMin, setEditDurationMin] = useState("");
-  const [editNote, setEditNote] = useState("");
+  const {
+    durationMin,
+    setDurationMin,
+    note,
+    setNote,
+    editingWalk,
+    editDurationMin,
+    setEditDurationMin,
+    editNote,
+    setEditNote,
+    canAddWalk,
+    canSaveEditedWalk,
+    handleAddWalk,
+    handleRemoveWalk,
+    handleEditWalk,
+    handleSaveEditedWalk,
+    closeEditWalkModal,
+  } = useWalkEntryEditor({
+    selectedPetId,
+    addWalk,
+    updateWalk,
+    removeWalk,
+  });
   const hasPets = profile.pets.length > 0;
   const currentWalks = getWalks(selectedPetId);
   const stats = useWalkStats(currentWalks);
-
-  const canAddWalk = useMemo(
-    () => Boolean(selectedPetId) && isPositiveNumber(durationMin),
-    [selectedPetId, durationMin]
-  );
-  const canSaveEditedWalk = useMemo(
-    () => Boolean(editingWalk) && isPositiveNumber(editDurationMin),
-    [editingWalk, editDurationMin]
-  );
-
-  const handleAddWalk = () => {
-    if (!canAddWalk || !selectedPetId) return;
-    const newItem: Walk = {
-      id: createUid(),
-      startedAt: Date.now(),
-      petId: selectedPetId,
-      durationMin: Number(durationMin),
-      note: note.trim() || undefined,
-    };
-    addWalk(selectedPetId, newItem);
-    setDurationMin("");
-    setNote("");
-  };
-
-  const handleRemoveWalk = (id: string) => {
-    if (!selectedPetId) return;
-    removeWalk(selectedPetId, id);
-    if (editingWalk?.id === id) {
-      closeEditWalkModal();
-    }
-  };
-
-  const handleEditWalk = (walk: Walk) => {
-    setEditingWalk(walk);
-    setEditDurationMin(walk.durationMin.toString());
-    setEditNote(walk.note ?? "");
-  };
-
-  const closeEditWalkModal = () => {
-    setEditingWalk(null);
-    setEditDurationMin("");
-    setEditNote("");
-  };
-
-  const handleSaveEditedWalk = () => {
-    if (!canSaveEditedWalk || !selectedPetId || !editingWalk) return;
-    updateWalk(selectedPetId, {
-      ...editingWalk,
-      durationMin: Number(editDurationMin),
-      note: editNote.trim() || undefined,
-    });
-    closeEditWalkModal();
-  };
 
   const lastWalkText = currentWalks[0] ? formatDateTime(currentWalks[0].startedAt) : "Еще нет записей";
   const heroBadgeText = hasPets
@@ -246,14 +214,21 @@ function WalkListItem({ walk, onRemove, onEdit }: WalkListItemProps) {
   return (
     <SwipeableCardsListItem
       id={walk.id}
-      title={cardTitle}
-      subtitle={cardSubtitle}
-      badgeText={`${walk.durationMin} мин`}
-      note={walk.note}
       gradientColors={gradientColors}
       onRemove={handleRemove}
       onLongPress={handleEdit}
-      helperText="Долгое нажатие — редактировать • свайп влево — кнопка удаления"
-    />
+    >
+      <SwipeableCardsListItemHeader>
+        <SwipeableCardsListItemTextBlock>
+          <SwipeableCardsListItemTitle text={cardTitle} />
+          <SwipeableCardsListItemSubtitle text={cardSubtitle} />
+        </SwipeableCardsListItemTextBlock>
+        <SwipeableCardsListItemBadge text={`${walk.durationMin} мин`} />
+      </SwipeableCardsListItemHeader>
+      <SwipeableCardsListItemNote text={walk.note} />
+      <SwipeableCardsListItemFooter>
+        <SwipeableCardsListItemHelper text="Долгое нажатие — редактировать • свайп влево — кнопка удаления" />
+      </SwipeableCardsListItemFooter>
+    </SwipeableCardsListItem>
   );
 }

@@ -1,7 +1,7 @@
 import { Platform } from "react-native";
 import * as Notifications from "expo-notifications";
-import type { Reminder } from "@dog-care/types";
-import { getReminderCategoryLabel } from "@/packages/core";
+import type { Reminder } from "@dog-care/domain";
+import { getReminderCategoryLabel } from "@dog-care/core/shared";
 
 const REMINDER_CHANNEL_ID = "dog-care-reminders";
 

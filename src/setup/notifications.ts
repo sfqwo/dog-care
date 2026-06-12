@@ -1,6 +1,6 @@
 import * as Notifications from "expo-notifications";
 import { router } from "expo-router";
-import type { Reminder } from "@dog-care/types";
+import type { Reminder } from "@dog-care/domain";
 import { getReminderRoute } from "@dog-care/core/shared";
 import { completeReminderInList } from "@/src/services/reminderActions";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";

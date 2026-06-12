@@ -8,7 +8,7 @@ Dog Care — мобильное приложение на Expo Router, кото�
 - **Профиль** — хранение владельца и неограниченного числа питомцев, редактирование через модальные формы с масками ввода, селектами пород/городов и кастомным тумблером пола.
 - **Локальные пакеты**  
   - `@dog-care/core` — shared/utils: форматирование дат, веса, обработка вет данных.  
-  - `@dog-care/types` — единый источник типов домена (питомцы, записи, здоровье).  
+  - `@dog-care/domain` — единый источник типов домена и бизнес-логики ухода: напоминания, план дня, ветпаспорт.  
   - `@dog-care/ui/input`, `@dog-care/select`, `@dog-care/tabs` — дизайн-система с инпутами, селектами и вкладками.
 - **Hooks** — отдельные файлы для карточек/статистики/вет-хранилища (`src/hooks/useVetStorage`, `useWalkStats`, `useDogBreeds` и т.д.).
 - **Storage** — JSON‑слой на AsyncStorage с ключами в `src/storage/keys`.
@@ -47,13 +47,13 @@ app/                         # Экранные маршруты Expo Router (ta
 ├─ (tabs)/(profile)          # Профиль владельца и питомцев
 packages/
 ├─ core/                     # shared + utils (форматирование, константы)
-├─ types/                    # Общие типы домена
+├─ domain/                   # Доменные типы и бизнес-логика ухода
 ├─ ui/input, ui/tabs         # Переиспользуемые UI-блоки
 ├─ select/                   # Выпадающие списки
 src/
 ├─ components/               # HeroCard, GenderToggle, модалки, списки и т.д.
 ├─ hooks/                    # Логика (useVetStorage, useWalkStats...)
+├─ presentation/             # UI-конфигурация и presentation mappings
 ├─ storage/                  # JSON-хранилище и ключи
-├─ domain/                   # (переносится в packages/types)
 assets/                      # Шрифты, иконки
 ```
