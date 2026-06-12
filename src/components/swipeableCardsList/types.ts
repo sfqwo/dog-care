@@ -17,11 +17,16 @@ export type SwipeableCardsListItemProps = {
   gradientColors: readonly [string, string, string];
   onRemove: () => void;
   onPress?: () => void;
+  onLongPress?: () => void;
   note?: string;
   renderRightActions?: () => ReactNode;
   badgeIcon?: IconName;
   noteIcon?: IconName;
   helperIcon?: IconName;
+  helperText?: string;
+  onCheckPress?: () => void;
+  checkLabel?: string;
+  checked?: boolean;
 };
 
 export type SlotProps = {

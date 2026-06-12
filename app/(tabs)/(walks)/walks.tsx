@@ -11,6 +11,11 @@ import {
   HeroCardTitle,
   PetTabs,
   Hint,
+  Modal,
+  ModalActionButton,
+  ModalActions,
+  ModalSubtitle,
+  ModalTitle,
   StatsBlock,
   StatsBlocks,
   SwipeableCardsList,
@@ -45,6 +50,9 @@ export default function WalksScreen() {
   const [walksByPet, setWalksByPet] = useState<WalksByPet>({});
   const [durationMin, setDurationMin] = useState("");
   const [note, setNote] = useState("");
+  const [editingWalk, setEditingWalk] = useState<Walk | null>(null);
+  const [editDurationMin, setEditDurationMin] = useState("");
+  const [editNote, setEditNote] = useState("");
   const hasPets = profile.pets.length > 0;
   const currentWalks = selectedPetId ? walksByPet[selectedPetId] ?? [] : [];
   const stats = useWalkStats(currentWalks);
@@ -62,6 +70,10 @@ export default function WalksScreen() {
   const canAddWalk = useMemo(
     () => Boolean(selectedPetId) && isPositiveNumber(durationMin),
     [selectedPetId, durationMin]
+  );
+  const canSaveEditedWalk = useMemo(
+    () => Boolean(editingWalk) && isPositiveNumber(editDurationMin),
+    [editingWalk, editDurationMin]
   );
 
   const handleAddWalk = () => {
@@ -89,6 +101,39 @@ export default function WalksScreen() {
       if (filtered.length === current.length) return prev;
       return { ...prev, [selectedPetId]: filtered };
     });
+    if (editingWalk?.id === id) {
+      closeEditWalkModal();
+    }
+  };
+
+  const handleEditWalk = (walk: Walk) => {
+    setEditingWalk(walk);
+    setEditDurationMin(walk.durationMin.toString());
+    setEditNote(walk.note ?? "");
+  };
+
+  const closeEditWalkModal = () => {
+    setEditingWalk(null);
+    setEditDurationMin("");
+    setEditNote("");
+  };
+
+  const handleSaveEditedWalk = () => {
+    if (!canSaveEditedWalk || !selectedPetId || !editingWalk) return;
+    setWalksByPet((prev) => {
+      const current = prev[selectedPetId] ?? [];
+      const next = current.map((walk) =>
+        walk.id === editingWalk.id
+          ? {
+              ...walk,
+              durationMin: Number(editDurationMin),
+              note: editNote.trim() || undefined,
+            }
+          : walk
+      );
+      return { ...prev, [selectedPetId]: next };
+    });
+    closeEditWalkModal();
   };
 
   const lastWalkText = currentWalks[0] ? formatDateTime(currentWalks[0].startedAt) : "Еще нет записей";
@@ -153,18 +198,79 @@ export default function WalksScreen() {
           </SwipeableCardsListHeader>
           <SwipeableCardsListEmpty text={emptyStateText} />
           {currentWalks.map((item) => (
-            <WalkListItem key={item.id} walk={item} onRemove={handleRemoveWalk} />
+            <WalkListItem
+              key={item.id}
+              walk={item}
+              onRemove={handleRemoveWalk}
+              onEdit={handleEditWalk}
+            />
           ))}
         </SwipeableCardsList>
+        <WalkEditModal
+          visible={Boolean(editingWalk)}
+          durationMin={editDurationMin}
+          note={editNote}
+          canSave={canSaveEditedWalk}
+          onChangeDurationMin={setEditDurationMin}
+          onChangeNote={setEditNote}
+          onSave={handleSaveEditedWalk}
+          onClose={closeEditWalkModal}
+        />
       </SafeAreaView>
     </LinearGradient>
   );
 }
 
-function WalkListItem({ walk, onRemove }: WalkListItemProps) {
+function WalkEditModal({
+  visible,
+  durationMin,
+  note,
+  canSave,
+  onChangeDurationMin,
+  onChangeNote,
+  onSave,
+  onClose,
+}: {
+  visible: boolean;
+  durationMin: string;
+  note: string;
+  canSave: boolean;
+  onChangeDurationMin: (value: string) => void;
+  onChangeNote: (value: string) => void;
+  onSave: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <Modal visible={visible} onClose={onClose}>
+      <ModalTitle>Редактировать прогулку</ModalTitle>
+      <ModalSubtitle>Обновите длительность и заметку.</ModalSubtitle>
+      <Input
+        value={durationMin}
+        onChangeText={onChangeDurationMin}
+        placeholder="Минуты"
+        keyboardType="number-pad"
+      />
+      <Input
+        value={note}
+        onChangeText={onChangeNote}
+        placeholder="Заметка"
+        multiline
+      />
+      <ModalActions>
+        <ModalActionButton closeOnPress>Отменить</ModalActionButton>
+        <ModalActionButton onPress={onSave} disabled={!canSave}>
+          Сохранить
+        </ModalActionButton>
+      </ModalActions>
+    </Modal>
+  );
+}
+
+function WalkListItem({ walk, onRemove, onEdit }: WalkListItemProps) {
   const { gradientColors, cardSubtitle, cardTitle } = useWalkCardDetails(walk);
 
   const handleRemove = () => onRemove(walk.id);
+  const handleEdit = () => onEdit(walk);
 
   return (
     <SwipeableCardsListItem
@@ -175,6 +281,8 @@ function WalkListItem({ walk, onRemove }: WalkListItemProps) {
       note={walk.note}
       gradientColors={gradientColors}
       onRemove={handleRemove}
+      onLongPress={handleEdit}
+      helperText="Долгое нажатие — редактировать • свайп влево — удалить"
     />
   );
 }

@@ -85,6 +85,13 @@ export const styles = StyleSheet.create({
   },
   cardFooter: {
     flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 12,
+    alignItems: "center",
+  },
+  helperRow: {
+    flex: 1,
+    flexDirection: "row",
     gap: 8,
     alignItems: "center",
   },
@@ -92,8 +99,32 @@ export const styles = StyleSheet.create({
     color: "#0f172a",
     fontSize: 12,
     fontWeight: "500",
+    flexShrink: 1,
   },
   icon: {
     color: "#0f172a",
+  },
+  checkButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    backgroundColor: "rgba(255,255,255,0.72)",
+  },
+  checkButtonChecked: {
+    backgroundColor: "rgba(220,252,231,0.92)",
+  },
+  checkIcon: {
+    color: "#0f172a",
+  },
+  checkIconChecked: {
+    color: "#166534",
+  },
+  checkButtonText: {
+    color: "#0f172a",
+    fontSize: 12,
+    fontWeight: "700",
   },
 });

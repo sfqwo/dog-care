@@ -80,17 +80,24 @@ export function SwipeableCardsListItem({
   note,
   onRemove,
   onPress,
+  onLongPress,
   renderRightActions,
   badgeIcon = "paw-outline",
   noteIcon = "notebook-outline",
   helperIcon = "gesture-swipe-left",
+  helperText: helperTextProp,
+  onCheckPress,
+  checkLabel = "Отметить",
+  checked = false,
 }: SwipeableCardsListItemProps) {
   useSwipeableCardsListGuard("SwipeableCardsListItem");
   const hasCustomPress = typeof onPress === "function";
-  const helperText = hasCustomPress ? "Свайп влево — удалить" : "Свайп влево или долгое нажатие — удалить";
+  const helperText =
+    helperTextProp ??
+    (hasCustomPress ? "Свайп влево — удалить" : "Свайп влево или долгое нажатие — удалить");
   const gradientArray = [...gradientColors] as [string, string, string];
   const handlePress = hasCustomPress ? onPress : undefined;
-  const handleLongPress = hasCustomPress ? onPress : onRemove;
+  const handleLongPress = onLongPress ?? (hasCustomPress ? onPress : onRemove);
   const rightActions =
     renderRightActions ??
     (() => (
@@ -141,8 +148,26 @@ export function SwipeableCardsListItem({
           ) : null}
 
           <View style={styles.cardFooter}>
-            <MaterialCommunityIcons name={helperIcon} size={16} style={styles.icon} />
-            <Text style={styles.helperText}>{helperText}</Text>
+            <View style={styles.helperRow}>
+              <MaterialCommunityIcons name={helperIcon} size={16} style={styles.icon} />
+              <Text style={styles.helperText}>{helperText}</Text>
+            </View>
+            {onCheckPress ? (
+              <Pressable
+                style={[styles.checkButton, checked && styles.checkButtonChecked]}
+                onPress={(event) => {
+                  event.stopPropagation();
+                  onCheckPress();
+                }}
+              >
+                <MaterialCommunityIcons
+                  name={checked ? "checkbox-marked" : "checkbox-blank-outline"}
+                  size={17}
+                  style={[styles.checkIcon, checked && styles.checkIconChecked]}
+                />
+                <Text style={styles.checkButtonText}>{checkLabel}</Text>
+              </Pressable>
+            ) : null}
           </View>
         </LinearGradient>
       </Pressable>

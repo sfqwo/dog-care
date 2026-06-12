@@ -26,6 +26,11 @@ import {
   StatsBlock,
   StatsBlocks,
   Hint,
+  Modal,
+  ModalActionButton,
+  ModalActions,
+  ModalSubtitle,
+  ModalTitle,
   SwipeableCardsList,
   SwipeableCardsListEmpty,
   SwipeableCardsListHeader,
@@ -45,6 +50,9 @@ export default function FeedingScreen() {
   const [feedingsByPet, setFeedingsByPet] = useState<FeedingsByPet>({});
   const [grams, setGrams] = useState("");
   const [food, setFood] = useState("");
+  const [editingFeeding, setEditingFeeding] = useState<Feeding | null>(null);
+  const [editGrams, setEditGrams] = useState("");
+  const [editFood, setEditFood] = useState("");
   const hasPets = profile.pets.length > 0;
   const items = selectedPetId ? feedingsByPet[selectedPetId] ?? [] : [];
   const stats = useFeedingStats(items);
@@ -63,8 +71,17 @@ export default function FeedingScreen() {
     () => Boolean(selectedPetId) && isPositiveNumber(grams),
     [selectedPetId, grams]
   );
+  const canSaveEditedFeeding = useMemo(
+    () => Boolean(editingFeeding) && isPositiveNumber(editGrams),
+    [editingFeeding, editGrams]
+  );
 
-  const handleAddFeeding = () => {
+  const resetForm = () => {
+    setGrams("");
+    setFood("");
+  };
+
+  const handleSubmitFeeding = () => {
     if (!canAddFeeding || !selectedPetId) return;
     const newItem: Feeding = {
       id: createUid(),
@@ -77,8 +94,7 @@ export default function FeedingScreen() {
       const current = prev[selectedPetId] ?? [];
       return { ...prev, [selectedPetId]: [newItem, ...current] };
     });
-    setGrams("");
-    setFood("");
+    resetForm();
   };
 
   const handleRemoveFeeding = (id: string) => {
@@ -89,6 +105,39 @@ export default function FeedingScreen() {
       if (filtered.length === current.length) return prev;
       return { ...prev, [selectedPetId]: filtered };
     });
+    if (editingFeeding?.id === id) {
+      closeEditFeedingModal();
+    }
+  };
+
+  const handleEditFeeding = (feeding: Feeding) => {
+    setEditingFeeding(feeding);
+    setEditGrams(feeding.grams.toString());
+    setEditFood(feeding.food ?? "");
+  };
+
+  const closeEditFeedingModal = () => {
+    setEditingFeeding(null);
+    setEditGrams("");
+    setEditFood("");
+  };
+
+  const handleSaveEditedFeeding = () => {
+    if (!canSaveEditedFeeding || !selectedPetId || !editingFeeding) return;
+    setFeedingsByPet((prev) => {
+      const current = prev[selectedPetId] ?? [];
+      const next = current.map((feeding) =>
+        feeding.id === editingFeeding.id
+          ? {
+              ...feeding,
+              grams: Number(editGrams),
+              food: editFood.trim() || undefined,
+            }
+          : feeding
+      );
+      return { ...prev, [selectedPetId]: next };
+    });
+    closeEditFeedingModal();
   };
 
   const lastMealText = items[0] ? formatDateTime(items[0].at) : "Еще нет записей";
@@ -136,7 +185,11 @@ export default function FeedingScreen() {
                     keyboardType="number-pad"
                     editable={Boolean(selectedPetId)}
                   />
-                  <TimeRecorderButton label="Добавить" onPress={handleAddFeeding} disabled={!canAddFeeding} />
+                  <TimeRecorderButton
+                    label="Добавить"
+                    onPress={handleSubmitFeeding}
+                    disabled={!canAddFeeding}
+                  />
                 </TimeRecorderRow>
                 <Input
                   value={food}
@@ -153,15 +206,74 @@ export default function FeedingScreen() {
           <SwipeableCardsListEmpty text={emptyStateText} />
 
           {items.map((item) => (
-            <FeedingListItem key={item.id} feeding={item} onRemove={handleRemoveFeeding} />
+            <FeedingListItem
+              key={item.id}
+              feeding={item}
+              onRemove={handleRemoveFeeding}
+              onEdit={handleEditFeeding}
+            />
           ))}
         </SwipeableCardsList>
+        <FeedingEditModal
+          visible={Boolean(editingFeeding)}
+          grams={editGrams}
+          food={editFood}
+          canSave={canSaveEditedFeeding}
+          onChangeGrams={setEditGrams}
+          onChangeFood={setEditFood}
+          onSave={handleSaveEditedFeeding}
+          onClose={closeEditFeedingModal}
+        />
       </SafeAreaView>
     </LinearGradient>
   );
 }
 
-function FeedingListItem({ feeding, onRemove }: FeedingListItemProps) {
+function FeedingEditModal({
+  visible,
+  grams,
+  food,
+  canSave,
+  onChangeGrams,
+  onChangeFood,
+  onSave,
+  onClose,
+}: {
+  visible: boolean;
+  grams: string;
+  food: string;
+  canSave: boolean;
+  onChangeGrams: (value: string) => void;
+  onChangeFood: (value: string) => void;
+  onSave: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <Modal visible={visible} onClose={onClose}>
+      <ModalTitle>Редактировать кормление</ModalTitle>
+      <ModalSubtitle>Обновите количество и описание корма.</ModalSubtitle>
+      <Input
+        value={grams}
+        onChangeText={onChangeGrams}
+        placeholder="Граммы"
+        keyboardType="number-pad"
+      />
+      <Input
+        value={food}
+        onChangeText={onChangeFood}
+        placeholder="Корм или вкусняшка"
+      />
+      <ModalActions>
+        <ModalActionButton closeOnPress>Отменить</ModalActionButton>
+        <ModalActionButton onPress={onSave} disabled={!canSave}>
+          Сохранить
+        </ModalActionButton>
+      </ModalActions>
+    </Modal>
+  );
+}
+
+function FeedingListItem({ feeding, onRemove, onEdit }: FeedingListItemProps) {
   const {
     gradientColors,
     cardSubtitle,
@@ -170,6 +282,7 @@ function FeedingListItem({ feeding, onRemove }: FeedingListItemProps) {
   } = useFeedingCardDetails(feeding);
 
   const handleRemove = () => onRemove(feeding.id);
+  const handleEdit = () => onEdit(feeding);
 
   return (
     <SwipeableCardsListItem
@@ -182,7 +295,7 @@ function FeedingListItem({ feeding, onRemove }: FeedingListItemProps) {
       badgeIcon="food-variant"
       noteIcon="silverware-fork-knife"
       onRemove={handleRemove}
-      onPress={handleRemove}
+      onPress={handleEdit}
     />
   );
 }

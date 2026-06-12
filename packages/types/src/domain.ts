@@ -23,6 +23,35 @@ export type VetRecord = {
   clinic?: string;
 };
 
+export type ReminderCategory = "walk" | "feeding" | "vet" | "treatment" | "other";
+
+export type ReminderRepeat = "none" | "daily" | "weekly" | "monthly";
+
+export type Reminder = {
+  id: string;
+  petId: string;
+  title: string;
+  dueAt: number;
+  category: ReminderCategory;
+  repeat: ReminderRepeat;
+  note?: string;
+  completedAt?: number;
+  notificationId?: string;
+};
+
+export type CompletedCareTaskSource = "reminder" | "feeding" | "walk" | "vet";
+
+export type CompletedCareTask = {
+  id: string;
+  petId: string;
+  title: string;
+  completedAt: number;
+  source: CompletedCareTaskSource;
+  category?: ReminderCategory;
+  note?: string;
+  detail?: string;
+};
+
 export type Pet = {
   id: string;
   name: string;
