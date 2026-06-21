@@ -28,7 +28,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-notifications"
+      "expo-notifications",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Разрешите доступ к фотографиям для сохранения медицинских документов питомца.",
+          "microphonePermission": false
+        }
+      ]
     ]
   }
 }

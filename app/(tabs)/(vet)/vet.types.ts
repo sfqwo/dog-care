@@ -20,7 +20,13 @@ export type VetListItemProps = {
   onRemove: (id: string) => void;
 };
 
-export type VetSectionTab = "passport" | "records" | "weight" | "medications";
+export type VetSectionTab =
+  | "passport"
+  | "records"
+  | "weight"
+  | "medications"
+  | "wellness"
+  | "documents";
 export type VetSectionTabIcon = ComponentProps<typeof MaterialCommunityIcons>["name"];
 
 export type VaccineSection = {

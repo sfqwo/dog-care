@@ -33,6 +33,42 @@ export type WeightEntry = {
   note?: string;
 };
 
+export type AppetiteStatus = "normal" | "reduced" | "none" | "increased";
+export type ActivityStatus = "normal" | "reduced" | "low" | "high";
+export type StoolStatus = "normal" | "soft" | "diarrhea" | "constipation";
+
+export type WellnessEntry = {
+  id: string;
+  petId: string;
+  at: number;
+  appetite: AppetiteStatus;
+  activity: ActivityStatus;
+  stool: StoolStatus;
+  vomiting: boolean;
+  itching: boolean;
+  temperature?: number;
+  note?: string;
+};
+
+export type MedicalDocumentType =
+  | "analysis"
+  | "prescription"
+  | "conclusion"
+  | "passport"
+  | "other";
+
+export type MedicalDocument = {
+  id: string;
+  petId: string;
+  type: MedicalDocumentType;
+  at: number;
+  title?: string;
+  note?: string;
+  visitId?: string;
+  imageUris: string[];
+  createdAt: number;
+};
+
 export type ReminderCategory = "walk" | "feeding" | "vet" | "treatment" | "birthday" | "other";
 
 export type ReminderRepeat = "none" | "daily" | "weekly" | "monthly" | "yearly";

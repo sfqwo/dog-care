@@ -4,6 +4,7 @@ import type {
   Feeding,
   HealthNoteField,
   MedicationCourse,
+  MedicalDocument,
   Reminder,
   TreatmentEntry,
   TreatmentType,
@@ -13,6 +14,7 @@ import type {
   VetHealthInfo,
   VetRecord,
   Walk,
+  WellnessEntry,
   WeightEntry,
 } from "@dog-care/domain";
 
@@ -21,6 +23,8 @@ export type WalksByPet = Record<string, Walk[]>;
 export type VetRecordsByPet = Record<string, VetRecord[]>;
 export type WeightEntriesByPet = Record<string, WeightEntry[]>;
 export type MedicationCoursesByPet = Record<string, MedicationCourse[]>;
+export type WellnessEntriesByPet = Record<string, WellnessEntry[]>;
+export type MedicalDocumentsByPet = Record<string, MedicalDocument[]>;
 export type RemindersByPet = Record<string, Reminder[]>;
 export type { VetHealthByPet };
 export type CompletedTasksByPet = Record<string, CompletedCareTask[]>;
@@ -32,6 +36,8 @@ export type CareRecordsContextValue = {
   vetRecordsByPet: VetRecordsByPet;
   weightEntriesByPet: WeightEntriesByPet;
   medicationCoursesByPet: MedicationCoursesByPet;
+  wellnessEntriesByPet: WellnessEntriesByPet;
+  medicalDocumentsByPet: MedicalDocumentsByPet;
   remindersByPet: RemindersByPet;
   vetHealthByPet: VetHealthByPet;
   completedTasksByPet: CompletedTasksByPet;
@@ -40,6 +46,8 @@ export type CareRecordsContextValue = {
   getVetRecords: (petId?: string | null) => VetRecord[];
   getWeightEntries: (petId?: string | null) => WeightEntry[];
   getMedicationCourses: (petId?: string | null) => MedicationCourse[];
+  getWellnessEntries: (petId?: string | null) => WellnessEntry[];
+  getMedicalDocuments: (petId?: string | null) => MedicalDocument[];
   getReminders: (petId?: string | null) => Reminder[];
   getVetHealth: (petId?: string | null) => VetHealthInfo;
   getCompletedTasks: (petId?: string | null) => CompletedCareTask[];
@@ -57,6 +65,12 @@ export type CareRecordsContextValue = {
   addMedicationCourse: (petId: string, course: MedicationCourse) => void;
   updateMedicationCourse: (petId: string, course: MedicationCourse) => void;
   removeMedicationCourse: (petId: string, id: string) => void;
+  addWellnessEntry: (petId: string, entry: WellnessEntry) => void;
+  updateWellnessEntry: (petId: string, entry: WellnessEntry) => void;
+  removeWellnessEntry: (petId: string, id: string) => void;
+  addMedicalDocument: (petId: string, document: MedicalDocument) => void;
+  updateMedicalDocument: (petId: string, document: MedicalDocument) => void;
+  removeMedicalDocument: (petId: string, id: string) => void;
   addReminder: (petId: string, reminder: Reminder) => void;
   removeReminder: (petId: string, id: string) => Promise<void>;
   completeReminder: (

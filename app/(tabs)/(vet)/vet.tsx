@@ -18,6 +18,8 @@ import { VetPassportSection } from "./vetPasportSection";
 import { VetRecordsSection } from "./vetRecordsSection";
 import { WeightSection } from "./weightSection";
 import { MedicationSection } from "./medicationSection";
+import { WellnessSection } from "./wellnessSection";
+import { MedicalDocumentsSection } from "./medicalDocumentsSection";
 
 export default function VetScreen() {
   const { section } = useLocalSearchParams<{ section?: string }>();
@@ -45,6 +47,8 @@ export default function VetScreen() {
   const isRecordsTab = activeSectionTab === "records";
   const isWeightTab = activeSectionTab === "weight";
   const isMedicationTab = activeSectionTab === "medications";
+  const isWellnessTab = activeSectionTab === "wellness";
+  const isDocumentsTab = activeSectionTab === "documents";
   const weightEntries = getWeightEntries(selectedPetId);
 
   useEffect(() => {
@@ -97,6 +101,18 @@ export default function VetScreen() {
 
               <MedicationSection
                 isActive={isMedicationTab}
+                hasPets={hasPets}
+                selectedPetId={selectedPetId}
+              />
+
+              <WellnessSection
+                isActive={isWellnessTab}
+                hasPets={hasPets}
+                selectedPetId={selectedPetId}
+              />
+
+              <MedicalDocumentsSection
+                isActive={isDocumentsTab}
                 hasPets={hasPets}
                 selectedPetId={selectedPetId}
               />

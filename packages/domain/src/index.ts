@@ -4,3 +4,5 @@ export * from "./reminders";
 export * from "./carePlan";
 export * from "./medications";
 export * from "./birthdays";
+export * from "./wellness";
+export * from "./medicalDocuments";

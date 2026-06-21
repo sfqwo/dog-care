@@ -9,15 +9,7 @@ import {
   formatTimeInputFromTimestamp,
 } from "@dog-care/core/utils";
 import { scheduleReminderNotification } from "@/src/services/reminderNotifications";
-
-export type MedicationCourseForm = {
-  name: string;
-  dosage: string;
-  startDate: string;
-  endDate: string;
-  time: string;
-  note: string;
-};
+import type { MedicationCourseForm, UseMedicationCourseEditorOptions } from "./types";
 
 const createInitialForm = (): MedicationCourseForm => {
   const reminderAt = new Date(Date.now() + 5 * 60 * 1000);
@@ -31,15 +23,6 @@ const createInitialForm = (): MedicationCourseForm => {
     time: formatTimeInputFromTimestamp(reminderAt.getTime()),
     note: "",
   };
-};
-
-type UseMedicationCourseEditorOptions = {
-  selectedPetId?: string | null;
-  addCourse: (petId: string, course: MedicationCourse) => void;
-  updateCourse: (petId: string, course: MedicationCourse) => void;
-  removeCourse: (petId: string, id: string) => void;
-  addReminder: (reminder: Reminder) => void;
-  removeReminder: (id: string) => Promise<void>;
 };
 
 export function useMedicationCourseEditor({

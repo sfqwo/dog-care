@@ -82,6 +82,18 @@ export const SECTION_TABS: SectionTabMeta[] = [
     subtitle: "Курсы и приёмы",
     icon: "pill" as VetSectionTabIcon,
   },
+  {
+    key: "wellness",
+    title: "Самочувствие",
+    subtitle: "Симптомы и наблюдения",
+    icon: "heart-pulse" as VetSectionTabIcon,
+  },
+  {
+    key: "documents",
+    title: "Документы",
+    subtitle: "Анализы и заключения",
+    icon: "file-document-multiple-outline" as VetSectionTabIcon,
+  },
 ];
 
 export const SECTION_TAB_ITEMS = SECTION_TABS.map((tab) => ({
