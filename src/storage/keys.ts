@@ -3,6 +3,8 @@ export const STORAGE_KEYS = {
   FEEDING: "dogcare.feeding.v1",
   VET: "dogcare.vet.v1",
   VET_HEALTH: "dogcare.vet.health.v1",
+  WEIGHT: "dogcare.weight.v1",
+  MEDICATIONS: "dogcare.medications.v1",
   REMINDERS: "dogcare.reminders.v1",
   COMPLETED_TASKS: "dogcare.completedTasks.v1",
   PROFILE: "dogcare.profile.v1",

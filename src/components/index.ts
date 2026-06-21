@@ -9,3 +9,4 @@ export * from "./ownerProfileCard";
 export * from "./petTabs";
 export * from "./formLayout";
 export * from "./hint";
+export * from "./birthdayReminderSync";

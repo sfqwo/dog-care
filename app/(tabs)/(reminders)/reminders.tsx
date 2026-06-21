@@ -14,13 +14,13 @@ import {
 } from "@dog-care/core/shared";
 import {
   buildReminderStats,
-  formatReminderDateInput,
-  formatReminderTimeInput,
   sortReminders,
 } from "@dog-care/domain";
 import {
   createUid,
+  formatDateInput,
   formatDateTime,
+  formatTimeInput,
   isBeforeToday,
 } from "@dog-care/core/utils";
 import type {
@@ -209,7 +209,7 @@ export default function RemindersScreen() {
                     <View style={remindersStyles.inlineField}>
                       <Input
                         value={date}
-                        onChangeText={(value) => setDate(formatReminderDateInput(value))}
+                        onChangeText={(value) => setDate(formatDateInput(value))}
                         placeholder="ДД.ММ.ГГГГ"
                         keyboardType="number-pad"
                         editable={Boolean(selectedPetId)}
@@ -218,7 +218,7 @@ export default function RemindersScreen() {
                     <View style={remindersStyles.inlineField}>
                       <Input
                         value={time}
-                        onChangeText={(value) => setTime(formatReminderTimeInput(value))}
+                        onChangeText={(value) => setTime(formatTimeInput(value))}
                         placeholder="ЧЧ:ММ"
                         keyboardType="number-pad"
                         editable={Boolean(selectedPetId)}
@@ -332,6 +332,7 @@ function ReminderListItem({
         ? "К выполнению"
       : "Запланировано";
   const repeatText = REMINDER_REPEAT_LABELS[reminder.repeat];
+  const isBirthdayReminder = reminder.category === "birthday";
   const noteParts = [
     reminder.note,
     reminder.repeat !== "none" ? `Повтор: ${repeatText}` : undefined,
@@ -344,6 +345,7 @@ function ReminderListItem({
       onPress={() => onOpen(reminder)}
       onLongPress={() => onToggleDone(reminder.id)}
       onRemove={() => onRemove(reminder.id)}
+      renderRightActions={isBirthdayReminder ? () => null : undefined}
     >
       <SwipeableCardsListItemHeader>
         <SwipeableCardsListItemTextBlock>
@@ -359,7 +361,9 @@ function ReminderListItem({
       </SwipeableCardsListItemHeader>
       <SwipeableCardsListItemNote text={noteParts.join(" • ")} icon="bell-ring-outline" />
       <SwipeableCardsListItemFooter>
-        <SwipeableCardsListItemHelper text="Тап — открыть • свайп влево — кнопка удаления" />
+        <SwipeableCardsListItemHelper
+          text={isBirthdayReminder ? "Управляется датой рождения в профиле" : "Тап — открыть • свайп влево — кнопка удаления"}
+        />
         <SwipeableCardsListItemCheckAction onPress={() => onToggleDone(reminder.id)} />
       </SwipeableCardsListItemFooter>
     </SwipeableCardsListItem>

@@ -1,13 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
-import { formatReminderDateInput, formatReminderTimeInput } from "@dog-care/domain";
-import { createUid } from "@dog-care/core/utils";
+import { createUid, formatDateInput, formatTimeInput } from "@dog-care/core/utils";
 import type { UseVetRecordFormOptions } from "./types";
 
 export function useVetRecordForm({ selectedPetId, onSubmit }: UseVetRecordFormOptions) {
   const [title, setTitle] = useState("");
   const [clinic, setClinic] = useState("");
-  const [date, setDate] = useState(formatReminderDateInput(''));
-  const [time, setTime] = useState(formatReminderTimeInput(''));
+  const [date, setDate] = useState(formatDateInput(''));
+  const [time, setTime] = useState(formatTimeInput(''));
   const [note, setNote] = useState("");
 
   const canSubmit = useMemo(
@@ -30,8 +29,8 @@ export function useVetRecordForm({ selectedPetId, onSubmit }: UseVetRecordFormOp
     onSubmit(newRecord);
     setTitle("");
     setClinic("");
-    setDate(formatReminderDateInput(''));
-    setTime(formatReminderTimeInput(''));
+    setDate(formatDateInput(''));
+    setTime(formatTimeInput(''));
     setNote("");
   }, [canSubmit, clinic, date, note, onSubmit, selectedPetId, time, title]);
 

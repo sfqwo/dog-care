@@ -1,7 +1,15 @@
 import type { Reminder, ReminderRepeat } from "./domain";
-import { isBeforeToday, isSameLocalDay } from "@dog-care/core/utils";
+import { createClampedLocalDate, isBeforeToday, isSameLocalDay } from "@dog-care/core/utils";
 
-export function getNextReminderDueAt(dueAt: number, repeat: ReminderRepeat) {
+export function getNextReminderDueAt(
+  dueAt: number,
+  repeat: ReminderRepeat,
+  yearlyMonth?: number,
+  yearlyDay?: number
+) {
+  if (repeat === "yearly" && yearlyMonth && yearlyDay) {
+    return getNextYearlyDueAt(dueAt, yearlyMonth, yearlyDay);
+  }
   const next = new Date(Math.max(dueAt, Date.now()));
   if (repeat === "daily") {
     next.setDate(next.getDate() + 1);
@@ -9,8 +17,42 @@ export function getNextReminderDueAt(dueAt: number, repeat: ReminderRepeat) {
     next.setDate(next.getDate() + 7);
   } else if (repeat === "monthly") {
     next.setMonth(next.getMonth() + 1);
+  } else if (repeat === "yearly") {
+    next.setFullYear(next.getFullYear() + 1);
   }
   return next.getTime();
+}
+
+function getNextYearlyDueAt(dueAt: number, month: number, day: number) {
+  const now = new Date();
+  const dueDate = new Date(dueAt);
+  let next = createYearlyOccurrence(
+    now.getFullYear(),
+    month,
+    day,
+    dueDate.getHours(),
+    dueDate.getMinutes()
+  );
+  if (next.getTime() <= now.getTime()) {
+    next = createYearlyOccurrence(
+      now.getFullYear() + 1,
+      month,
+      day,
+      dueDate.getHours(),
+      dueDate.getMinutes()
+    );
+  }
+  return next.getTime();
+}
+
+function createYearlyOccurrence(
+  year: number,
+  month: number,
+  day: number,
+  hours: number,
+  minutes: number
+) {
+  return createClampedLocalDate(year, month - 1, day, hours, minutes);
 }
 
 export function buildReminderStats(reminders: Reminder[], now = Date.now()) {
@@ -42,60 +84,4 @@ export function getDayPlanReminders(reminders: Reminder[], now = Date.now()) {
         (isSameLocalDay(reminder.dueAt, now) || isBeforeToday(reminder.dueAt, now))
     )
   );
-}
-
-export function parseReminderDateTime(dateValue: string, timeValue: string) {
-  const dateMatch = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(dateValue);
-  const timeMatch = /^(\d{2}):(\d{2})$/.exec(timeValue);
-  if (!dateMatch || !timeMatch) return null;
-
-  const day = Number(dateMatch[1]);
-  const month = Number(dateMatch[2]);
-  const year = Number(dateMatch[3]);
-  const hours = Number(timeMatch[1]);
-  const minutes = Number(timeMatch[2]);
-  const parsed = new Date(year, month - 1, day, hours, minutes, 0, 0);
-
-  if (
-    parsed.getFullYear() !== year ||
-    parsed.getMonth() !== month - 1 ||
-    parsed.getDate() !== day ||
-    parsed.getHours() !== hours ||
-    parsed.getMinutes() !== minutes
-  ) {
-    return null;
-  }
-
-  return parsed.getTime();
-}
-
-export function formatReminderDateInput(value: string) {
-  const digits = value.replace(/\D/g, "").slice(0, 8);
-  const segments = [digits.slice(0, 2), digits.slice(2, 4), digits.slice(4, 8)].filter(Boolean);
-  return segments.join(".");
-}
-
-export function formatReminderTimeInput(value: string) {
-  const digits = value.replace(/\D/g, "").slice(0, 4);
-  const hours = digits.slice(0, 2);
-  const minutes = digits.slice(2, 4);
-  return minutes ? `${hours}:${minutes}` : hours;
-}
-
-export function formatReminderDateForInput(timestamp: number) {
-  const date = new Date(timestamp);
-  return [
-    pad2(date.getDate()),
-    pad2(date.getMonth() + 1),
-    date.getFullYear(),
-  ].join(".");
-}
-
-export function formatReminderTimeForInput(timestamp: number) {
-  const date = new Date(timestamp);
-  return [pad2(date.getHours()), pad2(date.getMinutes())].join(":");
-}
-
-function pad2(value: number) {
-  return value.toString().padStart(2, "0");
 }

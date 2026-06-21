@@ -1,79 +1,51 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback } from "react";
 import { useFocusEffect } from "expo-router";
 import type { CompletedCareTask, Reminder } from "@dog-care/domain";
-import {
-  completeReminderInList,
-  removeReminderFromList,
-} from "@/src/services/reminderActions";
-import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
-import { STORAGE_KEYS } from "@/src/storage/keys";
-
-type RemindersByPet = Record<string, Reminder[]>;
+import { useCareRecordsContext } from "@/src/hooks/careRecordsContext";
 
 type CompleteReminderOptions = {
   onCompletedTask?: (petId: string, task: CompletedCareTask) => void;
 };
 
 export function useRemindersStorage(selectedPetId?: string | null) {
-  const [remindersByPet, setRemindersByPet] = useState<RemindersByPet>({});
-  const [storageLoaded, setStorageLoaded] = useState(false);
-  const reminders = useMemo(
-    () => (selectedPetId ? remindersByPet[selectedPetId] ?? [] : []),
-    [remindersByPet, selectedPetId]
-  );
+  const {
+    getReminders,
+    addReminder: addReminderToContext,
+    removeReminder: removeReminderFromContext,
+    completeReminder: completeReminderInContext,
+    reloadReminders,
+    reloadCompletedTasks,
+  } = useCareRecordsContext();
+  const reminders = getReminders(selectedPetId);
 
   useFocusEffect(
     useCallback(() => {
-      let isActive = true;
-      loadJSON<RemindersByPet>(STORAGE_KEYS.REMINDERS, {}).then((storedReminders) => {
-        if (!isActive) return;
-        setRemindersByPet(storedReminders ?? {});
-        setStorageLoaded(true);
-      });
-      return () => {
-        isActive = false;
-      };
-    }, [])
+      void Promise.all([reloadReminders(), reloadCompletedTasks()]);
+    }, [reloadCompletedTasks, reloadReminders])
   );
-
-  useEffect(() => {
-    if (!storageLoaded) return;
-    saveJSON(STORAGE_KEYS.REMINDERS, remindersByPet);
-  }, [remindersByPet, storageLoaded]);
 
   const addReminder = useCallback(
     (reminder: Reminder) => {
       if (!selectedPetId) return;
-      setRemindersByPet((prev) => {
-        const current = prev[selectedPetId] ?? [];
-        return { ...prev, [selectedPetId]: [reminder, ...current] };
-      });
+      addReminderToContext(selectedPetId, reminder);
     },
-    [selectedPetId]
+    [addReminderToContext, selectedPetId]
   );
 
   const removeReminder = useCallback(
     async (id: string) => {
       if (!selectedPetId) return;
-      const nextList = await removeReminderFromList(reminders, id);
-      setRemindersByPet((prev) => {
-        if (nextList === reminders) return prev;
-        return { ...prev, [selectedPetId]: nextList };
-      });
+      await removeReminderFromContext(selectedPetId, id);
     },
-    [reminders, selectedPetId]
+    [removeReminderFromContext, selectedPetId]
   );
 
   const completeReminder = useCallback(
     async (id: string, options: CompleteReminderOptions = {}) => {
       if (!selectedPetId) return;
-      const nextList = await completeReminderInList(reminders, id, options);
-      setRemindersByPet((prev) => {
-        if (nextList === reminders) return prev;
-        return { ...prev, [selectedPetId]: nextList };
-      });
+      await completeReminderInContext(selectedPetId, id, options);
     },
-    [reminders, selectedPetId]
+    [completeReminderInContext, selectedPetId]
   );
 
   return {

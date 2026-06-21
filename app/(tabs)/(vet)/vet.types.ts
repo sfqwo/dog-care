@@ -9,6 +9,7 @@ import type {
   VetHealthByPet,
   VetHealthInfo,
   VetRecord,
+  WeightEntry,
   VetRecordsByPet,
 } from "@dog-care/domain";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -19,7 +20,7 @@ export type VetListItemProps = {
   onRemove: (id: string) => void;
 };
 
-export type VetSectionTab = "passport" | "records";
+export type VetSectionTab = "passport" | "records" | "weight" | "medications";
 export type VetSectionTabIcon = ComponentProps<typeof MaterialCommunityIcons>["name"];
 
 export type VaccineSection = {
@@ -56,4 +57,5 @@ export type {
   VetHealthByPet,
   VetHealthInfo,
   VetRecordsByPet,
+  WeightEntry,
 };

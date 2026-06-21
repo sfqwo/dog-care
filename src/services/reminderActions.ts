@@ -40,9 +40,19 @@ export async function completeReminderInList(
     return reminders.filter((item) => item.id !== id);
   }
 
+  const nextDueAt = getNextReminderDueAt(
+    reminder.dueAt,
+    reminder.repeat,
+    reminder.yearlyMonth,
+    reminder.yearlyDay
+  );
+  if (reminder.repeatUntil && nextDueAt > reminder.repeatUntil) {
+    return reminders.filter((item) => item.id !== id);
+  }
+
   const nextReminder: Reminder = {
     ...reminder,
-    dueAt: getNextReminderDueAt(reminder.dueAt, reminder.repeat),
+    dueAt: nextDueAt,
     completedAt: undefined,
     notificationId: undefined,
   };
@@ -76,6 +86,7 @@ function createCompletedReminderTask(reminder: Reminder): CompletedCareTask {
     category: reminder.category,
     note: reminder.note,
     detail: REMINDER_CATEGORY_LABELS[reminder.category],
+    sourceRefId: reminder.id,
   };
   return completedTask;
 }

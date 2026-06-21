@@ -12,6 +12,8 @@ import type {
   CompletedCareTask,
   Feeding,
   HealthNoteField,
+  MedicationCourse,
+  Reminder,
   TreatmentEntry,
   TreatmentType,
   VaccineEntry,
@@ -19,16 +21,21 @@ import type {
   VetHealthInfo,
   VetRecord,
   Walk,
+  WeightEntry,
 } from "@dog-care/domain";
 import { EMPTY_HEALTH } from "@/app/(tabs)/(vet)/vet.constants";
 import { getCompletedSourceId } from "@dog-care/domain";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import { STORAGE_KEYS } from "@/src/storage/keys";
+import { completeReminderInList, removeReminderFromList } from "@/src/services/reminderActions";
 import type {
   CareRecordsContextValue,
   CompletedTasksByPet,
   FeedingsByPet,
+  MedicationCoursesByPet,
+  RemindersByPet,
   VetHealthByPet,
+  WeightEntriesByPet,
   VetRecordsByPet,
   WalksByPet,
 } from "./types";
@@ -39,6 +46,9 @@ export function CareRecordsProvider({ children }: { children: ReactNode }) {
   const [feedingsByPet, setFeedingsByPet] = useState<FeedingsByPet>({});
   const [walksByPet, setWalksByPet] = useState<WalksByPet>({});
   const [vetRecordsByPet, setVetRecordsByPet] = useState<VetRecordsByPet>({});
+  const [weightEntriesByPet, setWeightEntriesByPet] = useState<WeightEntriesByPet>({});
+  const [medicationCoursesByPet, setMedicationCoursesByPet] = useState<MedicationCoursesByPet>({});
+  const [remindersByPet, setRemindersByPet] = useState<RemindersByPet>({});
   const [vetHealthByPet, setVetHealthByPet] = useState<VetHealthByPet>({});
   const [completedTasksByPet, setCompletedTasksByPet] = useState<CompletedTasksByPet>({});
   const [storageLoaded, setStorageLoaded] = useState(false);
@@ -49,13 +59,19 @@ export function CareRecordsProvider({ children }: { children: ReactNode }) {
       loadJSON<FeedingsByPet>(STORAGE_KEYS.FEEDING, {}),
       loadJSON<WalksByPet>(STORAGE_KEYS.WALKS, {}),
       loadJSON<VetRecordsByPet>(STORAGE_KEYS.VET, {}),
+      loadJSON<WeightEntriesByPet>(STORAGE_KEYS.WEIGHT, {}),
+      loadJSON<MedicationCoursesByPet>(STORAGE_KEYS.MEDICATIONS, {}),
+      loadJSON<RemindersByPet>(STORAGE_KEYS.REMINDERS, {}),
       loadJSON<VetHealthByPet>(STORAGE_KEYS.VET_HEALTH, {}),
       loadJSON<CompletedTasksByPet>(STORAGE_KEYS.COMPLETED_TASKS, {}),
-    ]).then(([storedFeedings, storedWalks, storedVetRecords, storedVetHealth, storedCompleted]) => {
+    ]).then(([storedFeedings, storedWalks, storedVetRecords, storedWeightEntries, storedMedicationCourses, storedReminders, storedVetHealth, storedCompleted]) => {
       if (!isMounted) return;
       setFeedingsByPet(storedFeedings ?? {});
       setWalksByPet(storedWalks ?? {});
       setVetRecordsByPet(storedVetRecords ?? {});
+      setWeightEntriesByPet(storedWeightEntries ?? {});
+      setMedicationCoursesByPet(storedMedicationCourses ?? {});
+      setRemindersByPet(storedReminders ?? {});
       setVetHealthByPet(storedVetHealth ?? {});
       setCompletedTasksByPet(storedCompleted ?? {});
       setStorageLoaded(true);
@@ -82,6 +98,21 @@ export function CareRecordsProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!storageLoaded) return;
+    saveJSON(STORAGE_KEYS.WEIGHT, weightEntriesByPet);
+  }, [storageLoaded, weightEntriesByPet]);
+
+  useEffect(() => {
+    if (!storageLoaded) return;
+    saveJSON(STORAGE_KEYS.MEDICATIONS, medicationCoursesByPet);
+  }, [medicationCoursesByPet, storageLoaded]);
+
+  useEffect(() => {
+    if (!storageLoaded) return;
+    saveJSON(STORAGE_KEYS.REMINDERS, remindersByPet);
+  }, [remindersByPet, storageLoaded]);
+
+  useEffect(() => {
+    if (!storageLoaded) return;
     saveJSON(STORAGE_KEYS.VET_HEALTH, vetHealthByPet);
   }, [storageLoaded, vetHealthByPet]);
 
@@ -101,6 +132,18 @@ export function CareRecordsProvider({ children }: { children: ReactNode }) {
   const getVetRecords = useCallback(
     (petId?: string | null) => (petId ? vetRecordsByPet[petId] ?? [] : []),
     [vetRecordsByPet]
+  );
+  const getWeightEntries = useCallback(
+    (petId?: string | null) => (petId ? weightEntriesByPet[petId] ?? [] : []),
+    [weightEntriesByPet]
+  );
+  const getMedicationCourses = useCallback(
+    (petId?: string | null) => (petId ? medicationCoursesByPet[petId] ?? [] : []),
+    [medicationCoursesByPet]
+  );
+  const getReminders = useCallback(
+    (petId?: string | null) => (petId ? remindersByPet[petId] ?? [] : []),
+    [remindersByPet]
   );
   const getVetHealth = useCallback(
     (petId?: string | null) => (petId && vetHealthByPet[petId]) || EMPTY_HEALTH,
@@ -162,6 +205,78 @@ export function CareRecordsProvider({ children }: { children: ReactNode }) {
         (task) => task.source !== "vet" || getCompletedSourceId(task) !== id
       ),
     }));
+  }, []);
+
+  const addWeightEntry = useCallback((petId: string, entry: WeightEntry) => {
+    setWeightEntriesByPet((prev) => ({ ...prev, [petId]: [entry, ...(prev[petId] ?? [])] }));
+  }, []);
+
+  const updateWeightEntry = useCallback((petId: string, entry: WeightEntry) => {
+    setWeightEntriesByPet((prev) => ({
+      ...prev,
+      [petId]: (prev[petId] ?? []).map((item) => (item.id === entry.id ? entry : item)),
+    }));
+  }, []);
+
+  const removeWeightEntry = useCallback((petId: string, id: string) => {
+    setWeightEntriesByPet((prev) => ({
+      ...prev,
+      [petId]: (prev[petId] ?? []).filter((entry) => entry.id !== id),
+    }));
+  }, []);
+
+  const addMedicationCourse = useCallback((petId: string, course: MedicationCourse) => {
+    setMedicationCoursesByPet((prev) => ({
+      ...prev,
+      [petId]: [course, ...(prev[petId] ?? [])],
+    }));
+  }, []);
+
+  const updateMedicationCourse = useCallback((petId: string, course: MedicationCourse) => {
+    setMedicationCoursesByPet((prev) => ({
+      ...prev,
+      [petId]: (prev[petId] ?? []).map((item) => (item.id === course.id ? course : item)),
+    }));
+  }, []);
+
+  const removeMedicationCourse = useCallback((petId: string, id: string) => {
+    setMedicationCoursesByPet((prev) => ({
+      ...prev,
+      [petId]: (prev[petId] ?? []).filter((course) => course.id !== id),
+    }));
+  }, []);
+
+  const addReminder = useCallback((petId: string, reminder: Reminder) => {
+    setRemindersByPet((prev) => ({
+      ...prev,
+      [petId]: [reminder, ...(prev[petId] ?? []).filter((item) => item.id !== reminder.id)],
+    }));
+  }, []);
+
+  const removeReminder = useCallback(async (petId: string, id: string) => {
+    const current = remindersByPet[petId] ?? [];
+    const next = await removeReminderFromList(current, id);
+    setRemindersByPet((prev) => ({ ...prev, [petId]: next }));
+  }, [remindersByPet]);
+
+  const completeReminder = useCallback(async (
+    petId: string,
+    id: string,
+    options: { onCompletedTask?: (petId: string, task: CompletedCareTask) => void } = {}
+  ) => {
+    const current = remindersByPet[petId] ?? [];
+    const next = await completeReminderInList(current, id, options);
+    setRemindersByPet((prev) => ({ ...prev, [petId]: next }));
+  }, [remindersByPet]);
+
+  const reloadReminders = useCallback(async () => {
+    const stored = await loadJSON<RemindersByPet>(STORAGE_KEYS.REMINDERS, {});
+    setRemindersByPet(stored ?? {});
+  }, []);
+
+  const reloadCompletedTasks = useCallback(async () => {
+    const stored = await loadJSON<CompletedTasksByPet>(STORAGE_KEYS.COMPLETED_TASKS, {});
+    setCompletedTasksByPet(stored ?? {});
   }, []);
 
   const addCompletedTask = useCallback((petId: string, task: CompletedCareTask) => {
@@ -229,14 +344,21 @@ export function CareRecordsProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<CareRecordsContextValue>(
     () => ({
+      isCareRecordsLoaded: storageLoaded,
       feedingsByPet,
       walksByPet,
       vetRecordsByPet,
+      weightEntriesByPet,
+      medicationCoursesByPet,
+      remindersByPet,
       vetHealthByPet,
       completedTasksByPet,
       getFeedings,
       getWalks,
       getVetRecords,
+      getWeightEntries,
+      getMedicationCourses,
+      getReminders,
       getVetHealth,
       getCompletedTasks,
       addFeeding,
@@ -247,6 +369,17 @@ export function CareRecordsProvider({ children }: { children: ReactNode }) {
       removeWalk,
       addVetRecord,
       removeVetRecord,
+      addWeightEntry,
+      updateWeightEntry,
+      removeWeightEntry,
+      addMedicationCourse,
+      updateMedicationCourse,
+      removeMedicationCourse,
+      addReminder,
+      removeReminder,
+      completeReminder,
+      reloadReminders,
+      reloadCompletedTasks,
       addCompletedTask,
       removeCompletedTask,
       setVaccineEntries,
@@ -260,26 +393,44 @@ export function CareRecordsProvider({ children }: { children: ReactNode }) {
       addFeeding,
       addVetRecord,
       addWalk,
+      addWeightEntry,
+      addMedicationCourse,
+      addReminder,
+      completeReminder,
       completedTasksByPet,
       feedingsByPet,
       getCompletedTasks,
       getFeedings,
       getVetHealth,
       getVetRecords,
+      getWeightEntries,
+      getMedicationCourses,
+      getReminders,
       getWalks,
       removeCompletedTask,
       removeFeeding,
       removeVetRecord,
+      removeWeightEntry,
+      removeMedicationCourse,
+      removeReminder,
       removeWalk,
       setAllergyEntries,
       setHealthNoteField,
       setOptionalVaccines,
       setTreatmentEntries,
       setVaccineEntries,
+      storageLoaded,
       updateFeeding,
+      updateWeightEntry,
+      updateMedicationCourse,
       updateWalk,
       vetHealthByPet,
       vetRecordsByPet,
+      weightEntriesByPet,
+      medicationCoursesByPet,
+      remindersByPet,
+      reloadReminders,
+      reloadCompletedTasks,
       walksByPet,
     ]
   );

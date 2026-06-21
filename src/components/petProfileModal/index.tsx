@@ -144,6 +144,7 @@ export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
           control={control}
           name="birthdate"
           placeholder="Дата рождения (опционально)"
+          maximumDate={Date.now()}
           style={petProfileModalStyles.inlineInput}
         />
         <View style={petProfileModalStyles.unitInputWrapper}>

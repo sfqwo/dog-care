@@ -9,3 +9,9 @@ export type CustomInputProps<TFieldValues extends FieldValues = FieldValues> = O
   name?: Path<TFieldValues>;
   rules?: RegisterOptions<TFieldValues>;
 };
+
+export type DateInputProps<TFieldValues extends FieldValues = FieldValues> =
+  CustomInputProps<TFieldValues> & {
+    minimumDate?: number;
+    maximumDate?: number;
+  };

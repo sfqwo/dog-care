@@ -25,9 +25,17 @@ export type VetRecord = {
   clinic?: string;
 };
 
-export type ReminderCategory = "walk" | "feeding" | "vet" | "treatment" | "other";
+export type WeightEntry = {
+  id: string;
+  petId: string;
+  at: number;
+  weight: number;
+  note?: string;
+};
 
-export type ReminderRepeat = "none" | "daily" | "weekly" | "monthly";
+export type ReminderCategory = "walk" | "feeding" | "vet" | "treatment" | "birthday" | "other";
+
+export type ReminderRepeat = "none" | "daily" | "weekly" | "monthly" | "yearly";
 
 export type Reminder = {
   id: string;
@@ -36,6 +44,9 @@ export type Reminder = {
   dueAt: number;
   category: ReminderCategory;
   repeat: ReminderRepeat;
+  repeatUntil?: number;
+  yearlyMonth?: number;
+  yearlyDay?: number;
   note?: string;
   completedAt?: number;
   notificationId?: string;
@@ -52,6 +63,20 @@ export type CompletedCareTask = {
   category?: ReminderCategory;
   note?: string;
   detail?: string;
+  sourceRefId?: string;
+};
+
+export type MedicationCourse = {
+  id: string;
+  petId: string;
+  name: string;
+  dosage: string;
+  startAt: number;
+  endAt: number;
+  time: string;
+  note?: string;
+  reminderId: string;
+  createdAt: number;
 };
 
 export type Pet = {

@@ -9,5 +9,6 @@ export const REMINDER_CATEGORY_ICONS: Record<ReminderCategory, ReminderCategoryI
   walk: "walk",
   vet: "medical-bag",
   treatment: "pill",
+  birthday: "cake-variant",
   other: "bell-outline",
 };

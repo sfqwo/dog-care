@@ -2,6 +2,7 @@ import { Pet, PetProfilePayload, UserProfile, UserProfilePayload } from "@dog-ca
 
 export type ProfileContextValue = {
   profile: UserProfile;
+  isProfileLoaded: boolean;
   editingPet: Pet | null;
   selectedPetId: string | null;
   setSelectedPetId: (id: string | null) => void;

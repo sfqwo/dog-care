@@ -24,7 +24,7 @@ import type {
   VetRecordsSectionProps,
 } from "./types";
 import { vetRecordsStyles } from "./styles";
-import { formatReminderTimeInput } from "@dog-care/domain";
+import { formatTimeInput } from "@dog-care/core/utils";
 
 export function VetRecordsSection({
   isActive,
@@ -82,7 +82,7 @@ export function VetRecordsSection({
 
         <Input
           value={time}
-          onChangeText={(value) => setTime(formatReminderTimeInput(value))}
+          onChangeText={(value) => setTime(formatTimeInput(value))}
           placeholder="Время приема"
           keyboardType="number-pad"
           editable={Boolean(selectedPetId)}

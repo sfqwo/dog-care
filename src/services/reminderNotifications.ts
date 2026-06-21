@@ -8,6 +8,7 @@ const REMINDER_CHANNEL_ID = "dog-care-reminders";
 type ScheduleReminderNotificationParams = {
   reminder: Reminder;
   categoryLabel: string;
+  requestPermission?: boolean;
 };
 
 export async function ensureReminderNotificationPermissions() {
@@ -24,12 +25,15 @@ export async function ensureReminderNotificationPermissions() {
 export async function scheduleReminderNotification({
   reminder,
   categoryLabel,
+  requestPermission = true,
 }: ScheduleReminderNotificationParams) {
   if (Platform.OS === "web" || reminder.completedAt || reminder.dueAt <= Date.now()) {
     return undefined;
   }
 
-  const canNotify = await ensureReminderNotificationPermissions();
+  const canNotify = requestPermission
+    ? await ensureReminderNotificationPermissions()
+    : (await Notifications.getPermissionsAsync()).granted;
   if (!canNotify) return undefined;
 
   await configureReminderNotificationChannel();

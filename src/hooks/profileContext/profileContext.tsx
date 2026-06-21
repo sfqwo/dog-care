@@ -26,6 +26,7 @@ const ProfileContext = createContext<ProfileContextValue | undefined>(undefined)
 
 export function ProfileProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<ProfileContextValue["profile"]>(DEFAULT_PROFILE);
+  const [isProfileLoaded, setIsProfileLoaded] = useState(false);
   const [editingPet, setEditingPet] = useState<ProfileContextValue["editingPet"] | null>(null);
   const [petModalVisible, setPetModalVisible] = useState(false);
   const [ownerModalVisible, setOwnerModalVisible] = useState(false);
@@ -39,6 +40,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     ).then((data) => {
       if (isMounted) {
         setProfile(data ?? DEFAULT_PROFILE);
+        setIsProfileLoaded(true);
       }
     });
     return () => {
@@ -47,8 +49,9 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    if (!isProfileLoaded) return;
     saveJSON(STORAGE_KEYS.PROFILE, profile);
-  }, [profile]);
+  }, [isProfileLoaded, profile]);
 
   const addPet = useCallback<ProfileContextValue["addPet"]>((pet) => {
     setProfile((prev) => ({
@@ -135,6 +138,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   const value = useMemo(
     () => ({
       profile,
+      isProfileLoaded,
       editingPet,
       selectedPetId,
       setSelectedPetId: handleSelectPet,
@@ -148,6 +152,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     }),
     [
       profile,
+      isProfileLoaded,
       editingPet,
       selectedPetId,
       handleSelectPet,

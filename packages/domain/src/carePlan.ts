@@ -5,8 +5,7 @@ import type {
   VetRecord,
   Walk,
 } from "./domain";
-import { parseReminderDateTime } from "./reminders";
-import { isSameLocalDay } from "@dog-care/core/utils";
+import { isSameLocalDay, parseDateTimeInput } from "@dog-care/core/utils";
 
 export type TodayVetPlanItem = {
   record: VetRecord;
@@ -73,7 +72,7 @@ export function buildVetPlanItems({
   return vetRecords
     .map<TodayVetPlanItem>((record) => ({
       record,
-      scheduledAt: parseReminderDateTime(record.date, record.time) ?? record.at,
+      scheduledAt: parseDateTimeInput(record.date, record.time) ?? record.at,
     }))
     .filter(
       (item) =>

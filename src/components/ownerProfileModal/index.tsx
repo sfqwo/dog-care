@@ -47,7 +47,12 @@ export function OwnerProfileModal({ visible, onClose }: OwnerProfileModalProps) 
         placeholder="Имя владельца"
       />
       <EmailInput control={control} name="email" placeholder="Email" />
-      <DateInput control={control} name="birthdate" placeholder="Дата рождения" />
+      <DateInput
+        control={control}
+        name="birthdate"
+        placeholder="Дата рождения"
+        maximumDate={Date.now()}
+      />
       <PhoneInput control={control} name="phone" placeholder="Телефон" />
       <ModalActions>
         <ModalActionButton closeOnPress>Отменить</ModalActionButton>
