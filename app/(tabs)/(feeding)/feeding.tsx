@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -10,12 +11,14 @@ import {
   useCareRecordsContext,
   useProfileContext,
 } from "@/src/hooks";
-import { Input } from "@/packages/ui/input";
+import { DateInput, Input } from "@/packages/ui/input";
 import {
   HeroCard,
   HeroCardBadge,
   HeroCardSubtitle,
   HeroCardTitle,
+  CareTrend,
+  CareTrendSeries,
   PetTabs,
   StatsBlock,
   StatsBlocks,
@@ -53,11 +56,19 @@ export default function FeedingScreen() {
     setGrams,
     food,
     setFood,
+    date,
+    setDate,
+    time,
+    setTime,
     editingFeeding,
     editGrams,
     setEditGrams,
     editFood,
     setEditFood,
+    editDate,
+    setEditDate,
+    editTime,
+    setEditTime,
     canAddFeeding,
     canSaveEditedFeeding,
     handleSubmitFeeding,
@@ -74,6 +85,10 @@ export default function FeedingScreen() {
   const hasPets = profile.pets.length > 0;
   const items = getFeedings(selectedPetId);
   const stats = useFeedingStats(items);
+  const trendPoints = useMemo(
+    () => items.map((item) => ({ at: item.at, value: item.grams })),
+    [items]
+  );
 
   const lastMealText = items[0] ? formatDateTime(items[0].at) : "Еще нет записей";
   const heroBadgeText = hasPets
@@ -110,6 +125,15 @@ export default function FeedingScreen() {
                 <StatsBlock label="Среднее" value={`${stats.avgGrams} г`} />
               </StatsBlocks>
 
+              <CareTrend title="Динамика питания">
+                <CareTrendSeries
+                  points={trendPoints}
+                  aggregation="sum"
+                  thresholdPercent={20}
+                  formatValue={(value) => `${Math.round(value)} г`}
+                />
+              </CareTrend>
+
               <TimeRecorder>
                 <TimeRecorderTitle>Записать кормление</TimeRecorderTitle>
                 <TimeRecorderRow>
@@ -124,6 +148,22 @@ export default function FeedingScreen() {
                     label="Добавить"
                     onPress={handleSubmitFeeding}
                     disabled={!canAddFeeding}
+                  />
+                </TimeRecorderRow>
+                <TimeRecorderRow>
+                  <DateInput
+                    value={date}
+                    onChangeText={setDate}
+                    placeholder="Дата"
+                    maximumDate={Date.now()}
+                    editable={Boolean(selectedPetId)}
+                  />
+                  <Input
+                    value={time}
+                    onChangeText={setTime}
+                    placeholder="Время"
+                    keyboardType="number-pad"
+                    editable={Boolean(selectedPetId)}
                   />
                 </TimeRecorderRow>
                 <Input
@@ -153,9 +193,13 @@ export default function FeedingScreen() {
           visible={Boolean(editingFeeding)}
           grams={editGrams}
           food={editFood}
+          date={editDate}
+          time={editTime}
           canSave={canSaveEditedFeeding}
           onChangeGrams={setEditGrams}
           onChangeFood={setEditFood}
+          onChangeDate={setEditDate}
+          onChangeTime={setEditTime}
           onSave={handleSaveEditedFeeding}
           onClose={closeEditFeedingModal}
         />
@@ -168,29 +212,49 @@ function FeedingEditModal({
   visible,
   grams,
   food,
+  date,
+  time,
   canSave,
   onChangeGrams,
   onChangeFood,
+  onChangeDate,
+  onChangeTime,
   onSave,
   onClose,
 }: {
   visible: boolean;
   grams: string;
   food: string;
+  date: string;
+  time: string;
   canSave: boolean;
   onChangeGrams: (value: string) => void;
   onChangeFood: (value: string) => void;
+  onChangeDate: (value: string) => void;
+  onChangeTime: (value: string) => void;
   onSave: () => void;
   onClose: () => void;
 }) {
   return (
     <Modal visible={visible} onClose={onClose}>
       <ModalTitle>Редактировать кормление</ModalTitle>
-      <ModalSubtitle>Обновите количество и описание корма.</ModalSubtitle>
+      <ModalSubtitle>Обновите дату, количество и описание корма.</ModalSubtitle>
       <Input
         value={grams}
         onChangeText={onChangeGrams}
         placeholder="Граммы"
+        keyboardType="number-pad"
+      />
+      <DateInput
+        value={date}
+        onChangeText={onChangeDate}
+        placeholder="Дата"
+        maximumDate={Date.now()}
+      />
+      <Input
+        value={time}
+        onChangeText={onChangeTime}
+        placeholder="Время"
         keyboardType="number-pad"
       />
       <Input

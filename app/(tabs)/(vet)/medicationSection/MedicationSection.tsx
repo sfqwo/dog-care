@@ -44,12 +44,14 @@ import {
 import type { MedicationCourseForm } from "@/src/hooks/useMedicationCourseEditor";
 import { medicationStyles } from "./styles";
 import type { MedicationSectionProps } from "./types";
+import { useInformer } from "@/src/components/informer";
 
 const ACTIVE_GRADIENT = ["#dcfce7", "#bfdbfe", "#fef3c7"] as const;
 const PLANNED_GRADIENT = ["#e0f2fe", "#ddd6fe", "#fef3c7"] as const;
 const COMPLETED_GRADIENT = ["#f1f5f9", "#e2e8f0", "#dcfce7"] as const;
 
 export function MedicationSection({ isActive, hasPets, selectedPetId }: MedicationSectionProps) {
+  const { showSuccess } = useInformer();
   const {
     getMedicationCourses,
     addMedicationCourse,
@@ -91,6 +93,7 @@ export function MedicationSection({ isActive, hasPets, selectedPetId }: Medicati
 
   const handleTake = async (course: MedicationCourse) => {
     await completeReminder(course.reminderId, { onCompletedTask: addCompletedTask });
+    showSuccess("Приём лекарства отмечен");
   };
 
   return (

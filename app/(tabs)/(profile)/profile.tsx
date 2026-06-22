@@ -30,6 +30,7 @@ import {
 import { useProfileContext } from "@/src/hooks";
 import { profileStyles, pageGradient, petGradient } from "./profile.styles";
 import type { PetListItemProps } from "./profile.types";
+import { buildPetNote } from "./utils";
 
 export default function ProfileScreen() {
   const {
@@ -136,14 +137,4 @@ function PetListItem({ pet, onRemove, onEdit }: PetListItemProps) {
       </SwipeableCardsListItemFooter>
     </SwipeableCardsListItem>
   );
-}
-
-function buildPetNote(pet: Pet) {
-  if (pet.notes?.trim()) {
-    return { note: `Заметки: ${pet.notes.trim()}`, noteIcon: "note-edit-outline" as const };
-  }
-  if (pet.birthdate?.trim()) {
-    return { note: `Дата рождения: ${pet.birthdate.trim()}`, noteIcon: "cake-variant" as const };
-  }
-  return { note: undefined, noteIcon: "account" as const };
 }

@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import dogBreedsSource from "@dog-care/core/shared/data/dog_ceo_breeds.json";
 import catBreedsSource from "@dog-care/core/shared/data/cat_ceo_breeds.json";
-import type { BreedRecord, DogBreedOption, SpeciesKey } from "./types";
+import type { BreedRecord, SpeciesKey } from "./types";
+import { mapBreedRecordToOption } from "./utils";
 
 const BREED_SOURCES: Record<SpeciesKey, BreedRecord[]> = {
   dog: dogBreedsSource.breeds,
@@ -29,14 +30,4 @@ export function useDogBreeds(species?: string, query?: string) {
   }, [normalizedQuery, normalizedSpecies]);
 
   return { breeds: sortedBreeds, loading: false, error: null };
-}
-
-function mapBreedRecordToOption(record: BreedRecord): DogBreedOption {
-  const readableRu = record.name_ru?.trim();
-  const readableEn = record.name_en?.trim();
-  const title = readableRu && readableRu.length > 1 ? readableRu : readableEn ?? record.code;
-  return {
-    value: record.code,
-    title,
-  };
 }

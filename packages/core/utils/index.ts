@@ -5,3 +5,5 @@ export * from "./isPositiveNumber";
 export * from "./inputValidators";
 export * from "./dateTime";
 export * from "./numberInput";
+export * from "./trends";
+export * from "./collections";

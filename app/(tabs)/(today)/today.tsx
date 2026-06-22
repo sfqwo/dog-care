@@ -50,7 +50,6 @@ import {
 import { useCareRecordsContext, useProfileContext, useRemindersStorage } from "@/src/hooks";
 import {
   REMINDER_CATEGORY_ICONS,
-  type ReminderCategoryIcon,
 } from "@/src/presentation/reminders";
 import {
   dueGradient,
@@ -60,10 +59,11 @@ import {
   todayStyles,
 } from "./today.styles";
 import type { TodayCompletedItemProps, TodayPlanItemProps } from "./today.types";
-
-type ReminderCardIcon = ReminderCategoryIcon | "check-circle-outline";
+import { useInformer } from "@/src/components/informer";
+import { getCompletedSourceIcon } from "./utils";
 
 export default function TodayScreen() {
+  const { showSuccess } = useInformer();
   const { profile, selectedPetId } = useProfileContext();
   const {
     getFeedings,
@@ -117,11 +117,13 @@ export default function TodayScreen() {
     await completeReminder(id, {
       onCompletedTask: addCompletedTask,
     });
+    showSuccess("Дело отмечено выполненным");
   };
 
   const handleRemoveReminder = async (id: string) => {
     if (!selectedPetId) return;
     await removeReminder(id);
+    showSuccess("Дело удалено");
   };
 
   const handleRemoveCompletedItem = async (item: CompletedCareTask) => {
@@ -136,6 +138,7 @@ export default function TodayScreen() {
       removeVetRecord(selectedPetId, sourceId);
       removeCompletedTask(selectedPetId, item.id);
     }
+    showSuccess("Запись удалена");
   };
 
   const handleOpenVetRecord = () => {
@@ -155,11 +158,13 @@ export default function TodayScreen() {
       note: record.note,
     };
     addCompletedTask(selectedPetId, completedTask);
+    showSuccess("Визит отмечен выполненным");
   };
 
   const handleRemoveVetRecord = async (id: string) => {
     if (!selectedPetId) return;
     removeVetRecord(selectedPetId, id);
+    showSuccess("Визит удалён");
   };
 
   const heroSubtitle = hasPets
@@ -342,12 +347,4 @@ function TodayCompletedItem({ item, onRemove }: TodayCompletedItemProps) {
       </SwipeableCardsListItemFooter>
     </SwipeableCardsListItem>
   );
-}
-
-function getCompletedSourceIcon(item: CompletedCareTask): ReminderCardIcon {
-  if (item.category) return REMINDER_CATEGORY_ICONS[item.category];
-  if (item.source === "feeding") return "food-variant";
-  if (item.source === "walk") return "walk";
-  if (item.source === "vet") return "medical-bag";
-  return "check-circle-outline";
 }

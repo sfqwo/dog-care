@@ -2,28 +2,15 @@ import { useMemo, useState } from "react";
 import {
   parseMedicationCourseSchedule,
 } from "@dog-care/domain";
-import type { MedicationCourse, Reminder } from "@dog-care/domain";
+import type { MedicationCourse } from "@dog-care/domain";
 import {
   createUid,
   formatDateInputFromTimestamp,
-  formatTimeInputFromTimestamp,
 } from "@dog-care/core/utils";
-import { scheduleReminderNotification } from "@/src/services/reminderNotifications";
 import type { MedicationCourseForm, UseMedicationCourseEditorOptions } from "./types";
-
-const createInitialForm = (): MedicationCourseForm => {
-  const reminderAt = new Date(Date.now() + 5 * 60 * 1000);
-  const end = new Date(reminderAt);
-  end.setDate(end.getDate() + 6);
-  return {
-    name: "",
-    dosage: "",
-    startDate: formatDateInputFromTimestamp(reminderAt.getTime()),
-    endDate: formatDateInputFromTimestamp(end.getTime()),
-    time: formatTimeInputFromTimestamp(reminderAt.getTime()),
-    note: "",
-  };
-};
+import { useInformer } from "@/src/components/informer";
+import { createInitialMedicationCourseForm } from "./utils";
+import { createMedicationReminder } from "@/src/services/medicationReminders";
 
 export function useMedicationCourseEditor({
   selectedPetId,
@@ -33,9 +20,10 @@ export function useMedicationCourseEditor({
   addReminder,
   removeReminder,
 }: UseMedicationCourseEditorOptions) {
-  const [form, setForm] = useState<MedicationCourseForm>(createInitialForm);
+  const { showSuccess } = useInformer();
+  const [form, setForm] = useState<MedicationCourseForm>(createInitialMedicationCourseForm);
   const [editingCourse, setEditingCourse] = useState<MedicationCourse | null>(null);
-  const [editForm, setEditForm] = useState<MedicationCourseForm>(createInitialForm);
+  const [editForm, setEditForm] = useState<MedicationCourseForm>(createInitialMedicationCourseForm);
   const [isSaving, setIsSaving] = useState(false);
   const schedule = useMemo(
     () => parseMedicationCourseSchedule(form.startDate, form.endDate, form.time),
@@ -80,7 +68,8 @@ export function useMedicationCourseEditor({
       const reminder = await createMedicationReminder(course, schedule.nextDoseAt);
       addCourse(selectedPetId, course);
       addReminder(reminder);
-      setForm(createInitialForm());
+      showSuccess("Курс лечения добавлен");
+      setForm(createInitialMedicationCourseForm());
     } finally {
       setIsSaving(false);
     }
@@ -100,7 +89,7 @@ export function useMedicationCourseEditor({
 
   const closeEditModal = () => {
     setEditingCourse(null);
-    setEditForm(createInitialForm());
+    setEditForm(createInitialMedicationCourseForm());
   };
 
   const handleSaveEdit = async () => {
@@ -120,6 +109,7 @@ export function useMedicationCourseEditor({
       const reminder = await createMedicationReminder(course, editSchedule.nextDoseAt);
       updateCourse(selectedPetId, course);
       addReminder(reminder);
+      showSuccess("Курс лечения обновлён");
       closeEditModal();
     } finally {
       setIsSaving(false);
@@ -130,6 +120,7 @@ export function useMedicationCourseEditor({
     if (!selectedPetId) return;
     await removeReminder(course.reminderId);
     removeCourse(selectedPetId, course.id);
+    showSuccess("Курс лечения удалён");
     if (editingCourse?.id === course.id) closeEditModal();
   };
 
@@ -148,22 +139,4 @@ export function useMedicationCourseEditor({
     handleRemove,
     closeEditModal,
   };
-}
-
-async function createMedicationReminder(course: MedicationCourse, dueAt: number) {
-  const base: Reminder = {
-    id: course.reminderId,
-    petId: course.petId,
-    title: `Принять ${course.name}`,
-    dueAt,
-    category: "treatment",
-    repeat: "daily",
-    repeatUntil: course.endAt,
-    note: [course.dosage, course.note].filter(Boolean).join(" • "),
-  };
-  const notificationId = await scheduleReminderNotification({
-    reminder: base,
-    categoryLabel: course.dosage,
-  });
-  return { ...base, notificationId };
 }

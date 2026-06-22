@@ -1,13 +1,16 @@
+import { useMemo } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { Input } from "@/packages/ui/input";
+import { DateInput, Input } from "@/packages/ui/input";
 import {
   HeroCard,
   HeroCardBadge,
   HeroCardSubtitle,
   HeroCardTitle,
+  CareTrend,
+  CareTrendSeries,
   PetTabs,
   Hint,
   Modal,
@@ -53,11 +56,19 @@ export default function WalksScreen() {
     setDurationMin,
     note,
     setNote,
+    date,
+    setDate,
+    time,
+    setTime,
     editingWalk,
     editDurationMin,
     setEditDurationMin,
     editNote,
     setEditNote,
+    editDate,
+    setEditDate,
+    editTime,
+    setEditTime,
     canAddWalk,
     canSaveEditedWalk,
     handleAddWalk,
@@ -74,6 +85,10 @@ export default function WalksScreen() {
   const hasPets = profile.pets.length > 0;
   const currentWalks = getWalks(selectedPetId);
   const stats = useWalkStats(currentWalks);
+  const trendPoints = useMemo(
+    () => currentWalks.map((walk) => ({ at: walk.startedAt, value: walk.durationMin })),
+    [currentWalks]
+  );
 
   const lastWalkText = currentWalks[0] ? formatDateTime(currentWalks[0].startedAt) : "Еще нет записей";
   const heroBadgeText = hasPets
@@ -110,6 +125,15 @@ export default function WalksScreen() {
                 <StatsBlock label="Среднее время" value={`${stats.avgDuration} мин`} />
               </StatsBlocks>
 
+              <CareTrend title="Динамика прогулок">
+                <CareTrendSeries
+                  points={trendPoints}
+                  aggregation="sum"
+                  thresholdPercent={20}
+                  formatValue={(value) => `${Math.round(value)} мин`}
+                />
+              </CareTrend>
+
               <TimeRecorder>
                 <TimeRecorderTitle>Записать прогулку</TimeRecorderTitle>
                 <TimeRecorderRow>
@@ -121,6 +145,22 @@ export default function WalksScreen() {
                     editable={Boolean(selectedPetId)}
                   />
                   <TimeRecorderButton label="Добавить" onPress={handleAddWalk} disabled={!canAddWalk} />
+                </TimeRecorderRow>
+                <TimeRecorderRow>
+                  <DateInput
+                    value={date}
+                    onChangeText={setDate}
+                    placeholder="Дата"
+                    maximumDate={Date.now()}
+                    editable={Boolean(selectedPetId)}
+                  />
+                  <Input
+                    value={time}
+                    onChangeText={setTime}
+                    placeholder="Время"
+                    keyboardType="number-pad"
+                    editable={Boolean(selectedPetId)}
+                  />
                 </TimeRecorderRow>
                 <Input
                   value={note}
@@ -149,9 +189,13 @@ export default function WalksScreen() {
           visible={Boolean(editingWalk)}
           durationMin={editDurationMin}
           note={editNote}
+          date={editDate}
+          time={editTime}
           canSave={canSaveEditedWalk}
           onChangeDurationMin={setEditDurationMin}
           onChangeNote={setEditNote}
+          onChangeDate={setEditDate}
+          onChangeTime={setEditTime}
           onSave={handleSaveEditedWalk}
           onClose={closeEditWalkModal}
         />
@@ -164,29 +208,49 @@ function WalkEditModal({
   visible,
   durationMin,
   note,
+  date,
+  time,
   canSave,
   onChangeDurationMin,
   onChangeNote,
+  onChangeDate,
+  onChangeTime,
   onSave,
   onClose,
 }: {
   visible: boolean;
   durationMin: string;
   note: string;
+  date: string;
+  time: string;
   canSave: boolean;
   onChangeDurationMin: (value: string) => void;
   onChangeNote: (value: string) => void;
+  onChangeDate: (value: string) => void;
+  onChangeTime: (value: string) => void;
   onSave: () => void;
   onClose: () => void;
 }) {
   return (
     <Modal visible={visible} onClose={onClose}>
       <ModalTitle>Редактировать прогулку</ModalTitle>
-      <ModalSubtitle>Обновите длительность и заметку.</ModalSubtitle>
+      <ModalSubtitle>Обновите дату, длительность и заметку.</ModalSubtitle>
       <Input
         value={durationMin}
         onChangeText={onChangeDurationMin}
         placeholder="Минуты"
+        keyboardType="number-pad"
+      />
+      <DateInput
+        value={date}
+        onChangeText={onChangeDate}
+        placeholder="Дата"
+        maximumDate={Date.now()}
+      />
+      <Input
+        value={time}
+        onChangeText={onChangeTime}
+        placeholder="Время"
         keyboardType="number-pad"
       />
       <Input

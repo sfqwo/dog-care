@@ -25,6 +25,7 @@ import type {
 } from "./types";
 import { vetRecordsStyles } from "./styles";
 import { formatTimeInput } from "@dog-care/core/utils";
+import { useInformer } from "@/src/components/informer";
 
 export function VetRecordsSection({
   isActive,
@@ -34,6 +35,7 @@ export function VetRecordsSection({
   onAddRecord,
   onRemoveRecord,
 }: VetRecordsSectionProps) {
+  const { showSuccess } = useInformer();
   const {
     title,
     setTitle,
@@ -54,6 +56,10 @@ export function VetRecordsSection({
   const emptyStateText = hasPets
     ? "Добавьте первую запись о визите к ветеринару."
     : "Чтобы вести визиты, добавьте питомца.";
+  const handleRemoveRecord = (id: string) => {
+    onRemoveRecord(id);
+    showSuccess("Визит удалён");
+  };
 
   return (
     <View style={vetRecordsStyles.section}>
@@ -109,7 +115,7 @@ export function VetRecordsSection({
       {records.length === 0 ? <SwipeableCardsListEmpty text={emptyStateText} /> : null}
 
       {records.map((record) => (
-        <VetRecordCard key={record.id} record={record} onRemove={onRemoveRecord} />
+        <VetRecordCard key={record.id} record={record} onRemove={handleRemoveRecord} />
       ))}
     </View>
   );

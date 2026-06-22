@@ -16,7 +16,3 @@ export type WeightEntryCardProps = {
   onRemove: (id: string) => void;
   onEdit: (entry: WeightEntry) => void;
 };
-
-export type WeightTrendChartProps = {
-  entries: WeightEntry[];
-};

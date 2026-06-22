@@ -77,8 +77,10 @@ import type {
   CompletedReminderListItemProps,
   ReminderListItemProps,
 } from "./reminders.types";
+import { useInformer } from "@/src/components/informer";
 
 export default function RemindersScreen() {
+  const { showSuccess } = useInformer();
   const { profile, selectedPetId } = useProfileContext();
   const { getCompletedTasks, addCompletedTask, removeCompletedTask } = useCareRecordsContext();
   const {
@@ -138,11 +140,13 @@ export default function RemindersScreen() {
 
     addReminder(newReminder);
     resetReminderForm();
+    showSuccess("Напоминание добавлено");
   };
 
   const handleRemoveReminder = async (id: string) => {
     if (!selectedPetId) return;
     await removeReminder(id);
+    showSuccess("Напоминание удалено");
   };
 
   const handleToggleReminderDone = async (id: string) => {
@@ -150,6 +154,7 @@ export default function RemindersScreen() {
     await completeReminder(id, {
       onCompletedTask: addCompletedTask,
     });
+    showSuccess("Дело отмечено выполненным");
   };
 
   const handleOpenReminder = (reminder: Reminder) => {
@@ -159,6 +164,7 @@ export default function RemindersScreen() {
   const handleRemoveCompletedReminder = (id: string) => {
     if (!selectedPetId) return;
     removeCompletedTask(selectedPetId, id);
+    showSuccess("Запись удалена из выполненных");
   };
 
   const nextReminder = sortedReminders.find((reminder) => !reminder.completedAt);

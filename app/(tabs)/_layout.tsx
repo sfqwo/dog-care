@@ -3,6 +3,7 @@ import { router, Tabs, usePathname } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { getCarePlanMenuRoute, type CarePlanMenuId } from "./utils";
 
 const CARE_PLAN_MENU_ITEMS = [
   {
@@ -18,12 +19,6 @@ const CARE_PLAN_MENU_ITEMS = [
     icon: "notifications-outline",
   },
 ] as const;
-
-type CarePlanMenuId = "today" | "reminders";
-
-function getCarePlanMenuRoute(id: CarePlanMenuId) {
-  return id === "today" ? "/today" : "/reminders";
-}
 
 export default function TabsLayout() {
   return (

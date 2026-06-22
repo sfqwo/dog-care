@@ -2,6 +2,7 @@ export * from './careRecordsContext';
 export * from './profileContext';
 export * from './useDogBreeds';
 export * from './useFeedingCardDetails';
+export * from './useEntryDateTime';
 export * from './useFeedingEntryEditor';
 export * from './useFeedingStats';
 export * from './useMedicationCourseEditor';

@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import { GENDER_OPTIONS, SPECIES_OPTIONS } from "@dog-care/core/shared";
 import { Select, SelectHeader, SelectOption, SelectOptionTitle } from "@dog-care/select";
-import type { Pet, PetProfilePayload } from "@dog-care/domain";
+import type { PetProfilePayload } from "@dog-care/domain";
 import { useProfileContext, useDogBreeds } from "@/src/hooks";
 import { DateInput, Input } from "@/packages/ui/input";
 
@@ -18,6 +18,7 @@ import {
 import type { PetProfileFormState, PetProfileModalProps } from "./types";
 import { GenderToggle, type GenderToggleOption } from "../genderToggle";
 import { petProfileModalStyles } from "./styles";
+import { buildPetFormDefaults } from "./utils";
 
 const GENDER_ICON_MAP: Record<string, GenderToggleOption["icon"]> = {
   female: "gender-female",
@@ -176,16 +177,4 @@ export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
       </ModalActions>
     </Modal>
   );
-}
-
-function buildPetFormDefaults(pet?: Pet | null): PetProfileFormState {
-  return {
-    name: pet?.name ?? "",
-    breed: pet?.breed ?? "",
-    species: pet?.species ?? SPECIES_OPTIONS[0].value,
-    gender: pet?.gender ?? "",
-    birthdate: pet?.birthdate ?? "",
-    weight: pet?.weight ?? "",
-    notes: pet?.notes ?? "",
-  };
 }

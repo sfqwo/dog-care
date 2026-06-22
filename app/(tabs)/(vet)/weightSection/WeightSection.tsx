@@ -1,11 +1,13 @@
 import { useMemo } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 import type { WeightEntry } from "@dog-care/domain";
 import { formatLocalDate } from "@dog-care/core/utils";
 import { DateInput, Input } from "@/packages/ui/input";
 import {
   Hint,
+  CareTrend,
+  CareTrendSeries,
   Modal,
   ModalActionButton,
   ModalActions,
@@ -30,7 +32,8 @@ import {
 } from "@/src/components";
 import { useWeightEntryEditor } from "@/src/hooks";
 import { weightSectionStyles } from "./styles";
-import type { WeightEntryCardProps, WeightSectionProps, WeightTrendChartProps } from "./types";
+import type { WeightEntryCardProps, WeightSectionProps } from "./types";
+import { formatWeight, formatWeightDelta } from "./utils";
 
 const WEIGHT_GRADIENT = ["#dcfce7", "#bfdbfe", "#fde68a"] as const;
 const WEIGHT_NOTE_GRADIENT = ["#e0f2fe", "#bbf7d0", "#fef3c7"] as const;
@@ -58,6 +61,10 @@ export function WeightSection({
   const latestEntry = sortedEntries[0];
   const previousEntry = sortedEntries[1];
   const delta = latestEntry && previousEntry ? latestEntry.weight - previousEntry.weight : null;
+  const trendPoints = useMemo(
+    () => entries.map((entry) => ({ at: entry.at, value: entry.weight })),
+    [entries]
+  );
   const {
     date,
     setDate,
@@ -96,11 +103,19 @@ export function WeightSection({
     <View style={weightSectionStyles.section}>
       <StatsBlocks>
         <StatsBlock label="Текущий" value={latestEntry ? `${formatWeight(latestEntry.weight)} кг` : "—"} />
-        <StatsBlock label="Изменение" value={formatDelta(delta)} />
+        <StatsBlock label="Изменение" value={formatWeightDelta(delta)} />
         <StatsBlock label="Записей" value={sortedEntries.length} />
       </StatsBlocks>
 
-      <WeightTrendChart entries={sortedEntries} />
+      <CareTrend title="Динамика веса">
+        <CareTrendSeries
+          points={trendPoints}
+          aggregation="last"
+          comparison="firstLast"
+          thresholdPercent={5}
+          formatValue={(value) => `${formatWeight(value)} кг`}
+        />
+      </CareTrend>
 
       <TimeRecorder>
         <TimeRecorderTitle>Записать вес</TimeRecorderTitle>
@@ -164,56 +179,6 @@ export function WeightSection({
   );
 }
 
-function WeightTrendChart({ entries }: WeightTrendChartProps) {
-  const chartEntries = useMemo(
-    () => [...entries].sort((first, second) => first.at - second.at).slice(-8),
-    [entries]
-  );
-  const weights = chartEntries.map((entry) => entry.weight);
-  const min = weights.length ? Math.min(...weights) : 0;
-  const max = weights.length ? Math.max(...weights) : 0;
-  const range = max - min || 1;
-
-  return (
-    <View style={weightSectionStyles.chartCard}>
-      <View style={weightSectionStyles.chartHeader}>
-        <Text style={weightSectionStyles.chartTitle}>Динамика веса</Text>
-        <Text style={weightSectionStyles.chartSubtitle}>Последние измерения по датам</Text>
-      </View>
-
-      {chartEntries.length === 0 ? (
-        <View style={weightSectionStyles.chartEmpty}>
-          <Text style={weightSectionStyles.chartEmptyText}>
-            График появится после первой записи.
-          </Text>
-        </View>
-      ) : (
-        <View style={weightSectionStyles.chartBars}>
-          {chartEntries.map((entry, index) => {
-            const height = 24 + ((entry.weight - min) / range) * 88;
-            const isLatest = index === chartEntries.length - 1;
-            return (
-              <View key={entry.id} style={weightSectionStyles.chartSlot}>
-                <Text style={weightSectionStyles.chartWeight}>{formatWeight(entry.weight)}</Text>
-                <View
-                  style={[
-                    weightSectionStyles.chartBar,
-                    isLatest && weightSectionStyles.chartBarCurrent,
-                    { height },
-                  ]}
-                />
-                <Text style={weightSectionStyles.chartDate}>
-                  {formatLocalDate(entry.at, { day: "2-digit", month: "2-digit" })}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
-      )}
-    </View>
-  );
-}
-
 function WeightEntryCard({ entry, previousEntry, onRemove, onEdit }: WeightEntryCardProps) {
   const delta = previousEntry ? entry.weight - previousEntry.weight : null;
   const handleRemove = () => onRemove(entry.id);
@@ -231,7 +196,7 @@ function WeightEntryCard({ entry, previousEntry, onRemove, onEdit }: WeightEntry
           <SwipeableCardsListItemTitle text={`${formatWeight(entry.weight)} кг`} />
           <SwipeableCardsListItemSubtitle text={`Измерение • ${formatLocalDate(entry.at)}`} />
         </SwipeableCardsListItemTextBlock>
-        <SwipeableCardsListItemBadge text={formatDelta(delta)} icon="scale-bathroom" />
+        <SwipeableCardsListItemBadge text={formatWeightDelta(delta)} icon="scale-bathroom" />
       </SwipeableCardsListItemHeader>
       <SwipeableCardsListItemNote text={entry.note} icon="note-text-outline" />
       <SwipeableCardsListItemFooter>
@@ -289,15 +254,4 @@ function WeightEditModal({
       </ModalActions>
     </Modal>
   );
-}
-
-function formatWeight(value: number) {
-  return Number.isInteger(value) ? value.toString() : value.toFixed(1);
-}
-
-function formatDelta(value: number | null) {
-  if (value === null || Number.isNaN(value)) return "—";
-  if (value === 0) return "0 кг";
-  const sign = value > 0 ? "+" : "";
-  return `${sign}${formatWeight(value)} кг`;
 }

@@ -6,14 +6,30 @@ export function sortWellnessEntries(entries: WellnessEntry[]) {
 }
 
 export function hasWellnessSymptoms(entry: WellnessEntry) {
-  return (
-    entry.appetite !== "normal" ||
-    entry.activity !== "normal" ||
-    entry.stool !== "normal" ||
-    entry.vomiting ||
-    entry.itching ||
-    Boolean(entry.temperature && (entry.temperature < 37.5 || entry.temperature > 39.2))
-  );
+  return getWellnessSymptomScore(entry) > 0;
+}
+
+export function getWellnessSymptomScore(entry: WellnessEntry) {
+  const appetiteScore = entry.appetite === "none"
+    ? 2
+    : entry.appetite === "normal" ? 0 : 1;
+  const activityScore = entry.activity === "low"
+    ? 2
+    : entry.activity === "normal" ? 0 : 1;
+  const stoolScore = entry.stool === "normal"
+    ? 0
+    : entry.stool === "soft" ? 1 : 2;
+  const temperatureScore = entry.temperature &&
+    (entry.temperature < 37.5 || entry.temperature > 39.2)
+    ? 2
+    : 0;
+
+  return appetiteScore +
+    activityScore +
+    stoolScore +
+    (entry.vomiting ? 2 : 0) +
+    (entry.itching ? 1 : 0) +
+    temperatureScore;
 }
 
 export function getWellnessEntryContext(

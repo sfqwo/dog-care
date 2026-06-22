@@ -8,6 +8,7 @@ import {
   parseDateInputTimestamp,
 } from "@dog-care/core/utils";
 import type { WeightEntry } from "@dog-care/domain";
+import { useInformer } from "@/src/components/informer";
 
 type UseWeightEntryEditorOptions = {
   selectedPetId?: string | null;
@@ -22,6 +23,7 @@ export function useWeightEntryEditor({
   updateWeightEntry,
   removeWeightEntry,
 }: UseWeightEntryEditorOptions) {
+  const { showSuccess } = useInformer();
   const [date, setDate] = useState(formatCurrentDateInput);
   const [weight, setWeight] = useState("");
   const [note, setNote] = useState("");
@@ -64,12 +66,14 @@ export function useWeightEntryEditor({
       note: note.trim() || undefined,
     };
     addWeightEntry(selectedPetId, newEntry);
+    showSuccess("Вес записан");
     resetForm();
   };
 
   const handleRemoveWeightEntry = (id: string) => {
     if (!selectedPetId) return;
     removeWeightEntry(selectedPetId, id);
+    showSuccess("Запись веса удалена");
     if (editingEntry?.id === id) {
       closeEditWeightModal();
     }
@@ -90,6 +94,7 @@ export function useWeightEntryEditor({
       weight: Number(normalizeDecimalInput(editWeight)),
       note: editNote.trim() || undefined,
     });
+    showSuccess("Запись веса обновлена");
     closeEditWeightModal();
   };
 

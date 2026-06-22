@@ -1,8 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
 import { createUid, formatDateInput, formatTimeInput } from "@dog-care/core/utils";
 import type { UseVetRecordFormOptions } from "./types";
+import { useInformer } from "@/src/components/informer";
 
 export function useVetRecordForm({ selectedPetId, onSubmit }: UseVetRecordFormOptions) {
+  const { showSuccess } = useInformer();
   const [title, setTitle] = useState("");
   const [clinic, setClinic] = useState("");
   const [date, setDate] = useState(formatDateInput(''));
@@ -27,12 +29,13 @@ export function useVetRecordForm({ selectedPetId, onSubmit }: UseVetRecordFormOp
       time,
     };
     onSubmit(newRecord);
+    showSuccess("Визит добавлен");
     setTitle("");
     setClinic("");
     setDate(formatDateInput(''));
     setTime(formatTimeInput(''));
     setNote("");
-  }, [canSubmit, clinic, date, note, onSubmit, selectedPetId, time, title]);
+  }, [canSubmit, clinic, date, note, onSubmit, selectedPetId, showSuccess, time, title]);
 
   return {
     title,

@@ -27,6 +27,7 @@ import type {
 } from "@dog-care/domain";
 import { EMPTY_HEALTH } from "@/app/(tabs)/(vet)/vet.constants";
 import { getCompletedSourceId } from "@dog-care/domain";
+import { sortNewestFirst } from "@dog-care/core/utils";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import { STORAGE_KEYS } from "@/src/storage/keys";
 import { completeReminderInList, removeReminderFromList } from "@/src/services/reminderActions";
@@ -43,6 +44,7 @@ import type {
   VetRecordsByPet,
   WalksByPet,
 } from "./types";
+import { cloneVetHealth } from "./utils";
 
 const CareRecordsContext = createContext<CareRecordsContextValue | undefined>(undefined);
 
@@ -183,13 +185,19 @@ export function CareRecordsProvider({ children }: { children: ReactNode }) {
   );
 
   const addFeeding = useCallback((petId: string, feeding: Feeding) => {
-    setFeedingsByPet((prev) => ({ ...prev, [petId]: [feeding, ...(prev[petId] ?? [])] }));
+    setFeedingsByPet((prev) => ({
+      ...prev,
+      [petId]: sortNewestFirst([feeding, ...(prev[petId] ?? [])], (item) => item.at),
+    }));
   }, []);
 
   const updateFeeding = useCallback((petId: string, feeding: Feeding) => {
     setFeedingsByPet((prev) => ({
       ...prev,
-      [petId]: (prev[petId] ?? []).map((item) => (item.id === feeding.id ? feeding : item)),
+      [petId]: sortNewestFirst(
+        (prev[petId] ?? []).map((item) => (item.id === feeding.id ? feeding : item)),
+        (item) => item.at
+      ),
     }));
   }, []);
 
@@ -201,13 +209,19 @@ export function CareRecordsProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const addWalk = useCallback((petId: string, walk: Walk) => {
-    setWalksByPet((prev) => ({ ...prev, [petId]: [walk, ...(prev[petId] ?? [])] }));
+    setWalksByPet((prev) => ({
+      ...prev,
+      [petId]: sortNewestFirst([walk, ...(prev[petId] ?? [])], (item) => item.startedAt),
+    }));
   }, []);
 
   const updateWalk = useCallback((petId: string, walk: Walk) => {
     setWalksByPet((prev) => ({
       ...prev,
-      [petId]: (prev[petId] ?? []).map((item) => (item.id === walk.id ? walk : item)),
+      [petId]: sortNewestFirst(
+        (prev[petId] ?? []).map((item) => (item.id === walk.id ? walk : item)),
+        (item) => item.startedAt
+      ),
     }));
   }, []);
 
@@ -374,7 +388,7 @@ export function CareRecordsProvider({ children }: { children: ReactNode }) {
   const updateHealth = useCallback(
     (petId: string, updater: (current: VetHealthInfo) => VetHealthInfo) => {
       setVetHealthByPet((prev) => {
-        const current = cloneHealth(prev[petId]);
+        const current = cloneVetHealth(prev[petId]);
         return { ...prev, [petId]: updater(current) };
       });
     },
@@ -542,16 +556,4 @@ export function useCareRecordsContext() {
     throw new Error("useCareRecordsContext must be used within a CareRecordsProvider.");
   }
   return context;
-}
-
-function cloneHealth(info?: VetHealthInfo): VetHealthInfo {
-  return {
-    ...EMPTY_HEALTH,
-    ...(info ?? {}),
-    vaccines: { ...(info?.vaccines ?? EMPTY_HEALTH.vaccines) },
-    optionalVaccines: [...(info?.optionalVaccines ?? EMPTY_HEALTH.optionalVaccines ?? [])],
-    deworming: [...(info?.deworming ?? EMPTY_HEALTH.deworming ?? [])],
-    ectoparasites: [...(info?.ectoparasites ?? EMPTY_HEALTH.ectoparasites ?? [])],
-    allergyEntries: [...(info?.allergyEntries ?? EMPTY_HEALTH.allergyEntries ?? [])],
-  };
 }

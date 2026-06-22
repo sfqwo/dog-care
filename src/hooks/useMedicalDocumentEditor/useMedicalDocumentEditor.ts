@@ -2,10 +2,9 @@ import { Alert } from "react-native";
 import { useMemo, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 
-import { MedicalDocument } from "@/packages/domain";
+import type { MedicalDocument } from "@/packages/domain";
 import {
   createUid,
-  formatCurrentDateInput,
   formatDateInputFromTimestamp,
   parseDateInputTimestamp,
 } from "@dog-care/core/utils";
@@ -14,16 +13,11 @@ import {
   persistMedicalDocumentImages,
 } from "@/src/services/medicalDocumentFiles";
 import type { MedicalDocumentForm, UseMedicalDocumentEditorOptions } from "./types";
-
-
-const createInitialForm = (): MedicalDocumentForm => ({
-  type: "analysis",
-  date: formatCurrentDateInput(),
-  title: "",
-  note: "",
-  visitId: "",
-  imageUris: [],
-});
+import { useInformer } from "@/src/components/informer";
+import {
+  buildMedicalDocument,
+  createInitialMedicalDocumentForm,
+} from "./utils";
 
 export function useMedicalDocumentEditor({
   selectedPetId,
@@ -31,9 +25,10 @@ export function useMedicalDocumentEditor({
   updateDocument,
   removeDocument,
 }: UseMedicalDocumentEditorOptions) {
-  const [form, setForm] = useState<MedicalDocumentForm>(createInitialForm);
+  const { showSuccess } = useInformer();
+  const [form, setForm] = useState<MedicalDocumentForm>(createInitialMedicalDocumentForm);
   const [editingDocument, setEditingDocument] = useState<MedicalDocument | null>(null);
-  const [editForm, setEditForm] = useState<MedicalDocumentForm>(createInitialForm);
+  const [editForm, setEditForm] = useState<MedicalDocumentForm>(createInitialMedicalDocumentForm);
   const [isSaving, setIsSaving] = useState(false);
   const at = useMemo(() => parseDateInputTimestamp(form.date), [form.date]);
   const editAt = useMemo(() => parseDateInputTimestamp(editForm.date), [editForm.date]);
@@ -84,8 +79,12 @@ export function useMedicalDocumentEditor({
     setIsSaving(true);
     try {
       const imageUris = persistMedicalDocumentImages(form.imageUris);
-      addDocument(selectedPetId, buildDocument(createUid(), selectedPetId, at, form, imageUris));
-      setForm(createInitialForm());
+      addDocument(
+        selectedPetId,
+        buildMedicalDocument(createUid(), selectedPetId, at, form, imageUris)
+      );
+      showSuccess("Документ сохранён");
+      setForm(createInitialMedicalDocumentForm());
     } catch {
       Alert.alert("Не удалось сохранить", "Проверьте доступ к фотографиям и попробуйте снова.");
     } finally {
@@ -107,7 +106,7 @@ export function useMedicalDocumentEditor({
 
   const closeEditModal = () => {
     setEditingDocument(null);
-    setEditForm(createInitialForm());
+    setEditForm(createInitialMedicalDocumentForm());
   };
 
   const handleSaveEdit = async () => {
@@ -117,9 +116,17 @@ export function useMedicalDocumentEditor({
       const imageUris = persistMedicalDocumentImages(editForm.imageUris);
       updateDocument(
         selectedPetId,
-        buildDocument(editingDocument.id, selectedPetId, editAt, editForm, imageUris, editingDocument.createdAt)
+        buildMedicalDocument(
+          editingDocument.id,
+          selectedPetId,
+          editAt,
+          editForm,
+          imageUris,
+          editingDocument.createdAt
+        )
       );
       deleteMedicalDocumentImages(editingDocument.imageUris);
+      showSuccess("Документ обновлён");
       closeEditModal();
     } catch {
       Alert.alert("Не удалось сохранить", "Проверьте доступ к фотографиям и попробуйте снова.");
@@ -132,6 +139,7 @@ export function useMedicalDocumentEditor({
     if (!selectedPetId) return;
     deleteMedicalDocumentImages(document.imageUris);
     removeDocument(selectedPetId, document.id);
+    showSuccess("Документ удалён");
     if (editingDocument?.id === document.id) closeEditModal();
   };
 
@@ -151,26 +159,5 @@ export function useMedicalDocumentEditor({
     handleSaveEdit,
     handleRemove,
     closeEditModal,
-  };
-}
-
-function buildDocument(
-  id: string,
-  petId: string,
-  at: number,
-  form: MedicalDocumentForm,
-  imageUris: string[],
-  createdAt = Date.now()
-): MedicalDocument {
-  return {
-    id,
-    petId,
-    type: form.type,
-    at,
-    title: form.title.trim() || undefined,
-    note: form.note.trim() || undefined,
-    visitId: form.visitId || undefined,
-    imageUris,
-    createdAt,
   };
 }

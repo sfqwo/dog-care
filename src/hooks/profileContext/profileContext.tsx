@@ -13,6 +13,7 @@ import { createUid } from "@dog-care/core/utils";
 import { PetProfileModal } from "@/src/components/petProfileModal";
 import { OwnerProfileModal } from "../../components";
 import type { ProfileContextValue } from "./types";
+import { useInformer } from "@/src/components/informer";
 
 const DEFAULT_PROFILE: ProfileContextValue["profile"] = {
   ownerName: "",
@@ -25,6 +26,7 @@ const DEFAULT_PROFILE: ProfileContextValue["profile"] = {
 const ProfileContext = createContext<ProfileContextValue | undefined>(undefined);
 
 export function ProfileProvider({ children }: { children: ReactNode }) {
+  const { showSuccess } = useInformer();
   const [profile, setProfile] = useState<ProfileContextValue["profile"]>(DEFAULT_PROFILE);
   const [isProfileLoaded, setIsProfileLoaded] = useState(false);
   const [editingPet, setEditingPet] = useState<ProfileContextValue["editingPet"] | null>(null);
@@ -64,7 +66,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
         ...prev.pets,
       ],
     }));
-  }, []);
+    showSuccess("Питомец добавлен");
+  }, [showSuccess]);
 
   const updatePet = useCallback<ProfileContextValue["updatePet"]>((updatedPet) => {
     setProfile((prev) => ({
@@ -78,7 +81,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
           : pet
       ),
     }));
-  }, []);
+    showSuccess("Профиль питомца обновлён");
+  }, [showSuccess]);
 
   const removePet = useCallback<ProfileContextValue["removePet"]>((id) => {
     setProfile((prev) => ({ ...prev, pets: prev.pets.filter((pet) => pet.id !== id) }));
@@ -89,11 +93,13 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       }
       return current;
     });
-  }, []);
+    showSuccess("Питомец удалён");
+  }, [showSuccess]);
 
   const updateOwner = useCallback<ProfileContextValue["updateOwner"]>((nextProfile) => {
     setProfile((prevProfile) => ({ ...prevProfile, ...nextProfile }));
-  }, []);
+    showSuccess("Профиль обновлён");
+  }, [showSuccess]);
 
   const openEditOwnerModal = useCallback(() => {
     setOwnerModalVisible(true);

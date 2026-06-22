@@ -1,49 +1,18 @@
 import { useMemo, useState } from "react";
-import type {
-  ActivityStatus,
-  AppetiteStatus,
-  StoolStatus,
-  WellnessEntry,
-} from "@dog-care/domain";
 import {
   createUid,
-  formatCurrentDateInput,
   formatDateInputFromTimestamp,
   formatTimeInputFromTimestamp,
-  normalizeDecimalInput,
   parseDateTimeInput,
 } from "@dog-care/core/utils";
-
-export type WellnessEntryForm = {
-  date: string;
-  time: string;
-  appetite: AppetiteStatus;
-  activity: ActivityStatus;
-  stool: StoolStatus;
-  vomiting: boolean;
-  itching: boolean;
-  temperature: string;
-  note: string;
-};
-
-const createInitialForm = (): WellnessEntryForm => ({
-  date: formatCurrentDateInput(),
-  time: formatTimeInputFromTimestamp(Date.now()),
-  appetite: "normal",
-  activity: "normal",
-  stool: "normal",
-  vomiting: false,
-  itching: false,
-  temperature: "",
-  note: "",
-});
-
-type UseWellnessEntryEditorOptions = {
-  selectedPetId?: string | null;
-  addEntry: (petId: string, entry: WellnessEntry) => void;
-  updateEntry: (petId: string, entry: WellnessEntry) => void;
-  removeEntry: (petId: string, id: string) => void;
-};
+import { useInformer } from "@/src/components/informer";
+import type { WellnessEntry } from "@dog-care/domain";
+import type { UseWellnessEntryEditorOptions, WellnessEntryForm } from "./types";
+import {
+  buildWellnessEntry,
+  createInitialWellnessForm,
+  isWellnessTemperatureValid,
+} from "./utils";
 
 export function useWellnessEntryEditor({
   selectedPetId,
@@ -51,17 +20,23 @@ export function useWellnessEntryEditor({
   updateEntry,
   removeEntry,
 }: UseWellnessEntryEditorOptions) {
-  const [form, setForm] = useState<WellnessEntryForm>(createInitialForm);
+  const { showSuccess } = useInformer();
+  const [form, setForm] = useState<WellnessEntryForm>(createInitialWellnessForm);
   const [editingEntry, setEditingEntry] = useState<WellnessEntry | null>(null);
-  const [editForm, setEditForm] = useState<WellnessEntryForm>(createInitialForm);
+  const [editForm, setEditForm] = useState<WellnessEntryForm>(createInitialWellnessForm);
   const at = useMemo(() => parseDateTimeInput(form.date, form.time), [form.date, form.time]);
   const editAt = useMemo(
     () => parseDateTimeInput(editForm.date, editForm.time),
     [editForm.date, editForm.time]
   );
-  const canSubmit = Boolean(selectedPetId && at && at <= Date.now() && isTemperatureValid(form.temperature));
+  const canSubmit = Boolean(
+    selectedPetId && at && at <= Date.now() && isWellnessTemperatureValid(form.temperature)
+  );
   const canSaveEdit = Boolean(
-    editingEntry && editAt && editAt <= Date.now() && isTemperatureValid(editForm.temperature)
+    editingEntry &&
+    editAt &&
+    editAt <= Date.now() &&
+    isWellnessTemperatureValid(editForm.temperature)
   );
 
   const updateForm = <K extends keyof WellnessEntryForm>(field: K, value: WellnessEntryForm[K]) => {
@@ -77,8 +52,9 @@ export function useWellnessEntryEditor({
 
   const handleSubmit = () => {
     if (!selectedPetId || !at || !canSubmit) return;
-    addEntry(selectedPetId, buildEntry(createUid(), selectedPetId, at, form));
-    setForm(createInitialForm());
+    addEntry(selectedPetId, buildWellnessEntry(createUid(), selectedPetId, at, form));
+    showSuccess("Самочувствие записано");
+    setForm(createInitialWellnessForm());
   };
 
   const handleEdit = (entry: WellnessEntry) => {
@@ -98,21 +74,23 @@ export function useWellnessEntryEditor({
 
   const closeEditModal = () => {
     setEditingEntry(null);
-    setEditForm(createInitialForm());
+    setEditForm(createInitialWellnessForm());
   };
 
   const handleSaveEdit = () => {
     if (!selectedPetId || !editingEntry || !editAt || !canSaveEdit) return;
     updateEntry(
       selectedPetId,
-      buildEntry(editingEntry.id, selectedPetId, editAt, editForm)
+      buildWellnessEntry(editingEntry.id, selectedPetId, editAt, editForm)
     );
+    showSuccess("Запись самочувствия обновлена");
     closeEditModal();
   };
 
   const handleRemove = (id: string) => {
     if (!selectedPetId) return;
     removeEntry(selectedPetId, id);
+    showSuccess("Запись самочувствия удалена");
     if (editingEntry?.id === id) closeEditModal();
   };
 
@@ -130,33 +108,4 @@ export function useWellnessEntryEditor({
     handleRemove,
     closeEditModal,
   };
-}
-
-function buildEntry(
-  id: string,
-  petId: string,
-  at: number,
-  form: WellnessEntryForm
-): WellnessEntry {
-  const temperature = form.temperature
-    ? Number(normalizeDecimalInput(form.temperature))
-    : undefined;
-  return {
-    id,
-    petId,
-    at,
-    appetite: form.appetite,
-    activity: form.activity,
-    stool: form.stool,
-    vomiting: form.vomiting,
-    itching: form.itching,
-    temperature,
-    note: form.note.trim() || undefined,
-  };
-}
-
-function isTemperatureValid(value: string) {
-  if (!value.trim()) return true;
-  const temperature = Number(normalizeDecimalInput(value));
-  return Number.isFinite(temperature) && temperature >= 30 && temperature <= 45;
 }

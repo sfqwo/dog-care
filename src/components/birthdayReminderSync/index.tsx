@@ -4,10 +4,8 @@ import {
   buildPetBirthdayReminder,
   isBirthdayReminderCurrent,
 } from "@dog-care/domain";
-import type { Reminder } from "@dog-care/domain";
-import { REMINDER_CATEGORY_LABELS } from "@dog-care/core/shared";
 import { useCareRecordsContext, useProfileContext } from "@/src/hooks";
-import { scheduleReminderNotification } from "@/src/services/reminderNotifications";
+import { scheduleBirthdayNotification } from "@/src/services/birthdayReminders";
 
 export function BirthdayReminderSync() {
   const { profile, isProfileLoaded } = useProfileContext();
@@ -61,12 +59,4 @@ export function BirthdayReminderSync() {
   }, [addReminder, isCareRecordsLoaded, isProfileLoaded, profile.pets, remindersByPet, removeReminder]);
 
   return null;
-}
-
-function scheduleBirthdayNotification(reminder: Reminder) {
-  return scheduleReminderNotification({
-    reminder,
-    categoryLabel: REMINDER_CATEGORY_LABELS.birthday,
-    requestPermission: false,
-  });
 }

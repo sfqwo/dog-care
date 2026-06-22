@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Select, SelectOption, SelectOptionTitle } from "@dog-care/select";
 import {
   getWellnessEntryContext,
+  getWellnessSymptomScore,
   hasWellnessSymptoms,
   sortWellnessEntries,
 } from "@dog-care/domain";
@@ -16,11 +17,14 @@ import type {
 import {
   formatDateTime,
   formatTimeInput,
+  getOptionTitle,
   isSameLocalDay,
 } from "@dog-care/core/utils";
 import { DateInput, Input } from "@/packages/ui/input";
 import {
   Hint,
+  CareTrend,
+  CareTrendSeries,
   Modal,
   ModalActionButton,
   ModalActions,
@@ -93,6 +97,10 @@ export function WellnessSection({ isActive, hasPets, selectedPetId }: WellnessSe
   const todayCount = entries.filter((entry) => isSameLocalDay(entry.at, Date.now())).length;
   const symptomCount = entries.filter(hasWellnessSymptoms).length;
   const latestTemperature = entries.find((entry) => entry.temperature)?.temperature;
+  const trendPoints = useMemo(
+    () => entries.map((entry) => ({ at: entry.at, value: getWellnessSymptomScore(entry) })),
+    [entries]
+  );
 
   if (!isActive) return null;
 
@@ -106,6 +114,16 @@ export function WellnessSection({ isActive, hasPets, selectedPetId }: WellnessSe
           value={latestTemperature ? `${latestTemperature} °C` : "—"}
         />
       </StatsBlocks>
+
+      <CareTrend title="Динамика симптомов">
+        <CareTrendSeries
+          points={trendPoints}
+          aggregation="last"
+          comparison="firstLast"
+          thresholdPercent={25}
+          formatValue={(value) => `Индекс ${Math.round(value)}`}
+        />
+      </CareTrend>
 
       <TimeRecorder>
         <TimeRecorderTitle>Записать самочувствие</TimeRecorderTitle>
@@ -351,8 +369,4 @@ function WellnessEntryCard({
       </SwipeableCardsListItemFooter>
     </SwipeableCardsListItem>
   );
-}
-
-function getOptionTitle(options: { value: string; title: string }[], value: string) {
-  return options.find((option) => option.value === value)?.title ?? value;
 }

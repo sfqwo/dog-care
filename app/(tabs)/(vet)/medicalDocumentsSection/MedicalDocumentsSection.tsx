@@ -4,7 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Select, SelectOption, SelectOptionTitle } from "@dog-care/select";
 import { sortMedicalDocuments } from "@dog-care/domain";
 import type { MedicalDocument, MedicalDocumentType, VetRecord } from "@dog-care/domain";
-import { formatLocalDate } from "@dog-care/core/utils";
+import { formatLocalDate, getOptionTitle } from "@dog-care/core/utils";
 import { DateInput, Input } from "@/packages/ui/input";
 import {
   Hint,
@@ -266,7 +266,7 @@ function MedicalDocumentCard({
   onEdit: (document: MedicalDocument) => void;
   onRemove: (document: MedicalDocument) => void;
 }) {
-  const typeTitle = getDocumentTypeTitle(document.type);
+  const typeTitle = getOptionTitle(DOCUMENT_TYPE_OPTIONS, document.type, "Документ");
   return (
     <SwipeableCardsListItem
       id={document.id}
@@ -311,7 +311,9 @@ function DocumentPreviewModal({
 
   return (
     <Modal visible={Boolean(document)} onClose={onClose}>
-      <ModalTitle>{document?.title || getDocumentTypeTitle(document?.type)}</ModalTitle>
+      <ModalTitle>
+        {document?.title || getOptionTitle(DOCUMENT_TYPE_OPTIONS, document?.type, "Документ")}
+      </ModalTitle>
       <ModalSubtitle>
         {[document ? formatLocalDate(document.at) : undefined, visit?.title].filter(Boolean).join(" • ")}
       </ModalSubtitle>
@@ -337,8 +339,4 @@ function DocumentPreviewModal({
       </ModalActions>
     </Modal>
   );
-}
-
-function getDocumentTypeTitle(type?: MedicalDocumentType) {
-  return DOCUMENT_TYPE_OPTIONS.find((option) => option.value === type)?.title ?? "Документ";
 }
