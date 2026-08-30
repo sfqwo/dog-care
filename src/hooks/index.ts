@@ -1,4 +1,5 @@
 export * from './careRecordsContext';
+export * from './authContext';
 export * from './profileContext';
 export * from './useDogBreeds';
 export * from './useFeedingCardDetails';

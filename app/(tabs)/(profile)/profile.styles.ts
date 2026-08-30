@@ -46,6 +46,33 @@ export const profileStyles = StyleSheet.create({
     color: "#0f172a",
     fontWeight: "600",
   },
+  accountSection: {
+    paddingVertical: 4,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 16,
+  },
+  accountText: {
+    flex: 1,
+    gap: 4,
+  },
+  accountEmail: {
+    color: "#64748b",
+    fontSize: 14,
+  },
+  signOutButton: {
+    minHeight: 40,
+    borderRadius: 8,
+    justifyContent: "center",
+    paddingHorizontal: 16,
+    backgroundColor: "#fee2e2",
+  },
+  signOutButtonText: {
+    color: "#991b1b",
+    fontSize: 14,
+    fontWeight: "700",
+  },
 });
 
 export const pageGradient: [ColorValue, ColorValue] = ["#ecfeff", "#f5f3ff"];

@@ -2,6 +2,7 @@
   "expo": {
     "name": "dog-care",
     "slug": "dog-care",
+    "scheme": "dogcare",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

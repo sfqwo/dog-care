@@ -12,3 +12,4 @@ export * from "./hint";
 export * from "./birthdayReminderSync";
 export * from "./careTrend";
 export * from "./informer";
+export * from "./authScreen";
