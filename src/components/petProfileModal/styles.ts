@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors } from "@/src/theme";
 
 export const petProfileModalStyles = StyleSheet.create({
   inlineRow: {
@@ -29,9 +30,9 @@ export const petProfileModalStyles = StyleSheet.create({
     right: 16,
     fontSize: 16,
     fontWeight: "600",
-    color: "#0f172a",
+    color: colors.text,
   },
   inputInvalid: {
-    borderColor: "#f87171",
+    borderColor: colors.danger,
   },
 });

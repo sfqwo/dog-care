@@ -7,6 +7,7 @@ import "@/src/setup";
 import { Stack } from "expo-router";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { colors } from "@/src/theme";
 
 export default function RootLayout() {
   return (
@@ -26,7 +27,7 @@ function AppNavigator() {
   if (isAuthLoading) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator size="large" color="#0f766e" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -61,6 +62,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#f8fafc",
+    backgroundColor: colors.background,
   },
 });

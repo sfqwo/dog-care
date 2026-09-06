@@ -1,4 +1,5 @@
 import { ColorValue, StyleSheet } from "react-native";
+import { colors, gradients, radius } from "@/src/theme";
 
 export const remindersStyles = StyleSheet.create({
   screenGradient: { flex: 1 },
@@ -14,24 +15,24 @@ export const remindersStyles = StyleSheet.create({
     flex: 1,
   },
   sectionHeader: {
-    borderRadius: 18,
+    borderRadius: radius.card,
     padding: 16,
-    backgroundColor: "rgba(255,255,255,0.92)",
+    backgroundColor: colors.surfaceRaised,
     gap: 4,
   },
   sectionTitle: {
-    color: "#0f172a",
+    color: colors.text,
     fontSize: 16,
     fontWeight: "800",
   },
   sectionSubtitle: {
-    color: "rgba(15,23,42,0.62)",
+    color: colors.textSubtle,
     fontSize: 13,
     fontWeight: "600",
   },
 });
 
-export const pageGradient: [ColorValue, ColorValue] = ["#eefdf8", "#fff7ed"];
-export const reminderGradient: [string, string, string] = ["#d9f99d", "#bfdbfe", "#fef3c7"];
-export const overdueGradient: [string, string, string] = ["#fecdd3", "#fed7aa", "#fef3c7"];
-export const completedGradient: [string, string, string] = ["#e5e7eb", "#f3f4f6", "#ffffff"];
+export const pageGradient: [ColorValue, ColorValue] = gradients.page;
+export const reminderGradient: [string, string, string] = gradients.cardWarm;
+export const overdueGradient: [string, string, string] = gradients.danger;
+export const completedGradient: [string, string, string] = gradients.cardMuted;

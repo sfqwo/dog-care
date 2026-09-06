@@ -1,22 +1,23 @@
 import { StyleSheet } from "react-native";
+import { colors, radius } from "@/src/theme";
 
 export const styles = StyleSheet.create({
   base: {
     flex: 1,
-    borderRadius: 16,
+    borderRadius: radius.input,
     borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.15)",
+    borderColor: colors.border,
     paddingHorizontal: 14,
     paddingVertical: 12,
-    backgroundColor: "white",
+    backgroundColor: colors.surface,
     minHeight: 46,
     fontSize: 16,
-    color: "#374151",
+    color: colors.text,
   },
   note: {
     minHeight: 48,
   },
   invalid: {
-    borderColor: "#f87171",
+    borderColor: colors.danger,
   },
 });

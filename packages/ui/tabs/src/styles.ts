@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors, radius } from "@/src/theme";
 
 export const styles = StyleSheet.create({
   tabsGrid: {
@@ -10,15 +11,15 @@ export const styles = StyleSheet.create({
     flexBasis: "48%",
     flexGrow: 1,
     padding: 14,
-    borderRadius: 18,
-    backgroundColor: "rgba(15,23,42,0.04)",
+    borderRadius: radius.control,
+    backgroundColor: colors.surfaceMuted,
     borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.06)",
+    borderColor: colors.border,
     gap: 4,
   },
   tabCardActive: {
-    backgroundColor: "rgba(14,165,233,0.12)",
-    borderColor: "rgba(14,165,233,0.5)",
+    backgroundColor: colors.accentSurface,
+    borderColor: colors.accent,
   },
   tabCardPressed: {
     transform: [{ scale: 0.98 }],
@@ -31,37 +32,40 @@ export const styles = StyleSheet.create({
   iconPill: {
     width: 30,
     height: 30,
-    borderRadius: 999,
+    borderRadius: radius.pill,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(15,23,42,0.08)",
+    backgroundColor: colors.secondary,
   },
   iconPillActive: {
-    backgroundColor: "#0ea5e9",
+    backgroundColor: colors.accent,
   },
   icon: {
-    color: "#0f172a",
+    color: colors.text,
   },
   iconActive: {
-    color: "white",
+    color: colors.primaryText,
   },
   petName: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#0f172a",
+    color: colors.text,
     flex: 1,
   },
   petNameActive: {
-    color: "#0c4a6e",
+    color: colors.text,
   },
   petMeta: {
     fontSize: 13,
-    color: "rgba(15,23,42,0.7)",
+    color: colors.textMuted,
+  },
+  petMetaActive: {
+    color: colors.accent,
   },
   emptyCard: {
-    borderRadius: 20,
+    borderRadius: radius.card,
     padding: 16,
-    backgroundColor: "rgba(15,23,42,0.04)",
+    backgroundColor: colors.surfaceMuted,
     flexDirection: "row",
     gap: 12,
     alignItems: "center",
@@ -69,29 +73,29 @@ export const styles = StyleSheet.create({
   emptyIconCircle: {
     width: 44,
     height: 44,
-    borderRadius: 22,
-    backgroundColor: "rgba(14,165,233,0.12)",
+    borderRadius: radius.pill,
+    backgroundColor: colors.secondary,
     justifyContent: "center",
     alignItems: "center",
   },
   emptyIcon: {
-    color: "#0ea5e9",
+    color: colors.text,
   },
   emptyTitle: {
     fontWeight: "700",
     fontSize: 15,
-    color: "#0f172a",
+    color: colors.text,
   },
   emptySubtitle: {
-    color: "rgba(15,23,42,0.65)",
+    color: colors.textMuted,
     fontSize: 13,
   },
   segmentContainer: {
     flexDirection: "row",
-    borderRadius: 16,
+    borderRadius: radius.control,
     borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.15)",
-    backgroundColor: "rgba(15,23,42,0.06)",
+    borderColor: colors.border,
+    backgroundColor: colors.surfaceMuted,
     overflow: "hidden",
   },
   segmentWrapper: {
@@ -108,31 +112,31 @@ export const styles = StyleSheet.create({
     gap: 6,
   },
   segmentButtonActive: {
-    backgroundColor: "#0ea5e9",
+    backgroundColor: colors.primary,
   },
   segmentButtonPressed: {
     opacity: 0.85,
   },
   segmentText: {
     fontWeight: "600",
-    color: "#0f172a",
+    color: colors.text,
     fontSize: 12,
   },
   segmentTextActive: {
-    color: "white",
+    color: colors.primaryText,
   },
   segmentSubtitle: {
     fontSize: 12,
-    color: "rgba(15,23,42,0.7)",
+    color: colors.textMuted,
   },
   segmentIcon: {
-    color: "#0f172a",
+    color: colors.text,
   },
   segmentIconActive: {
-    color: "white",
+    color: colors.primaryText,
   },
   segmentDivider: {
     width: StyleSheet.hairlineWidth,
-    backgroundColor: "rgba(15,23,42,0.15)",
+    backgroundColor: colors.border,
   },
 });

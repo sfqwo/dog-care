@@ -1,8 +1,9 @@
 import { StyleSheet } from "react-native";
+import { colors } from "@/src/theme";
 
 export const styles = StyleSheet.create({
   hintText: {
     fontSize: 13,
-    color: "rgba(15,23,42,0.7)",
+    color: colors.textMuted,
   },
 });

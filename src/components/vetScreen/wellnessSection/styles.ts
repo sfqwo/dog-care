@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors, radius } from "@/src/theme";
 
 export const wellnessStyles = StyleSheet.create({
   section: { gap: 16 },
@@ -9,21 +10,21 @@ export const wellnessStyles = StyleSheet.create({
   toggle: {
     flex: 1,
     minHeight: 44,
-    borderRadius: 14,
+    borderRadius: radius.button,
     paddingHorizontal: 12,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
-    backgroundColor: "rgba(15,23,42,0.07)",
+    backgroundColor: colors.secondary,
     borderWidth: 1,
     borderColor: "transparent",
   },
   toggleActive: {
-    backgroundColor: "rgba(254,226,226,0.9)",
-    borderColor: "rgba(220,38,38,0.35)",
+    backgroundColor: colors.dangerSurface,
+    borderColor: colors.danger,
   },
-  toggleText: { color: "#0f172a", fontSize: 13, fontWeight: "700" },
-  toggleIcon: { color: "#0f172a" },
-  toggleIconActive: { color: "#b91c1c" },
+  toggleText: { color: colors.text, fontSize: 13, fontWeight: "700" },
+  toggleIcon: { color: colors.text },
+  toggleIconActive: { color: colors.danger },
 });

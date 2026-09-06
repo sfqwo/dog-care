@@ -1,6 +1,6 @@
 import { View } from "react-native";
 
-import { DateInput, Input } from "@/packages/ui/input";
+import { DateInput, Input, TimeInput } from "@/packages/ui/input";
 import {
   Hint,
   SwipeableCardsListEmpty,
@@ -24,7 +24,6 @@ import type {
   VetRecordsSectionProps,
 } from "./types";
 import { vetRecordsStyles } from "./styles";
-import { formatTimeInput } from "@dog-care/core/utils";
 import { useInformer } from "@/src/components/informer";
 
 export function VetRecordsSection({
@@ -86,11 +85,10 @@ export function VetRecordsSection({
           editable={Boolean(selectedPetId)}
         />
 
-        <Input
+        <TimeInput
           value={time}
-          onChangeText={(value) => setTime(formatTimeInput(value))}
+          onChangeText={setTime}
           placeholder="Время приема"
-          keyboardType="number-pad"
           editable={Boolean(selectedPetId)}
         />
 

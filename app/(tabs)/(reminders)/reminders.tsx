@@ -20,7 +20,6 @@ import {
   createUid,
   formatDateInput,
   formatDateTime,
-  formatTimeInput,
   isBeforeToday,
 } from "@dog-care/core/utils";
 import type {
@@ -28,7 +27,7 @@ import type {
   ReminderCategory,
   ReminderRepeat,
 } from "@dog-care/domain";
-import { Input } from "@/packages/ui/input";
+import { Input, TimeInput } from "@/packages/ui/input";
 import {
   HeroCard,
   HeroCardBadge,
@@ -222,11 +221,10 @@ export default function RemindersScreen() {
                       />
                     </View>
                     <View style={remindersStyles.inlineField}>
-                      <Input
+                      <TimeInput
                         value={time}
-                        onChangeText={(value) => setTime(formatTimeInput(value))}
+                        onChangeText={setTime}
                         placeholder="ЧЧ:ММ"
-                        keyboardType="number-pad"
                         editable={Boolean(selectedPetId)}
                       />
                     </View>

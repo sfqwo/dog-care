@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors, radius } from "@/src/theme";
 
 export const genderToggleStyles = StyleSheet.create({
   wrapper: {
@@ -10,7 +11,7 @@ export const genderToggleStyles = StyleSheet.create({
   backgroundInput: {
     width: "100%",
     minHeight: 48,
-    borderRadius: 18,
+    borderRadius: radius.input,
   },
   nonInteractive: {
     pointerEvents: "none",
@@ -24,8 +25,8 @@ export const genderToggleStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    borderRadius: 16,
-    backgroundColor: "rgba(148,163,184,0.15)",
+    borderRadius: radius.input,
+    backgroundColor: colors.surfaceMuted,
   },
   toggleOption: {
     flex: 1,
@@ -37,32 +38,32 @@ export const genderToggleStyles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   toggleOptionActive: {
-    backgroundColor: "rgba(14,165,233,0.22)",
+    backgroundColor: colors.secondary,
   },
   toggleOptionPressed: {
-    backgroundColor: "rgba(15,23,42,0.08)",
+    backgroundColor: colors.secondaryPressed,
   },
   toggleOptionFirst: {
-    borderTopLeftRadius: 16,
-    borderBottomLeftRadius: 16,
+    borderTopLeftRadius: radius.input,
+    borderBottomLeftRadius: radius.input,
   },
   toggleOptionLast: {
-    borderTopRightRadius: 16,
-    borderBottomRightRadius: 16,
+    borderTopRightRadius: radius.input,
+    borderBottomRightRadius: radius.input,
   },
   optionIcon: {
-    color: "rgba(15,23,42,0.6)",
+    color: colors.textMuted,
   },
   optionIconActive: {
-    color: "#0ea5e9",
+    color: colors.text,
   },
   optionLabel: {
     fontSize: 15,
     fontWeight: "600",
-    color: "rgba(15,23,42,0.7)",
+    color: colors.textMuted,
   },
   optionLabelActive: {
-    color: "#0f172a",
+    color: colors.text,
   },
   optionContent: {
     flexDirection: "row",

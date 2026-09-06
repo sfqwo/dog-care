@@ -1,4 +1,5 @@
 import { ColorValue, StyleSheet } from "react-native";
+import { gradients } from "@/src/theme";
 
 export const vetStyles = StyleSheet.create({
   screenGradient: { flex: 1 },
@@ -6,4 +7,4 @@ export const vetStyles = StyleSheet.create({
   sectionTabsBlock: { gap: 16 },
 });
 
-export const pageGradient: [ColorValue, ColorValue] = ["#eef2ff", "#fdf4ff"];
+export const pageGradient: [ColorValue, ColorValue] = gradients.page;

@@ -1,25 +1,26 @@
 import { StyleSheet } from "react-native";
+import { colors, radius } from "@/src/theme";
 
 export const styles = StyleSheet.create({
   inputCard: {
-    borderRadius: 24,
+    borderRadius: radius.card,
     padding: 20,
-    backgroundColor: "rgba(255,255,255,0.95)",
+    backgroundColor: colors.surfaceRaised,
     gap: 12,
   },
-  sectionTitle: { fontSize: 16, fontWeight: "700", color: "#0f172a" },
+  sectionTitle: { fontSize: 16, fontWeight: "700", color: colors.text },
   inputRow: { flexDirection: "row", gap: 10, alignItems: "center" },
   addButton: {
-    borderRadius: 16,
+    borderRadius: radius.button,
     paddingVertical: 14,
     paddingHorizontal: 24,
     alignItems: "center",
-    backgroundColor: "#e28ca1ff",
+    backgroundColor: colors.primary,
     minWidth: 120,
   },
-  addButtonText: { color: "white", fontWeight: "700", fontSize: 15 },
+  addButtonText: { color: colors.primaryText, fontWeight: "700", fontSize: 15 },
   hintText: {
     fontSize: 13,
-    color: "rgba(15,23,42,0.7)",
+    color: colors.textMuted,
   },
 });

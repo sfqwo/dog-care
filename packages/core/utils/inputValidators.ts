@@ -1,4 +1,4 @@
-import { parseDate } from "./dateTime";
+import { parseDate, parseTime } from "./dateTime";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -21,6 +21,11 @@ export function isDateValueValid(value: string, minimumDate?: number, maximumDat
     (!minimumDate || timestamp >= minimumDate) &&
     (!maximumDate || timestamp <= maximumDate)
   );
+}
+
+export function isTimeValueValid(value: string) {
+  if (!value.replace(/\D/g, "")) return true;
+  return parseTime(value) !== null;
 }
 
 function hasMinDigits(value: string, min: number) {

@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors, radius } from "@/src/theme";
 
 export const vetPassportStyles = StyleSheet.create({
   section: {
@@ -16,21 +17,21 @@ export const vetPassportStyles = StyleSheet.create({
   addVaccineButton: {
     paddingHorizontal: 16,
     paddingVertical: 10,
-    borderRadius: 14,
-    backgroundColor: "#0ea5e9",
+    borderRadius: radius.button,
+    backgroundColor: colors.primary,
   },
   addVaccineButtonDisabled: {
     opacity: 0.5,
   },
   addVaccineButtonText: {
-    color: "#fff",
+    color: colors.primaryText,
     fontWeight: "600",
   },
   vaccineGroup: {
     gap: 10,
     paddingBottom: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "rgba(15,23,42,0.08)",
+    borderBottomColor: colors.border,
   },
   addButtonContainer: {
     flexDirection: "row",
@@ -40,40 +41,40 @@ export const vetPassportStyles = StyleSheet.create({
   entryCountLabel: {
     fontSize: 13,
     fontWeight: "600",
-    color: "rgba(15,23,42,0.75)",
+    color: colors.textMuted,
   },
   addButton: {
     paddingHorizontal: 14,
     paddingVertical: 8,
-    borderRadius: 12,
-    backgroundColor: "rgba(14,165,233,0.15)",
+    borderRadius: radius.button,
+    backgroundColor: colors.secondary,
   },
   addButtonText: {
     fontWeight: "600",
-    color: "#0ea5e9",
+    color: colors.secondaryText,
   },
   listCard: {
     gap: 10,
-    borderRadius: 16,
+    borderRadius: radius.control,
     padding: 12,
-    backgroundColor: "rgba(248,250,252,0.9)",
+    backgroundColor: colors.surfaceRaised,
     borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.06)",
+    borderColor: colors.border,
   },
   removeButton: {
     alignSelf: "flex-start",
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 10,
-    backgroundColor: "rgba(239,68,68,0.1)",
+    borderRadius: radius.button,
+    backgroundColor: colors.dangerSurface,
   },
   removeButtonText: {
-    color: "#b91c1c",
+    color: colors.danger,
     fontWeight: "600",
   },
   emptyNote: {
     flex: 1,
     fontSize: 13,
-    color: "rgba(15,23,42,0.6)",
+    color: colors.textSubtle,
   },
 });

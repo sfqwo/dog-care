@@ -34,9 +34,10 @@ import { useWeightEntryEditor } from "@/src/hooks";
 import { weightSectionStyles } from "./styles";
 import type { WeightEntryCardProps, WeightSectionProps } from "./types";
 import { formatWeight, formatWeightDelta } from "./utils";
+import { gradients } from "@/src/theme";
 
-const WEIGHT_GRADIENT = ["#dcfce7", "#bfdbfe", "#fde68a"] as const;
-const WEIGHT_NOTE_GRADIENT = ["#e0f2fe", "#bbf7d0", "#fef3c7"] as const;
+const WEIGHT_GRADIENT = gradients.card;
+const WEIGHT_NOTE_GRADIENT = gradients.cardWarm;
 
 export function WeightSection({
   isActive,

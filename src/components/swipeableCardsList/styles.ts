@@ -1,42 +1,45 @@
 import { StyleSheet } from "react-native";
+import { colors, radius, shadows } from "@/src/theme";
 
 export const styles = StyleSheet.create({
   listContent: { padding: 20, paddingBottom: 48, gap: 20 },
   emptyContainer: {
     marginTop: 12,
-    borderRadius: 20,
+    borderRadius: radius.card,
     padding: 20,
-    backgroundColor: "rgba(255,255,255,0.9)",
+    backgroundColor: colors.surfaceRaised,
     alignItems: "center",
   },
   emptyText: {
-    color: "rgba(15,23,42,0.8)",
+    color: colors.textMuted,
     textAlign: "center",
   },
   defaultAction: {
-    backgroundColor: "#ffe1e1",
+    backgroundColor: colors.dangerSurface,
     justifyContent: "center",
     alignItems: "flex-end",
     paddingHorizontal: 20,
-    borderRadius: 22,
+    borderRadius: radius.card,
   },
   defaultActionText: {
-    color: "#a30f2d",
+    color: colors.danger,
     fontWeight: "600",
   },
   cardPressable: {
-    borderRadius: 22,
+    borderRadius: radius.card,
     overflow: "hidden",
   },
   cardPressablePressed: {
     transform: [{ scale: 0.98 }],
   },
   card: {
-    borderRadius: 22,
+    borderRadius: radius.card,
     padding: 18,
     gap: 14,
-    boxShadow: "0px 12px 18px rgba(15, 23, 42, 0.15)",
-    elevation: 8,
+    borderWidth: 1,
+    borderColor: "rgba(123,88,107,0.26)",
+    boxShadow: shadows.cardStrong,
+    elevation: 10,
   },
   cardHeader: {
     flexDirection: "row",
@@ -48,12 +51,12 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   cardTitle: {
-    color: "#0f172a",
+    color: colors.text,
     fontSize: 17,
     fontWeight: "700",
   },
   cardSubtitle: {
-    color: "rgba(15, 23, 42, 0.7)",
+    color: colors.textMuted,
     marginTop: 4,
     fontSize: 13,
   },
@@ -61,13 +64,15 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    backgroundColor: "rgba(255, 255, 255, 0.6)",
+    backgroundColor: "rgba(255,255,255,0.5)",
+    borderWidth: 1,
+    borderColor: "rgba(69,60,65,0.12)",
     paddingHorizontal: 14,
     paddingVertical: 8,
-    borderRadius: 999,
+    borderRadius: radius.pill,
   },
   durationValue: {
-    color: "#0f172a",
+    color: colors.text,
     fontWeight: "700",
     fontSize: 15,
   },
@@ -76,11 +81,13 @@ export const styles = StyleSheet.create({
     gap: 10,
     alignItems: "center",
     padding: 12,
-    borderRadius: 14,
-    backgroundColor: "rgba(255, 255, 255, 0.55)",
+    borderRadius: radius.control,
+    backgroundColor: "rgba(255,255,255,0.42)",
+    borderWidth: 1,
+    borderColor: "rgba(69,60,65,0.1)",
   },
   noteText: {
-    color: "#1f2937",
+    color: colors.textMuted,
     flex: 1,
   },
   cardFooter: {
@@ -96,45 +103,45 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   helperText: {
-    color: "#0f172a",
+    color: colors.text,
     fontSize: 12,
     fontWeight: "500",
     flexShrink: 1,
   },
   icon: {
-    color: "#0f172a",
+    color: colors.text,
   },
   checkButton: {
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    borderRadius: 999,
+    borderRadius: radius.pill,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    backgroundColor: "rgba(255,255,255,0.72)",
+    backgroundColor: colors.secondary,
   },
   checkButtonChecked: {
-    backgroundColor: "rgba(220,252,231,0.92)",
+    backgroundColor: colors.secondary,
   },
   checkButtonDisabled: {
-    backgroundColor: "rgba(255,255,255,0.5)",
+    backgroundColor: colors.surfaceMuted,
     opacity: 0.7,
   },
   checkIcon: {
-    color: "#0f172a",
+    color: colors.text,
   },
   checkIconChecked: {
-    color: "#166534",
+    color: colors.success,
   },
   checkIconDisabled: {
-    color: "rgba(15,23,42,0.45)",
+    color: colors.textSubtle,
   },
   checkButtonText: {
-    color: "#0f172a",
+    color: colors.text,
     fontSize: 12,
     fontWeight: "700",
   },
   checkButtonTextDisabled: {
-    color: "rgba(15,23,42,0.55)",
+    color: colors.textSubtle,
   },
 });

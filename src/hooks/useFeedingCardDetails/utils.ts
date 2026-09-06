@@ -1,6 +1,8 @@
-const LIGHT = ["#faf5ff", "#f5d0fe", "#f0abfc"] as const;
-const BALANCED = ["#ecfccb", "#d9f99d", "#bef264"] as const;
-const FEAST = ["#fef3c7", "#fde68a", "#fcd34d"] as const;
+import { gradients } from "@/src/theme";
+
+const LIGHT = gradients.cardMuted;
+const BALANCED = gradients.cardAccent;
+const FEAST = gradients.cardAccentStrong;
 
 export function getFeedingGradient(grams: number) {
   if (grams <= 100) return LIGHT;

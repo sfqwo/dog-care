@@ -107,7 +107,7 @@ function TabsCards({
               </Text>
             </View>
             {item.subtitle ? (
-              <Text style={styles.petMeta} numberOfLines={1}>
+              <Text style={[styles.petMeta, isActive && styles.petMetaActive]} numberOfLines={1}>
                 {item.subtitle}
               </Text>
             ) : null}

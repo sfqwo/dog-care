@@ -33,8 +33,9 @@ import { useCareRecordsContext, useMedicalDocumentEditor } from "@/src/hooks";
 import type { MedicalDocumentForm } from "@/src/hooks/useMedicalDocumentEditor";
 import { documentStyles } from "./styles";
 import type { MedicalDocumentsSectionProps } from "./types";
+import { gradients } from "@/src/theme";
 
-const DOCUMENT_GRADIENT = ["#e0f2fe", "#dcfce7", "#fef3c7"] as const;
+const DOCUMENT_GRADIENT = gradients.card;
 const DOCUMENT_TYPE_OPTIONS: { value: MedicalDocumentType; title: string }[] = [
   { value: "analysis", title: "Анализы" },
   { value: "prescription", title: "Рецепт" },

@@ -1,9 +1,10 @@
 import { StyleSheet } from "react-native";
+import { colors, radius, shadows } from "@/src/theme";
 
 export const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: "rgba(15,23,42,0.5)",
+    backgroundColor: colors.overlay,
     justifyContent: "center",
     padding: 24,
   },
@@ -14,15 +15,15 @@ export const styles = StyleSheet.create({
     maxHeight: "90%",
   },
   card: {
-    borderRadius: 24,
+    borderRadius: radius.card,
     padding: 24,
-    backgroundColor: "white",
+    backgroundColor: colors.surface,
     gap: 12,
-    boxShadow: "0px 12px 24px rgba(15, 23, 42, 0.2)",
+    boxShadow: shadows.overlay,
     elevation: 12,
   },
-  title: { fontSize: 20, fontWeight: "700", color: "#0f172a" },
-  subtitle: { color: "rgba(15,23,42,0.7)" },
+  title: { fontSize: 20, fontWeight: "700", color: colors.text },
+  subtitle: { color: colors.textMuted },
   actions: {
     flexDirection: "row",
     justifyContent: "flex-end",
@@ -31,20 +32,20 @@ export const styles = StyleSheet.create({
   actionButton: {
     paddingHorizontal: 20,
     paddingVertical: 12,
-    borderRadius: 16,
-    backgroundColor: "#0f172a",
+    borderRadius: radius.button,
+    backgroundColor: colors.primary,
   },
   actionButtonSecondary: {
-    backgroundColor: "rgba(15,23,42,0.08)",
+    backgroundColor: colors.secondary,
   },
   actionButtonDisabled: {
     opacity: 0.5,
   },
   actionText: {
-    color: "white",
+    color: colors.primaryText,
     fontWeight: "600",
   },
   actionTextSecondary: {
-    color: "#0f172a",
+    color: colors.secondaryText,
   },
 });

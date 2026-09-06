@@ -1,19 +1,16 @@
 import { forwardRef } from "react";
 import type { TextInput } from "react-native";
 import {
-  formatDateInput,
   formatEmail,
   formatPhone,
-  isDateValueValid,
   isEmailValueValid,
   isPhoneValueValid,
 } from "@dog-care/core/utils";
 import { Input } from "../Input";
-import type { CustomInputProps, DateInputProps } from "./types";
+import type { CustomInputProps } from "./types";
 
 const EMAIL_ERROR_MESSAGE = "Введите корректный email";
 const PHONE_ERROR_MESSAGE = "Введите корректный номер телефона";
-const DATE_ERROR_MESSAGE = "Введите дату в формате ДД.ММ.ГГГГ";
 
 export const EmailInput = forwardRef<TextInput, CustomInputProps>(function EmailInput(
   { autoCapitalize = "none", ...rest },
@@ -49,20 +46,3 @@ export const PhoneInput = forwardRef<TextInput, CustomInputProps>(function Phone
   );
 });
 PhoneInput.displayName = "@dog-care/input/PhoneInput";
-
-export const DateInput = forwardRef<TextInput, DateInputProps>(function DateInput(
-  { minimumDate, maximumDate, ...props },
-  ref
-) {
-  return (
-    <Input
-      ref={ref}
-      {...props}
-      keyboardType="number-pad"
-      formatValue={formatDateInput}
-      validateValue={(value) => isDateValueValid(value, minimumDate, maximumDate)}
-      validationMessage={DATE_ERROR_MESSAGE}
-    />
-  );
-});
-DateInput.displayName = "@dog-care/input/DateInput";

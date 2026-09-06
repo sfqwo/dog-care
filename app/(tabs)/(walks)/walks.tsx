@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { DateInput, Input } from "@/packages/ui/input";
+import { DateInput, Input, TimeInput } from "@/packages/ui/input";
 import {
   HeroCard,
   HeroCardBadge,
@@ -154,11 +154,10 @@ export default function WalksScreen() {
                     maximumDate={Date.now()}
                     editable={Boolean(selectedPetId)}
                   />
-                  <Input
+                  <TimeInput
                     value={time}
                     onChangeText={setTime}
                     placeholder="Время"
-                    keyboardType="number-pad"
                     editable={Boolean(selectedPetId)}
                   />
                 </TimeRecorderRow>
@@ -247,11 +246,10 @@ function WalkEditModal({
         placeholder="Дата"
         maximumDate={Date.now()}
       />
-      <Input
+      <TimeInput
         value={time}
         onChangeText={onChangeTime}
         placeholder="Время"
-        keyboardType="number-pad"
       />
       <Input
         value={note}

@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors, radius } from "@/src/theme";
 
 export const vetHeaderStyles = StyleSheet.create({
   grid: {
@@ -10,26 +11,26 @@ export const vetHeaderStyles = StyleSheet.create({
   card: {
     flexBasis: "47%",
     flexGrow: 1,
-    borderRadius: 20,
+    borderRadius: radius.card,
     padding: 16,
-    backgroundColor: "rgba(255,255,255,0.9)",
+    backgroundColor: colors.surfaceRaised,
     borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.08)",
+    borderColor: colors.border,
     gap: 6,
   },
   label: {
     fontSize: 13,
-    color: "rgba(15,23,42,0.7)",
+    color: colors.textMuted,
     textTransform: "uppercase",
     letterSpacing: 0.5,
   },
   value: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#0f172a",
+    color: colors.text,
   },
   hint: {
     fontSize: 13,
-    color: "rgba(15,23,42,0.7)",
+    color: colors.textMuted,
   },
 });

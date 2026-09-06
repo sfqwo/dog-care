@@ -1,4 +1,5 @@
 import { ColorValue, StyleSheet } from "react-native";
+import { colors, gradients, radius } from "@/src/theme";
 
 export const calendarStyles = StyleSheet.create({
   screenGradient: { flex: 1 },
@@ -10,41 +11,41 @@ export const calendarStyles = StyleSheet.create({
   dayButton: {
     width: '12%',
     minHeight: 62,
-    borderRadius: 8,
+    borderRadius: radius.button,
     alignItems: "center",
     justifyContent: "center",
     gap: 4,
-    backgroundColor: "rgba(15,23,42,0.08)",
+    backgroundColor: colors.secondary,
     borderWidth: 1,
-    borderColor: "rgba(15,23,42,0.08)",
+    borderColor: colors.border,
   },
   dayButtonSelected: {
-    backgroundColor: "#0f172a",
-    borderColor: "#0f172a",
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   dayButtonToday: {
-    borderColor: "#2563eb",
+    borderColor: colors.primary,
   },
   weekDayText: {
-    color: "#64748b",
+    color: colors.textSubtle,
     fontSize: 11,
     fontWeight: "800",
     textTransform: "uppercase",
   },
   weekDayTextSelected: {
-    color: "#dbeafe",
+    color: colors.primaryText,
   },
   dayNumberText: {
-    color: "#0f172a",
+    color: colors.text,
     fontSize: 16,
     fontWeight: "900",
   },
   dayNumberTextSelected: {
-    color: "#ffffff",
+    color: colors.primaryText,
   },
 });
 
-export const pageGradient: [ColorValue, ColorValue] = ["#eef2ff", "#ecfdf5"];
-export const plannedGradient: [string, string, string] = ["#bfdbfe", "#ddd6fe", "#fef3c7"];
-export const doneGradient: [string, string, string] = ["#bbf7d0", "#a7f3d0", "#e0f2fe"];
-export const notDoneGradient: [string, string, string] = ["#fecdd3", "#fed7aa", "#fef3c7"];
+export const pageGradient: [ColorValue, ColorValue] = gradients.page;
+export const plannedGradient: [string, string, string] = gradients.cardWarm;
+export const doneGradient: [string, string, string] = gradients.cardMuted;
+export const notDoneGradient: [string, string, string] = gradients.danger;

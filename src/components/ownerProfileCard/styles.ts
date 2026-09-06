@@ -1,36 +1,37 @@
 import { StyleSheet } from "react-native";
+import { colors, radius, shadows } from "@/src/theme";
 
 export const styles = StyleSheet.create({
   card: {
-    borderRadius: 28,
+    borderRadius: radius.card,
     padding: 20,
-    backgroundColor: "rgba(255,255,255,0.95)",
+    backgroundColor: colors.surfaceRaised,
     gap: 16,
-    boxShadow: "0px 10px 18px rgba(15, 23, 42, 0.12)",
+    boxShadow: shadows.card,
     elevation: 6,
   },
-  title: { fontSize: 16, fontWeight: "700", color: "#0f172a" },
+  title: { fontSize: 16, fontWeight: "700", color: colors.text },
   infoLine: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   infoLabel: {
-    color: "rgba(15,23,42,0.55)",
+    color: colors.textSubtle,
     fontSize: 14,
   },
   infoValue: {
-    color: "#0f172a",
+    color: colors.text,
     fontWeight: "600",
   },
   button: {
-    borderRadius: 18,
+    borderRadius: radius.button,
     paddingVertical: 12,
     alignItems: "center",
-    backgroundColor: "#8b5cf6",
+    backgroundColor: colors.primary,
   },
   buttonText: {
-    color: "white",
+    color: colors.primaryText,
     fontWeight: "700",
     fontSize: 15,
   },

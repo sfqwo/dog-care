@@ -1,9 +1,10 @@
 import { StyleSheet } from "react-native";
+import { colors, radius } from "@/src/theme";
 
 export const authScreenStyles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#f8fafc",
+    backgroundColor: colors.background,
   },
   keyboardView: {
     flex: 1,
@@ -26,23 +27,23 @@ export const authScreenStyles = StyleSheet.create({
   iconBox: {
     width: 48,
     height: 48,
-    borderRadius: 8,
+    borderRadius: radius.control,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#0f766e",
+    backgroundColor: colors.primary,
   },
   brandName: {
-    color: "#0f172a",
+    color: colors.text,
     fontSize: 16,
     fontWeight: "800",
   },
   title: {
-    color: "#0f172a",
+    color: colors.text,
     fontSize: 30,
     fontWeight: "800",
   },
   subtitle: {
-    color: "#475569",
+    color: colors.textMuted,
     fontSize: 15,
     lineHeight: 22,
   },
@@ -51,11 +52,11 @@ export const authScreenStyles = StyleSheet.create({
   },
   button: {
     minHeight: 50,
-    borderRadius: 8,
+    borderRadius: radius.button,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 18,
-    backgroundColor: "#0f172a",
+    backgroundColor: colors.primary,
   },
   buttonPressed: {
     opacity: 0.84,
@@ -64,7 +65,7 @@ export const authScreenStyles = StyleSheet.create({
     opacity: 0.4,
   },
   buttonText: {
-    color: "#ffffff",
+    color: colors.primaryText,
     fontSize: 15,
     fontWeight: "800",
   },
@@ -74,7 +75,7 @@ export const authScreenStyles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   linkText: {
-    color: "#0f766e",
+    color: colors.text,
     fontSize: 14,
     fontWeight: "700",
   },
@@ -85,22 +86,22 @@ export const authScreenStyles = StyleSheet.create({
     gap: 6,
   },
   secondaryText: {
-    color: "#64748b",
+    color: colors.textSubtle,
     fontSize: 14,
   },
   error: {
     borderLeftWidth: 3,
-    borderLeftColor: "#dc2626",
+    borderLeftColor: colors.danger,
     paddingLeft: 12,
-    color: "#991b1b",
+    color: colors.danger,
     fontSize: 14,
     lineHeight: 20,
   },
   success: {
     borderLeftWidth: 3,
-    borderLeftColor: "#16a34a",
+    borderLeftColor: colors.success,
     paddingLeft: 12,
-    color: "#166534",
+    color: colors.success,
     fontSize: 14,
     lineHeight: 20,
   },

@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { getCarePlanMenuRoute, type CarePlanMenuId } from "@/src/screens/tabs/root/utils";
+import { colors, radius } from "@/src/theme";
 
 const CARE_PLAN_MENU_ITEMS = [
   {
@@ -28,6 +29,7 @@ export default function TabsLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Tabs
         screenOptions={{
+          headerStyle: styles.header,
           headerTitleAlign: "left",
           headerRight: () => <CarePlanHeaderLinks />,
           headerRightContainerStyle: styles.headerRightContainer,
@@ -142,33 +144,37 @@ function HeaderLink({
     >
       <Ionicons
         name={icon}
-        size={15}
-        color={active ? "#ffffff" : "#0f172a"}
+        size={19}
+        color={active ? colors.primaryText : colors.text}
       />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
+  header: {
+    height: 122,
+  },
   headerRightContainer: {
     paddingRight: 12,
+    paddingVertical: 8,
   },
   headerLinks: {
     flexDirection: "row",
-    gap: 6,
+    gap: 8,
     alignItems: "center",
   },
   headerLink: {
-    width: 34,
-    height: 34,
-    borderRadius: 999,
+    width: 42,
+    height: 42,
+    borderRadius: radius.pill,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: 5,
-    backgroundColor: "rgba(15,23,42,0.08)",
+    backgroundColor: colors.secondary,
   },
   headerLinkActive: {
-    backgroundColor: "#0f172a",
+    backgroundColor: colors.primary,
   },
 });

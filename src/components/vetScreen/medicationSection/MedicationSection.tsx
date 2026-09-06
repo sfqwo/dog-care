@@ -8,10 +8,9 @@ import type { MedicationCourse } from "@dog-care/domain";
 import {
   formatDateTime,
   formatLocalDate,
-  formatTimeInput,
   isSameLocalDay,
 } from "@dog-care/core/utils";
-import { DateInput, Input } from "@/packages/ui/input";
+import { DateInput, Input, TimeInput } from "@/packages/ui/input";
 import {
   Hint,
   Modal,
@@ -45,10 +44,11 @@ import type { MedicationCourseForm } from "@/src/hooks/useMedicationCourseEditor
 import { medicationStyles } from "./styles";
 import type { MedicationSectionProps } from "./types";
 import { useInformer } from "@/src/components/informer";
+import { gradients } from "@/src/theme";
 
-const ACTIVE_GRADIENT = ["#dcfce7", "#bfdbfe", "#fef3c7"] as const;
-const PLANNED_GRADIENT = ["#e0f2fe", "#ddd6fe", "#fef3c7"] as const;
-const COMPLETED_GRADIENT = ["#f1f5f9", "#e2e8f0", "#dcfce7"] as const;
+const ACTIVE_GRADIENT = gradients.cardWarm;
+const PLANNED_GRADIENT = gradients.card;
+const COMPLETED_GRADIENT = gradients.cardMuted;
 
 export function MedicationSection({ isActive, hasPets, selectedPetId }: MedicationSectionProps) {
   const { showSuccess } = useInformer();
@@ -219,11 +219,10 @@ function MedicationFields({
           />
         </View>
       </View>
-      <Input
+      <TimeInput
         value={form.time}
-        onChangeText={(value) => onChange("time", formatTimeInput(value))}
+        onChangeText={(value) => onChange("time", value)}
         placeholder="Время приёма"
-        keyboardType="number-pad"
         editable={!disabled}
       />
       <Input

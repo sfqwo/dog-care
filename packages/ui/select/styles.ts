@@ -1,12 +1,13 @@
 import { StyleSheet } from "react-native";
+import { colors, radius } from "@/src/theme";
 
 export const styles = StyleSheet.create({
   trigger: {
     minHeight: 52,
-    borderRadius: 16,
+    borderRadius: radius.input,
     borderWidth: 1,
-    borderColor: "#E4E4E7",
-    backgroundColor: "#FFFFFF",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     paddingHorizontal: 16,
     justifyContent: "center",
   },
@@ -17,24 +18,24 @@ export const styles = StyleSheet.create({
     opacity: 0.5,
   },
   triggerInvalid: {
-    borderColor: "#f87171",
+    borderColor: colors.danger,
   },
   label: {
     fontSize: 16,
-    color: "#111827",
+    color: colors.text,
   },
   placeholder: {
-    color: "#9ca3afca",
+    color: colors.textSubtle,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.3)",
+    backgroundColor: colors.overlay,
     justifyContent: "flex-end",
   },
   modalCard: {
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
+    backgroundColor: colors.surface,
+    borderTopLeftRadius: radius.sheet,
+    borderTopRightRadius: radius.sheet,
     paddingHorizontal: 20,
     paddingBottom: 32,
     paddingTop: 12,
@@ -47,13 +48,13 @@ export const styles = StyleSheet.create({
     width: 56,
     height: 5,
     borderRadius: 3,
-    backgroundColor: "#D4D4D8",
+    backgroundColor: colors.borderStrong,
     alignSelf: "center",
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#0F172A",
+    color: colors.text,
     textAlign: "center",
   },
   modalHeader: {
@@ -61,46 +62,46 @@ export const styles = StyleSheet.create({
     paddingBlockEnd: 30,
     gap: 8,
     width: "100%",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.surface,
   },
   optionsList: {
-    borderRadius: 20,
+    borderRadius: radius.card,
     flex: 1,
   },
   option: {
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "#E4E4E7",
+    borderBottomColor: colors.border,
   },
   optionLast: {
     borderBottomWidth: 0,
   },
   optionTitle: {
     fontSize: 16,
-    color: "#111827",
+    color: colors.text,
     fontWeight: "600",
   },
   optionText: {
     fontSize: 15,
-    color: "#374151",
+    color: colors.textMuted,
     marginTop: 2,
   },
   optionDescription: {
     fontSize: 13,
-    color: "#6B7280",
+    color: colors.textSubtle,
     marginTop: 2,
   },
   cancelButton: {
     marginTop: 8,
     paddingVertical: 14,
-    borderRadius: 16,
-    backgroundColor: "#E5E7EB",
+    borderRadius: radius.button,
+    backgroundColor: colors.secondary,
     alignItems: "center",
   },
   cancelButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#0F172A",
+    color: colors.secondaryText,
   },
 });

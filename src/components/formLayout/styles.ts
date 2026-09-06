@@ -1,13 +1,14 @@
 import { StyleSheet } from "react-native";
+import { colors, radius } from "@/src/theme";
 
 export const styles = StyleSheet.create({
   stack: {
     gap: 16,
   },
   card: {
-    borderRadius: 24,
+    borderRadius: radius.card,
     padding: 18,
-    backgroundColor: "rgba(255,255,255,0.95)",
+    backgroundColor: colors.surfaceRaised,
     gap: 12,
   },
   headerRow: {
@@ -22,13 +23,13 @@ export const styles = StyleSheet.create({
   toggleButton: {
     width: 36,
     height: 36,
-    borderRadius: 18,
+    borderRadius: radius.control,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(15,23,42,0.06)",
+    backgroundColor: colors.secondary,
   },
   toggleIcon: {
-    color: "#0f172a",
+    color: colors.text,
   },
   cardBody: {
     gap: 12,
@@ -36,10 +37,10 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#0f172a",
+    color: colors.text,
   },
   subtitle: {
-    color: "rgba(15,23,42,0.7)",
+    color: colors.textMuted,
     fontSize: 13,
   },
 });

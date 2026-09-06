@@ -16,11 +16,10 @@ import type {
 } from "@dog-care/domain";
 import {
   formatDateTime,
-  formatTimeInput,
   getOptionTitle,
   isSameLocalDay,
 } from "@dog-care/core/utils";
-import { DateInput, Input } from "@/packages/ui/input";
+import { DateInput, Input, TimeInput } from "@/packages/ui/input";
 import {
   Hint,
   CareTrend,
@@ -50,9 +49,10 @@ import { useCareRecordsContext, useWellnessEntryEditor } from "@/src/hooks";
 import type { WellnessEntryForm } from "@/src/hooks/useWellnessEntryEditor";
 import { wellnessStyles } from "./styles";
 import type { WellnessSectionProps } from "./types";
+import { gradients } from "@/src/theme";
 
-const NORMAL_GRADIENT = ["#dcfce7", "#dbeafe", "#fef3c7"] as const;
-const SYMPTOM_GRADIENT = ["#fee2e2", "#ffedd5", "#fef3c7"] as const;
+const NORMAL_GRADIENT = gradients.card;
+const SYMPTOM_GRADIENT = gradients.danger;
 
 const APPETITE_OPTIONS: { value: AppetiteStatus; title: string }[] = [
   { value: "normal", title: "Обычный" },
@@ -199,11 +199,10 @@ function WellnessFields({
           />
         </View>
         <View style={wellnessStyles.inlineField}>
-          <Input
+          <TimeInput
             value={form.time}
-            onChangeText={(value) => onChange("time", formatTimeInput(value))}
+            onChangeText={(value) => onChange("time", value)}
             placeholder="Время"
-            keyboardType="number-pad"
             editable={!disabled}
           />
         </View>

@@ -1,4 +1,5 @@
 import { ColorValue, StyleSheet } from "react-native";
+import { colors, gradients } from "@/src/theme";
 
 export const walkStyles = StyleSheet.create({
   screenGradient: { flex: 1 },
@@ -6,8 +7,8 @@ export const walkStyles = StyleSheet.create({
   recorderHint: {
     marginTop: 8,
     fontSize: 13,
-    color: "rgba(15,23,42,0.7)",
+    color: colors.textMuted,
   },
 });
 
-export const pageGradient: [ColorValue, ColorValue] = ["#fdf2f8", "#f5f3ff"];
+export const pageGradient: [ColorValue, ColorValue] = gradients.page;

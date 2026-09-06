@@ -11,7 +11,7 @@ import {
   useCareRecordsContext,
   useProfileContext,
 } from "@/src/hooks";
-import { DateInput, Input } from "@/packages/ui/input";
+import { DateInput, Input, TimeInput } from "@/packages/ui/input";
 import {
   HeroCard,
   HeroCardBadge,
@@ -158,11 +158,10 @@ export default function FeedingScreen() {
                     maximumDate={Date.now()}
                     editable={Boolean(selectedPetId)}
                   />
-                  <Input
+                  <TimeInput
                     value={time}
                     onChangeText={setTime}
                     placeholder="Время"
-                    keyboardType="number-pad"
                     editable={Boolean(selectedPetId)}
                   />
                 </TimeRecorderRow>
@@ -251,11 +250,10 @@ function FeedingEditModal({
         placeholder="Дата"
         maximumDate={Date.now()}
       />
-      <Input
+      <TimeInput
         value={time}
         onChangeText={onChangeTime}
         placeholder="Время"
-        keyboardType="number-pad"
       />
       <Input
         value={food}

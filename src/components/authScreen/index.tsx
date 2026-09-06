@@ -4,6 +4,7 @@ import { Link } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import type { AuthButtonProps, AuthLinkProps, AuthScreenProps } from "./types";
 import { authScreenStyles } from "./styles";
+import { colors } from "@/src/theme";
 
 export function AuthScreen({ title, subtitle, icon, children }: AuthScreenProps) {
   return (
@@ -19,7 +20,7 @@ export function AuthScreen({ title, subtitle, icon, children }: AuthScreenProps)
           <View style={authScreenStyles.content}>
             <View style={authScreenStyles.brand}>
               <View style={authScreenStyles.iconBox}>
-                <MaterialCommunityIcons name={icon} size={27} color="#ffffff" />
+                <MaterialCommunityIcons name={icon} size={27} color={colors.primaryText} />
               </View>
               <Text style={authScreenStyles.brandName}>Dog Care</Text>
               <Text style={authScreenStyles.title}>{title}</Text>

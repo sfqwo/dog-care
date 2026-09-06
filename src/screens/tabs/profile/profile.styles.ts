@@ -1,49 +1,50 @@
 import { ColorValue, StyleSheet } from "react-native";
+import { colors, gradients, radius } from "@/src/theme";
 
 export const profileStyles = StyleSheet.create({
   screenGradient: { flex: 1 },
   safeArea: { flex: 1 },
   contentGap: { gap: 18 },
   formCard: {
-    borderRadius: 24,
+    borderRadius: radius.card,
     padding: 20,
-    backgroundColor: "rgba(255,255,255,0.95)",
+    backgroundColor: colors.surfaceRaised,
     gap: 12,
   },
-  sectionTitle: { fontSize: 16, fontWeight: "700", color: "#0f172a" },
+  sectionTitle: { fontSize: 16, fontWeight: "700", color: colors.text },
   button: {
-    borderRadius: 16,
+    borderRadius: radius.button,
     paddingVertical: 12,
     alignItems: "center",
-    backgroundColor: "#8b5cf6",
+    backgroundColor: colors.primary,
   },
   buttonDisabled: {
     opacity: 0.4,
   },
   buttonText: {
-    color: "white",
+    color: colors.primaryText,
     fontWeight: "700",
     fontSize: 15,
   },
   buttonSecondary: {
-    borderRadius: 16,
+    borderRadius: radius.button,
     paddingVertical: 10,
     alignItems: "center",
-    backgroundColor: "rgba(15,23,42,0.08)",
+    backgroundColor: colors.secondary,
   },
   buttonSecondaryText: {
-    color: "#0f172a",
+    color: colors.secondaryText,
     fontWeight: "600",
     fontSize: 14,
   },
   listTitle: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#0f172a",
+    color: colors.text,
     marginBottom: 6,
   },
   editingLabel: {
-    color: "#0f172a",
+    color: colors.text,
     fontWeight: "600",
   },
   accountSection: {
@@ -58,7 +59,7 @@ export const profileStyles = StyleSheet.create({
     gap: 4,
   },
   accountEmail: {
-    color: "#64748b",
+    color: colors.textSubtle,
     fontSize: 14,
   },
   signOutButton: {
@@ -66,15 +67,15 @@ export const profileStyles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: "center",
     paddingHorizontal: 16,
-    backgroundColor: "#fee2e2",
+    backgroundColor: colors.dangerSurface,
   },
   signOutButtonText: {
-    color: "#991b1b",
+    color: colors.danger,
     fontSize: 14,
     fontWeight: "700",
   },
 });
 
-export const pageGradient: [ColorValue, ColorValue] = ["#ecfeff", "#f5f3ff"];
+export const pageGradient: [ColorValue, ColorValue] = gradients.page;
 
-export const petGradient = ["#e0f2fe", "#fef9c3", "#fde68a"] as const;
+export const petGradient = gradients.cardWarm;

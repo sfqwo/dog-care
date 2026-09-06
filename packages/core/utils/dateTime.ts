@@ -1,7 +1,7 @@
 const DEFAULT_LOCALE = "ru-RU";
 
 export function formatDateTime(timestamp: number) {
-  return new Date(timestamp).toLocaleString();
+  return `${formatDateInputFromTimestamp(timestamp)}, ${formatTimeInputFromTimestamp(timestamp)}`;
 }
 
 export function parseTime(timeValue: string): Date | null {
@@ -94,6 +94,7 @@ export function parseDateInputTimestamp(value: string, hours = 12) {
 }
 
 export function formatLocalDate(timestamp: number, options?: Intl.DateTimeFormatOptions) {
+  if (!options) return formatDateInputFromTimestamp(timestamp);
   return new Date(timestamp).toLocaleDateString(DEFAULT_LOCALE, options);
 }
 

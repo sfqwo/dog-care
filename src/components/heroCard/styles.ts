@@ -1,23 +1,24 @@
 import { StyleSheet } from "react-native";
+import { colors, radius, shadows } from "@/src/theme";
 
 export const styles = StyleSheet.create({
   card: {
-    borderRadius: 30,
+    borderRadius: radius.card,
     padding: 24,
-    backgroundColor: "rgba(255,255,255,0.95)",
-    boxShadow: "0px 14px 18px rgba(15, 23, 42, 0.12)",
+    backgroundColor: colors.surfaceRaised,
+    boxShadow: shadows.card,
     elevation: 7,
     gap: 10,
   },
-  title: { fontSize: 24, fontWeight: "800", color: "#0f172a" },
-  subtitle: { color: "rgba(15,23,42,0.7)", fontSize: 14 },
+  title: { fontSize: 24, fontWeight: "800", color: colors.text },
+  subtitle: { color: colors.textMuted, fontSize: 14 },
   badge: {
     alignSelf: "flex-start",
     paddingHorizontal: 14,
     paddingVertical: 6,
-    borderRadius: 999,
-    backgroundColor: "#fdf2f8",
+    borderRadius: radius.pill,
+    backgroundColor: colors.secondary,
     marginTop: 6,
   },
-  badgeText: { color: "#a30f2d", fontWeight: "700", fontSize: 11, letterSpacing: 0.6 },
+  badgeText: { color: colors.text, fontWeight: "700", fontSize: 11, letterSpacing: 0.6 },
 });

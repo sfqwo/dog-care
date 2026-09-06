@@ -1,6 +1,8 @@
-const SHORT = ["#fdf2f8", "#fce7f3", "#ffe4e6"] as const;
-const MEDIUM = ["#ecfccb", "#d9f99d", "#bef264"] as const;
-const LONG = ["#ede9fe", "#ddd6fe", "#c4b5fd"] as const;
+import { gradients } from "@/src/theme";
+
+const SHORT = gradients.cardMuted;
+const MEDIUM = gradients.cardAccent;
+const LONG = gradients.cardAccentStrong;
 
 export function getWalkGradient(minutes: number) {
   if (minutes <= 20) return SHORT;
