@@ -45,8 +45,8 @@ import {
   TimeRecorderRow,
   TimeRecorderTitle,
 } from "@/src/components";
-import { feedingStyles, pageGradient } from "./feeding.styles";
-import type { FeedingListItemProps } from "./feeding.types";
+import { feedingStyles, pageGradient } from "@/src/screens/tabs/feeding/feeding.styles";
+import type { FeedingListItemProps } from "@/src/screens/tabs/feeding/feeding.types";
 
 export default function FeedingScreen() {
   const { profile, selectedPetId } = useProfileContext();

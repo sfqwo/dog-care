@@ -57,10 +57,10 @@ import {
   pageGradient,
   planGradient,
   todayStyles,
-} from "./today.styles";
-import type { TodayCompletedItemProps, TodayPlanItemProps } from "./today.types";
+} from "@/src/screens/tabs/today/today.styles";
+import type { TodayCompletedItemProps, TodayPlanItemProps } from "@/src/screens/tabs/today/today.types";
 import { useInformer } from "@/src/components/informer";
-import { getCompletedSourceIcon } from "./utils";
+import { getCompletedSourceIcon } from "@/src/screens/tabs/today/utils";
 
 export default function TodayScreen() {
   const { showSuccess } = useInformer();

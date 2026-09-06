@@ -7,7 +7,6 @@ export type StatsBlockProps = {
 
 export type StatsBlocksProps = {
   children: ReactNode;
-  maxPerRow?: number;
 };
 
 export type StatsBlockElement = ReactElement<StatsBlockProps>;

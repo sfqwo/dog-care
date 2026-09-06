@@ -25,7 +25,7 @@ import type {
   WellnessEntry,
   WeightEntry,
 } from "@dog-care/domain";
-import { EMPTY_HEALTH } from "@/app/(tabs)/(vet)/vet.constants";
+import { EMPTY_HEALTH } from "@/src/components/vetScreen/vet.constants";
 import { getCompletedSourceId } from "@dog-care/domain";
 import { sortNewestFirst } from "@dog-care/core/utils";
 import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";

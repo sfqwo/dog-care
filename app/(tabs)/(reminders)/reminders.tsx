@@ -72,11 +72,11 @@ import {
   pageGradient,
   reminderGradient,
   remindersStyles,
-} from "./reminders.styles";
+} from "@/src/screens/tabs/reminders/reminders.styles";
 import type {
   CompletedReminderListItemProps,
   ReminderListItemProps,
-} from "./reminders.types";
+} from "@/src/screens/tabs/reminders/reminders.types";
 import { useInformer } from "@/src/components/informer";
 
 export default function RemindersScreen() {

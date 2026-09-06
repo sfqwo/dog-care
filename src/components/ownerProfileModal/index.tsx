@@ -2,14 +2,17 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import type { UserProfilePayload } from "@dog-care/domain";
-import { useProfileContext } from "@/src/hooks/profileContext";
 import { DateInput, EmailInput, Input, PhoneInput } from "@/packages/ui/input";
 import { Modal, ModalActionButton, ModalActions, ModalSubtitle, ModalTitle } from "../modal";
 import type { OwnerProfileModalProps, OwnerFormValues } from "./types";
 import { mapProfileToForm } from "./utils";
 
-export function OwnerProfileModal({ visible, onClose }: OwnerProfileModalProps) {
-  const { profile, updateOwner } = useProfileContext();
+export function OwnerProfileModal({
+  visible,
+  profile,
+  onUpdateOwner,
+  onClose,
+}: OwnerProfileModalProps) {
   const {
     control,
     handleSubmit,
@@ -34,7 +37,7 @@ export function OwnerProfileModal({ visible, onClose }: OwnerProfileModalProps) 
       phone: values.phone.trim() || undefined,
       birthdate: values.birthdate.trim() || undefined,
     };
-    updateOwner(payload);
+    onUpdateOwner(payload);
   };
 
   return (

@@ -9,17 +9,17 @@ import {
   SwipeableCardsList,
   SwipeableCardsListHeader,
 } from "@/src/components";
+import { MedicalDocumentsSection } from "@/src/components/vetScreen/medicalDocumentsSection";
+import { MedicationSection } from "@/src/components/vetScreen/medicationSection";
+import { SECTION_TAB_ITEMS } from "@/src/components/vetScreen/vet.constants";
+import { VetHeader } from "@/src/components/vetScreen/vetHeader";
+import { VetPassportSection } from "@/src/components/vetScreen/vetPasportSection";
+import { VetRecordsSection } from "@/src/components/vetScreen/vetRecordsSection";
+import { pageGradient, vetStyles } from "@/src/components/vetScreen/vet.styles";
+import type { VetSectionTab } from "@/src/components/vetScreen/vet.types";
+import { WeightSection } from "@/src/components/vetScreen/weightSection";
+import { WellnessSection } from "@/src/components/vetScreen/wellnessSection";
 import { useCareRecordsContext, useProfileContext, useVetStorage } from "@/src/hooks";
-import { pageGradient, vetStyles } from "./vet.styles";
-import type { VetSectionTab } from "./vet.types";
-import { SECTION_TAB_ITEMS } from "./vet.constants";
-import { VetHeader } from "./vetHeader";
-import { VetPassportSection } from "./vetPasportSection";
-import { VetRecordsSection } from "./vetRecordsSection";
-import { WeightSection } from "./weightSection";
-import { MedicationSection } from "./medicationSection";
-import { WellnessSection } from "./wellnessSection";
-import { MedicalDocumentsSection } from "./medicalDocumentsSection";
 
 export default function VetScreen() {
   const { section } = useLocalSearchParams<{ section?: string }>();

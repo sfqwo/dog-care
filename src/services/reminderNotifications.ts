@@ -1,7 +1,6 @@
-import { Platform } from "react-native";
-import * as Notifications from "expo-notifications";
 import type { Reminder } from "@dog-care/domain";
 import { getReminderCategoryLabel } from "@dog-care/core/shared";
+import { canUseExpoNotifications } from "@/src/shared/runtime/expoEnvironment";
 
 const REMINDER_CHANNEL_ID = "dog-care-reminders";
 
@@ -12,8 +11,9 @@ type ScheduleReminderNotificationParams = {
 };
 
 export async function ensureReminderNotificationPermissions() {
-  if (Platform.OS === "web") return false;
+  if (!canUseExpoNotifications()) return false;
 
+  const Notifications = await import("expo-notifications");
   const current = await Notifications.getPermissionsAsync();
   const finalStatus = current.granted
     ? current
@@ -27,10 +27,11 @@ export async function scheduleReminderNotification({
   categoryLabel,
   requestPermission = true,
 }: ScheduleReminderNotificationParams) {
-  if (Platform.OS === "web" || reminder.completedAt || reminder.dueAt <= Date.now()) {
+  if (!canUseExpoNotifications() || reminder.completedAt || reminder.dueAt <= Date.now()) {
     return undefined;
   }
 
+  const Notifications = await import("expo-notifications");
   const canNotify = requestPermission
     ? await ensureReminderNotificationPermissions()
     : (await Notifications.getPermissionsAsync()).granted;
@@ -58,13 +59,16 @@ export async function scheduleReminderNotification({
 }
 
 export async function cancelReminderNotification(notificationId?: string) {
-  if (!notificationId || Platform.OS === "web") return;
+  if (!notificationId || !canUseExpoNotifications()) return;
+  const Notifications = await import("expo-notifications");
   await Notifications.cancelScheduledNotificationAsync(notificationId);
 }
 
 async function configureReminderNotificationChannel() {
+  const { Platform } = await import("react-native");
   if (Platform.OS !== "android") return;
 
+  const Notifications = await import("expo-notifications");
   await Notifications.setNotificationChannelAsync(REMINDER_CHANNEL_ID, {
     name: "Dog Care reminders",
     importance: Notifications.AndroidImportance.DEFAULT,

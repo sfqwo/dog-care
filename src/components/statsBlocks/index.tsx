@@ -10,27 +10,30 @@ const isStatsBlockElement = (
   child: ReactNode
 ): child is StatsBlockElement => isValidElement(child) && child.type === StatsBlock;
 
-export function StatsBlocks({ children, maxPerRow = 3 }: StatsBlocksProps) {
+export function StatsBlocks({ children }: StatsBlocksProps) {
   const blocks = Children.toArray(children).filter(isStatsBlockElement);
-
-  const rows: StatsBlockElement[][] = [];
-  blocks.forEach((child, index) => {
-    const rowIndex = Math.floor(index / maxPerRow);
-    if (!rows[rowIndex]) rows[rowIndex] = [];
-    rows[rowIndex].push(child);
-  });
 
   return (
     <StatsBlocksContext.Provider value={true}>
       <View style={styles.container}>
-        {rows.map((row, rowIndex) => (
-          <View key={`row-${rowIndex}`} style={styles.statsRow}>
-            {row.map((child, childIndex) => (
-              <View key={`stat-${rowIndex}-${childIndex}`} style={styles.statCard}>
-                <Text style={styles.statLabel}>{child.props.label}</Text>
-                <Text style={styles.statValue}>{child.props.value}</Text>
-              </View>
-            ))}
+        {blocks.map((child, index) => (
+          <View key={child.key?.toString() ?? `stat-${index}`} style={styles.statCard}>
+            <Text
+              style={styles.statLabel}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.72}
+            >
+              {child.props.label}
+            </Text>
+            <Text
+              style={styles.statValue}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.82}
+            >
+              {child.props.value}
+            </Text>
           </View>
         ))}
       </View>

@@ -11,7 +11,7 @@ import { loadJSON, saveJSON } from "@/src/storage/jsonStorage";
 import { STORAGE_KEYS } from "@/src/storage/keys";
 import { createUid } from "@dog-care/core/utils";
 import { PetProfileModal } from "@/src/components/petProfileModal";
-import { OwnerProfileModal } from "../../components";
+import { OwnerProfileModal } from "@/src/components/ownerProfileModal";
 import type { ProfileContextValue } from "./types";
 import { useInformer } from "@/src/components/informer";
 
@@ -177,10 +177,15 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       {children}
       <PetProfileModal
         visible={petModalVisible}
+        editingPet={editingPet}
+        onAddPet={addPet}
+        onUpdatePet={updatePet}
         onClose={closePetModal}
       />
       <OwnerProfileModal
         visible={ownerModalVisible}
+        profile={profile}
+        onUpdateOwner={updateOwner}
         onClose={closeOwnerModal}
       />
     </ProfileContext.Provider>

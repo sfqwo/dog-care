@@ -66,11 +66,11 @@ export function InformerProvider({ children }: InformerProviderProps) {
         {current ? (
           <Animated.View
             accessibilityLiveRegion="polite"
-            pointerEvents="none"
             style={[
               informerStyles.informer,
               current.variant === "info" && informerStyles.informerInfo,
               current.variant === "error" && informerStyles.informerError,
+              informerStyles.nonInteractive,
               { opacity, transform: [{ translateY }] },
             ]}
           >

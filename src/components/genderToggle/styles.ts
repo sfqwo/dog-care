@@ -12,6 +12,9 @@ export const genderToggleStyles = StyleSheet.create({
     minHeight: 48,
     borderRadius: 18,
   },
+  nonInteractive: {
+    pointerEvents: "none",
+  },
   toggleRow: {
     position: "absolute",
     top: 3,

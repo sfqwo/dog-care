@@ -1,5 +1,5 @@
 import type { VetHealthInfo } from "@dog-care/domain";
-import { EMPTY_HEALTH } from "@/app/(tabs)/(vet)/vet.constants";
+import { EMPTY_HEALTH } from "@/src/components/vetScreen/vet.constants";
 
 export function cloneVetHealth(info?: VetHealthInfo): VetHealthInfo {
   return {

@@ -16,9 +16,8 @@ export function GenderToggle({ value, options, onChange }: GenderToggleProps) {
     <View style={genderToggleStyles.wrapper}>
       <BaseInput
         editable={false}
-        pointerEvents="none"
         value=""
-        style={genderToggleStyles.backgroundInput}
+        style={[genderToggleStyles.backgroundInput, genderToggleStyles.nonInteractive]}
       />
       <View style={genderToggleStyles.toggleRow}>
         {options.map((option, index) => {

@@ -5,7 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import { GENDER_OPTIONS, SPECIES_OPTIONS } from "@dog-care/core/shared";
 import { Select, SelectHeader, SelectOption, SelectOptionTitle } from "@dog-care/select";
 import type { PetProfilePayload } from "@dog-care/domain";
-import { useProfileContext, useDogBreeds } from "@/src/hooks";
+import { useDogBreeds } from "@/src/hooks/useDogBreeds";
 import { DateInput, Input } from "@/packages/ui/input";
 
 import {
@@ -30,8 +30,13 @@ const genderToggleOptions: GenderToggleOption[] = GENDER_OPTIONS.map((option) =>
   icon: GENDER_ICON_MAP[option.value] ?? "account",
 }));
 
-export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
-  const { addPet, updatePet, editingPet } = useProfileContext();
+export function PetProfileModal({
+  visible,
+  editingPet,
+  onAddPet,
+  onUpdatePet,
+  onClose,
+}: PetProfileModalProps) {
   const [breedQuery, setBreedQuery] = useState("");
   const {
     control,
@@ -73,9 +78,9 @@ export function PetProfileModal({ visible, onClose }: PetProfileModalProps) {
     };
 
     if (isEditing && editingPet) {
-      updatePet({ ...payload, id: editingPet.id });
+      onUpdatePet({ ...payload, id: editingPet.id });
     } else {
-      addPet(payload);
+      onAddPet(payload);
     }
   };
 

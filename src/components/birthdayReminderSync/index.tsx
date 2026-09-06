@@ -4,7 +4,8 @@ import {
   buildPetBirthdayReminder,
   isBirthdayReminderCurrent,
 } from "@dog-care/domain";
-import { useCareRecordsContext, useProfileContext } from "@/src/hooks";
+import { useCareRecordsContext } from "@/src/hooks/careRecordsContext";
+import { useProfileContext } from "@/src/hooks/profileContext";
 import { scheduleBirthdayNotification } from "@/src/services/birthdayReminders";
 
 export function BirthdayReminderSync() {

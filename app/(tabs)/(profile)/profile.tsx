@@ -32,9 +32,9 @@ import { useProfileContext } from "@/src/hooks";
 import { useAuthContext } from "@/src/hooks/authContext";
 import { useInformer } from "@/src/components/informer";
 import { getAuthErrorMessage } from "@/src/hooks/authContext/utils";
-import { profileStyles, pageGradient, petGradient } from "./profile.styles";
-import type { PetListItemProps } from "./profile.types";
-import { buildPetNote } from "./utils";
+import { profileStyles, pageGradient, petGradient } from "@/src/screens/tabs/profile/profile.styles";
+import type { PetListItemProps } from "@/src/screens/tabs/profile/profile.types";
+import { buildPetNote } from "@/src/screens/tabs/profile/utils";
 
 export default function ProfileScreen() {
   const { user, signOut } = useAuthContext();

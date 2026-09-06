@@ -1,7 +1,8 @@
 import { CareRecordsProvider } from "@/src/hooks/careRecordsContext";
 import { ProfileProvider } from "@/src/hooks/profileContext";
 import { AuthProvider, useAuthContext } from "@/src/hooks/authContext";
-import { BirthdayReminderSync, InformerProvider } from "@/src/components";
+import { BirthdayReminderSync } from "@/src/components/birthdayReminderSync";
+import { InformerProvider } from "@/src/components/informer";
 import "@/src/setup";
 import { Stack } from "expo-router";
 import { ActivityIndicator, StyleSheet, View } from "react-native";

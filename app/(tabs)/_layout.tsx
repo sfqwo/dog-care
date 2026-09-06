@@ -1,21 +1,24 @@
 import "@/src/setup";
 import { router, Tabs, usePathname } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { getCarePlanMenuRoute, type CarePlanMenuId } from "./utils";
+import { getCarePlanMenuRoute, type CarePlanMenuId } from "@/src/screens/tabs/root/utils";
 
 const CARE_PLAN_MENU_ITEMS = [
   {
     id: "today",
-    title: "Сегодня",
-    subtitle: "План дня",
+    accessibilityLabel: "Сегодня",
     icon: "calendar-outline",
   },
   {
+    id: "calendar",
+    accessibilityLabel: "Календарь",
+    icon: "calendar-number-outline",
+  },
+  {
     id: "reminders",
-    title: "Напоминания",
-    subtitle: "Расписание",
+    accessibilityLabel: "Напоминания",
     icon: "notifications-outline",
   },
 ] as const;
@@ -68,6 +71,16 @@ export default function TabsLayout() {
           }}
         />
         <Tabs.Screen
+          name="(calendar)/calendar"
+          options={{
+            title: "Календарь",
+            href: null,
+            tabBarIcon: ({ size, color }) => (
+              <Ionicons name="calendar-number" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
           name="(today)/today"
           options={{
             title: "Сегодня",
@@ -100,7 +113,7 @@ function CarePlanHeaderLinks() {
         <HeaderLink
           key={item.id}
           id={item.id}
-          label={item.title}
+          accessibilityLabel={item.accessibilityLabel}
           icon={item.icon}
           active={pathname.includes(item.id)}
         />
@@ -111,17 +124,19 @@ function CarePlanHeaderLinks() {
 
 function HeaderLink({
   id,
-  label,
+  accessibilityLabel,
   icon,
   active,
 }: {
   id: CarePlanMenuId;
-  label: string;
+  accessibilityLabel: string;
   icon: keyof typeof Ionicons.glyphMap;
   active: boolean;
 }) {
   return (
     <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
       style={[styles.headerLink, active && styles.headerLinkActive]}
       onPress={() => router.push(getCarePlanMenuRoute(id))}
     >
@@ -130,9 +145,6 @@ function HeaderLink({
         size={15}
         color={active ? "#ffffff" : "#0f172a"}
       />
-      <Text style={[styles.headerLinkText, active && styles.headerLinkTextActive]}>
-        {label}
-      </Text>
     </Pressable>
   );
 }
@@ -143,27 +155,20 @@ const styles = StyleSheet.create({
   },
   headerLinks: {
     flexDirection: "row",
-    gap: 8,
+    gap: 6,
     alignItems: "center",
   },
   headerLink: {
-    minHeight: 32,
+    width: 34,
+    height: 34,
     borderRadius: 999,
-    paddingHorizontal: 10,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     gap: 5,
     backgroundColor: "rgba(15,23,42,0.08)",
   },
   headerLinkActive: {
     backgroundColor: "#0f172a",
-  },
-  headerLinkText: {
-    color: "#0f172a",
-    fontSize: 12,
-    fontWeight: "700",
-  },
-  headerLinkTextActive: {
-    color: "#ffffff",
   },
 });

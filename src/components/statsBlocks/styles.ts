@@ -1,22 +1,26 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  container: { gap: 12 },
-  statsRow: {
+  container: {
     flexDirection: "row",
-    gap: 12,
+    flexWrap: "wrap",
+    gap: 10,
   },
   statCard: {
-    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 144,
+    minWidth: 144,
     borderRadius: 20,
-    padding: 16,
+    padding: 14,
     backgroundColor: "rgba(255,255,255,0.9)",
   },
   statLabel: {
     color: "rgba(15,23,42,0.6)",
     fontSize: 12,
     textTransform: "uppercase",
-    letterSpacing: 0.5,
+    letterSpacing: 0,
+    flexShrink: 1,
   },
   statValue: {
     marginTop: 6,

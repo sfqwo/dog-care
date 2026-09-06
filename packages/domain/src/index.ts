@@ -6,3 +6,4 @@ export * from "./medications";
 export * from "./birthdays";
 export * from "./wellness";
 export * from "./medicalDocuments";
+export * from "./careCalendar";

@@ -35,10 +35,7 @@ export const styles = StyleSheet.create({
     borderRadius: 22,
     padding: 18,
     gap: 14,
-    shadowColor: "#0f172a",
-    shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.15,
-    shadowRadius: 18,
+    boxShadow: "0px 12px 18px rgba(15, 23, 42, 0.15)",
     elevation: 8,
   },
   cardHeader: {

@@ -45,8 +45,8 @@ import {
   useWalkStats,
 } from "@/src/hooks";
 import { formatDateTime } from "@dog-care/core/utils";
-import { pageGradient, walkStyles } from "./walks.styles";
-import type { WalkListItemProps } from "./walks.types";
+import { pageGradient, walkStyles } from "@/src/screens/tabs/walks/walks.styles";
+import type { WalkListItemProps } from "@/src/screens/tabs/walks/walks.types";
 
 export default function WalksScreen() {
   const { profile, selectedPetId } = useProfileContext();
