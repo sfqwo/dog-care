@@ -5,9 +5,7 @@ import {
   Hint,
   SwipeableCardsListEmpty,
   SwipeableCardsListItemBadge,
-  SwipeableCardsListItemFooter,
   SwipeableCardsListItemHeader,
-  SwipeableCardsListItemHelper,
   SwipeableCardsListItem,
   SwipeableCardsListItemNote,
   SwipeableCardsListItemSubtitle,
@@ -138,9 +136,6 @@ function VetRecordCard({ record, onRemove }: VetRecordCardProps) {
         <SwipeableCardsListItemBadge text={badgeText} icon="medical-bag" />
       </SwipeableCardsListItemHeader>
       <SwipeableCardsListItemNote text={noteText} icon="stethoscope" />
-      <SwipeableCardsListItemFooter>
-        <SwipeableCardsListItemHelper />
-      </SwipeableCardsListItemFooter>
     </SwipeableCardsListItem>
   );
 }

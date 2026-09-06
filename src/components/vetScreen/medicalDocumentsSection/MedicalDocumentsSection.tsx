@@ -18,9 +18,7 @@ import {
   SwipeableCardsListEmpty,
   SwipeableCardsListItem,
   SwipeableCardsListItemBadge,
-  SwipeableCardsListItemFooter,
   SwipeableCardsListItemHeader,
-  SwipeableCardsListItemHelper,
   SwipeableCardsListItemNote,
   SwipeableCardsListItemSubtitle,
   SwipeableCardsListItemTextBlock,
@@ -287,9 +285,6 @@ function MedicalDocumentCard({
       </SwipeableCardsListItemHeader>
       <Image source={{ uri: document.imageUris[0] }} style={documentStyles.cardImage} resizeMode="cover" />
       <SwipeableCardsListItemNote text={document.note} icon="text-box-outline" />
-      <SwipeableCardsListItemFooter>
-        <SwipeableCardsListItemHelper text="Тап — открыть • долгое нажатие — редактировать" />
-      </SwipeableCardsListItemFooter>
     </SwipeableCardsListItem>
   );
 }

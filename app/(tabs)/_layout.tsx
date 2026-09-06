@@ -8,19 +8,19 @@ import { colors, radius } from "@/src/theme";
 
 const CARE_PLAN_MENU_ITEMS = [
   {
-    id: "today",
-    accessibilityLabel: "Сегодня",
-    icon: "calendar-outline",
-  },
-  {
     id: "calendar",
     accessibilityLabel: "Календарь",
     icon: "calendar-number-outline",
   },
   {
-    id: "reminders",
-    accessibilityLabel: "Напоминания",
-    icon: "notifications-outline",
+    id: "vet",
+    accessibilityLabel: "Вет-журнал",
+    icon: "medkit",
+  },
+  {
+    id: "profile",
+    accessibilityLabel: "Профиль",
+    icon: "person-circle",
   },
 ] as const;
 
@@ -35,6 +35,15 @@ export default function TabsLayout() {
           headerRightContainerStyle: styles.headerRightContainer,
         }}
       >
+        <Tabs.Screen
+          name="(today)/today"
+          options={{
+            title: "Сегодня",
+            tabBarIcon: ({ size, color }) => (
+              <Ionicons name="calendar" size={size} color={color} />
+            ),
+          }}
+        />
         <Tabs.Screen
           name="(walks)/walks"
           options={{
@@ -57,6 +66,7 @@ export default function TabsLayout() {
           name="(vet)/vet"
           options={{
             title: "Вет",
+            href: null,
             tabBarIcon: ({ size, color }) => (
               <Ionicons name="medkit" size={size} color={color} />
             ),
@@ -66,7 +76,6 @@ export default function TabsLayout() {
           name="(reminders)/reminders"
           options={{
             title: "Напоминания",
-            href: null,
             tabBarIcon: ({ size, color }) => (
               <Ionicons name="notifications" size={size} color={color} />
             ),
@@ -83,19 +92,10 @@ export default function TabsLayout() {
           }}
         />
         <Tabs.Screen
-          name="(today)/today"
-          options={{
-            title: "Сегодня",
-            href: null,
-            tabBarIcon: ({ size, color }) => (
-              <Ionicons name="calendar" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
           name="(profile)/profile"
           options={{
             title: "Профиль",
+            href: null,
             tabBarIcon: ({ size, color }) => (
               <Ionicons name="person-circle" size={size} color={color} />
             ),

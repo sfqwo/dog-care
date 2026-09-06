@@ -24,9 +24,7 @@ import {
   SwipeableCardsListEmpty,
   SwipeableCardsListHeader,
   SwipeableCardsListItemBadge,
-  SwipeableCardsListItemFooter,
   SwipeableCardsListItemHeader,
-  SwipeableCardsListItemHelper,
   SwipeableCardsListItem,
   SwipeableCardsListItemNote,
   SwipeableCardsListItemSubtitle,
@@ -288,9 +286,6 @@ function WalkListItem({ walk, onRemove, onEdit }: WalkListItemProps) {
         <SwipeableCardsListItemBadge text={`${walk.durationMin} мин`} />
       </SwipeableCardsListItemHeader>
       <SwipeableCardsListItemNote text={walk.note} />
-      <SwipeableCardsListItemFooter>
-        <SwipeableCardsListItemHelper text="Долгое нажатие — редактировать • свайп влево — кнопка удаления" />
-      </SwipeableCardsListItemFooter>
     </SwipeableCardsListItem>
   );
 }

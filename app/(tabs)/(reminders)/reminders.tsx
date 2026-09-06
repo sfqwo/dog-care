@@ -366,7 +366,7 @@ function ReminderListItem({
       <SwipeableCardsListItemNote text={noteParts.join(" • ")} icon="bell-ring-outline" />
       <SwipeableCardsListItemFooter>
         <SwipeableCardsListItemHelper
-          text={isBirthdayReminder ? "Управляется датой рождения в профиле" : "Тап — открыть • свайп влево — кнопка удаления"}
+          text={isBirthdayReminder ? "Управляется датой рождения в профиле" : undefined}
         />
         <SwipeableCardsListItemCheckAction onPress={() => onToggleDone(reminder.id)} />
       </SwipeableCardsListItemFooter>
@@ -413,9 +413,6 @@ function CompletedReminderListItem({
         />
       </SwipeableCardsListItemHeader>
       <SwipeableCardsListItemNote text={item.note} />
-      <SwipeableCardsListItemFooter>
-        <SwipeableCardsListItemHelper />
-      </SwipeableCardsListItemFooter>
     </SwipeableCardsListItem>
   );
 }

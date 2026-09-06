@@ -18,9 +18,7 @@ import {
   SwipeableCardsListEmpty,
   SwipeableCardsListItem,
   SwipeableCardsListItemBadge,
-  SwipeableCardsListItemFooter,
   SwipeableCardsListItemHeader,
-  SwipeableCardsListItemHelper,
   SwipeableCardsListItemNote,
   SwipeableCardsListItemSubtitle,
   SwipeableCardsListItemTextBlock,
@@ -200,9 +198,6 @@ function WeightEntryCard({ entry, previousEntry, onRemove, onEdit }: WeightEntry
         <SwipeableCardsListItemBadge text={formatWeightDelta(delta)} icon="scale-bathroom" />
       </SwipeableCardsListItemHeader>
       <SwipeableCardsListItemNote text={entry.note} icon="note-text-outline" />
-      <SwipeableCardsListItemFooter>
-        <SwipeableCardsListItemHelper text="Тап — редактировать • свайп влево — кнопка удаления" />
-      </SwipeableCardsListItemFooter>
     </SwipeableCardsListItem>
   );
 }

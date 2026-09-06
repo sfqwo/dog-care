@@ -26,7 +26,6 @@ import {
   SwipeableCardsListItemCheckAction,
   SwipeableCardsListItemFooter,
   SwipeableCardsListItemHeader,
-  SwipeableCardsListItemHelper,
   SwipeableCardsListItemNote,
   SwipeableCardsListItemSubtitle,
   SwipeableCardsListItemTextBlock,
@@ -283,7 +282,6 @@ function MedicationCourseCard({
         icon="medical-bag"
       />
       <SwipeableCardsListItemFooter>
-        <SwipeableCardsListItemHelper text={helperText} icon="clock-outline" />
         {status !== "completed" ? (
           <SwipeableCardsListItemCheckAction
             label={takenToday ? "Принято" : "Принять"}

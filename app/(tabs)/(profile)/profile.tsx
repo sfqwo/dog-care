@@ -19,9 +19,7 @@ import {
   SwipeableCardsListEmpty,
   SwipeableCardsListHeader,
   SwipeableCardsListItemBadge,
-  SwipeableCardsListItemFooter,
   SwipeableCardsListItemHeader,
-  SwipeableCardsListItemHelper,
   SwipeableCardsListItem,
   SwipeableCardsListItemNote,
   SwipeableCardsListItemSubtitle,
@@ -167,9 +165,6 @@ function PetListItem({ pet, onRemove, onEdit }: PetListItemProps) {
         <SwipeableCardsListItemBadge text={badgeText} />
       </SwipeableCardsListItemHeader>
       <SwipeableCardsListItemNote text={note} icon={noteIcon} />
-      <SwipeableCardsListItemFooter>
-        <SwipeableCardsListItemHelper text="Тап — открыть • свайп влево — кнопка удаления" />
-      </SwipeableCardsListItemFooter>
     </SwipeableCardsListItem>
   );
 }

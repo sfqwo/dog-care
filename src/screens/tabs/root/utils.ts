@@ -1,7 +1,7 @@
-export type CarePlanMenuId = "today" | "calendar" | "reminders";
+export type CarePlanMenuId = "profile" | "calendar" | "vet";
 
 export function getCarePlanMenuRoute(id: CarePlanMenuId) {
-  if (id === "today") return "/today";
+  if (id === "profile") return "/profile";
   if (id === "calendar") return "/calendar";
-  return "/reminders";
+  return "/vet";
 }

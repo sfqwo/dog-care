@@ -178,9 +178,10 @@ export function SwipeableCardsListItemFooter({
 }
 
 export function SwipeableCardsListItemHelper({
-  text = "Свайп влево — кнопка удаления",
-  icon = "gesture-swipe-left",
+  text,
+  icon,
 }: SwipeableCardsListItemHelperProps) {
+  if (!text) return null;
   return (
     <View style={styles.helperRow}>
       <MaterialCommunityIcons name={icon} size={16} style={styles.icon} />

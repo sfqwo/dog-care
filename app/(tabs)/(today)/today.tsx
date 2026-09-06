@@ -270,7 +270,6 @@ function TodayPlanItem({
       </SwipeableCardsListItemHeader>
       <SwipeableCardsListItemNote text={reminder.note} icon="calendar-check-outline" />
       <SwipeableCardsListItemFooter>
-        <SwipeableCardsListItemHelper icon="check-circle-outline" />
         <SwipeableCardsListItemCheckAction
           onPress={() => onComplete(reminder.id)}
           disabled={!canComplete}
@@ -315,7 +314,6 @@ function TodayVetPlanItem({
       </SwipeableCardsListItemHeader>
       <SwipeableCardsListItemNote text={item.record.note ?? item.record.clinic} icon="stethoscope" />
       <SwipeableCardsListItemFooter>
-        <SwipeableCardsListItemHelper icon="check-circle-outline" />
         <SwipeableCardsListItemCheckAction
           onPress={() => onComplete(item.record)}
           disabled={!canComplete}

@@ -32,9 +32,7 @@ import {
   SwipeableCardsListEmpty,
   SwipeableCardsListHeader,
   SwipeableCardsListItemBadge,
-  SwipeableCardsListItemFooter,
   SwipeableCardsListItemHeader,
-  SwipeableCardsListItemHelper,
   SwipeableCardsListItem,
   SwipeableCardsListItemNote,
   SwipeableCardsListItemSubtitle,
@@ -296,9 +294,6 @@ function FeedingListItem({ feeding, onRemove, onEdit }: FeedingListItemProps) {
         <SwipeableCardsListItemBadge text={`${feeding.grams} г`} icon="food-variant" />
       </SwipeableCardsListItemHeader>
       <SwipeableCardsListItemNote text={noteText} icon="silverware-fork-knife" />
-      <SwipeableCardsListItemFooter>
-        <SwipeableCardsListItemHelper text="Тап — открыть • свайп влево — кнопка удаления" />
-      </SwipeableCardsListItemFooter>
     </SwipeableCardsListItem>
   );
 }

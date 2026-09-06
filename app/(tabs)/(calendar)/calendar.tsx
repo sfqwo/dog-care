@@ -32,7 +32,6 @@ import {
   SwipeableCardsListItemCheckAction,
   SwipeableCardsListItemFooter,
   SwipeableCardsListItemHeader,
-  SwipeableCardsListItemHelper,
   SwipeableCardsListItemNote,
   SwipeableCardsListItemSubtitle,
   SwipeableCardsListItemTextBlock,
@@ -271,7 +270,6 @@ function CalendarEventItem({
       </SwipeableCardsListItemHeader>
       <SwipeableCardsListItemNote text={event.note ?? event.detail} />
       <SwipeableCardsListItemFooter>
-        <SwipeableCardsListItemHelper text="Тап — открыть" icon="open-in-new" />
         {event.canComplete ? (
           <SwipeableCardsListItemCheckAction onPress={() => onComplete(event)} />
         ) : null}
